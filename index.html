@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAYX｜日々の整備で、Xデーへ</title>
+  <style>
+    body {
+      font-family: "Helvetica Neue", sans-serif;
+      background: #0e0e11;
+      color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 2em 1em 1em;
+      background-color: #1a1a1d;
+      border-bottom: 1px solid #333;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.2em;
+    }
+    p.tagline {
+      font-size: 1rem;
+      color: #999;
+    }
+    .dashboard {
+      padding: 2em 1em;
+      max-width: 600px;
+      margin: auto;
+    }
+    .card {
+      background-color: #1f1f23;
+      padding: 1em;
+      margin-bottom: 1.5em;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5em;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 0.4em 0;
+    }
+    .goal {
+      color: #ccc;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DAYX</h1>
+    <p class="tagline">Stack your days, reach your X-day.</p>
+  </header>
+  <section class="dashboard">
+    <div class="card">
+      <h2>今日のガソリン残量（モチベーション）</h2>
+      <input type="range" min="0" max="100" value="65">
+    </div>
+    <div class="card">
+      <h2>本日の整備リスト</h2>
+      <ul>
+        <li><input type="checkbox"> 朝のストレッチ</li>
+        <li><input type="checkbox"> メール返信</li>
+        <li><input type="checkbox"> 15分の瞑想</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Xデーに向けた今週の進路</h2>
+      <p class="goal">・動画1本完成<br>・読書メモ3つ記録</p>
+    </div>
+  </section>
+</body>
+</html>
