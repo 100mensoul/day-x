@@ -56,13 +56,27 @@
       color: #ccc;
       font-size: 0.95em;
     }
+    #logout {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.4em 0.8em;
+      cursor: pointer;
+      z-index: 999;
+    }
   </style>
 
-  <!-- Firebase設定と認証チェック -->
+  <!-- Firebase連携・認証チェック・ログアウト -->
   <script type="module" src="firebase-config.js"></script>
   <script type="module" src="auth-check.js"></script>
+  <script type="module" src="logout.js"></script>
 </head>
 <body>
+  <button id="logout">ログアウト</button>
   <header>
     <h1>DAYX</h1>
     <p class="tagline">Stack your days, reach your X-day.</p>
