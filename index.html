@@ -30,9 +30,7 @@
     }
     .tagline {
       font-size: 0.95rem;
-      background: linear-gradient(to right, #d4af37, #f1e7b6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #aaa;
       font-style: italic;
     }
     #motivation-key {
@@ -53,8 +51,8 @@
       padding: 0.4em 1em;
       font-size: 0.8rem;
       background: transparent;
-      color: #ccc;
-      border: 1px solid #555;
+      color: #888;
+      border: 1px solid #444;
       border-radius: 6px;
       cursor: pointer;
     }
@@ -71,13 +69,16 @@
       background-color: #1a1a1a;
       padding: 1.2em;
       margin-bottom: 1.2em;
-      border-left: 4px solid #ff2e42;
+      border-left: 4px solid #444;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
+    .card.high { border-left-color: #ff5c5c; }
+    .card.medium { border-left-color: #ffa500; }
+    .card.low { border-left-color: #5cafff; }
+    .card.none { border-left-color: #444; }
     .card.checked {
       opacity: 0.6;
-      border-left: 4px solid #555;
       background-color: #222;
     }
     .card-header {
@@ -238,7 +239,7 @@
 
     function renderTask(title, detail, phone = "", map = "", site = "", priority = "none", time = "", checked = false) {
       const card = document.createElement("div");
-      card.className = "card";
+      card.className = `card ${priority}`;
       card.dataset.priority = priority;
       card.dataset.time = time || formatDate(new Date());
       if (checked) card.classList.add("checked");
