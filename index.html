@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DAYX｜日々の整備で、Xデーへ</title>
+  <title>DAYX｜Redline整備シート</title>
   <style>
     body {
       font-family: "Helvetica Neue", sans-serif;
@@ -22,82 +22,96 @@
       font-size: 2rem;
       margin-bottom: 0.2em;
     }
-    p.tagline {
-      font-size: 1rem;
-      color: #999;
-    }
     .dashboard {
       padding: 2em 1em;
       max-width: 600px;
       margin: auto;
     }
-    .card {
-      background-color: #1f1f23;
-      padding: 1em;
-      margin-bottom: 1.5em;
+    .redline-box {
+      border: 2px solid #ff3b3f;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      padding: 1em;
+      margin-bottom: 2em;
+      background-color: #1f1f23;
     }
-    .card h2 {
+    .redline-box h2 {
+      color: #ff4f4f;
       font-size: 1.2rem;
-      margin-bottom: 0.5em;
+      margin-bottom: 0.8em;
     }
-    input[type="range"] {
-      width: 100%;
+    .redline-item {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      margin-bottom: 0.6em;
     }
-    ul {
-      list-style: none;
-      padding: 0;
+    .redline-item input[type="checkbox"] {
+      margin-right: 0.5em;
     }
-    li {
-      margin: 0.4em 0;
+    .redline-item.checked span {
+      text-decoration: line-through;
+      text-decoration-color: #ff3b3f;
+      color: #ff3b3f;
     }
-    .goal {
-      color: #ccc;
-      font-size: 0.95em;
+    .redline-form {
+      display: flex;
+      margin-top: 1em;
     }
-    #logout {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background-color: #444;
+    .redline-form input {
+      flex: 1;
+      padding: 0.4em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-right: 0.5em;
+    }
+    .redline-form button {
+      padding: 0.4em 0.8em;
+      background-color: #ff3b3f;
       color: white;
       border: none;
       border-radius: 6px;
-      padding: 0.4em 0.8em;
       cursor: pointer;
-      z-index: 999;
     }
   </style>
-
-  <!-- Firebase連携・認証チェック・ログアウト -->
-  <script type="module" src="firebase-config.js"></script>
-  <script type="module" src="auth-check.js"></script>
-  <script type="module" src="logout.js"></script>
 </head>
 <body>
-  <button id="logout">ログアウト</button>
   <header>
     <h1>DAYX</h1>
-    <p class="tagline">Stack your days, reach your X-day.</p>
+    <p class="tagline">Redline整備シート：命を運ぶ今日の点検</p>
   </header>
   <section class="dashboard">
-    <div class="card">
-      <h2>今日のガソリン残量（モチベーション）</h2>
-      <input type="range" min="0" max="100" value="65">
-    </div>
-    <div class="card">
-      <h2>本日の整備リスト</h2>
-      <ul>
-        <li><input type="checkbox"> 朝のストレッチ</li>
-        <li><input type="checkbox"> メール返信</li>
-        <li><input type="checkbox"> 15分の瞑想</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>Xデーに向けた今週の進路</h2>
-      <p class="goal">・動画1本完成<br>・読書メモ3つ記録</p>
+    <div class="redline-box">
+      <h2>整備リスト</h2>
+      <div id="task-list">
+        <!-- タスクはここに追加される -->
+      </div>
+      <div class="redline-form">
+        <input type="text" id="task-input" placeholder="やるべき整備を入力…" />
+        <button id="add-task">追加</button>
+      </div>
     </div>
   </section>
+
+  <script>
+    const taskInput = document.getElementById("task-input");
+    const taskList = document.getElementById("task-list");
+    const addBtn = document.getElementById("add-task");
+
+    addBtn.addEventListener("click", () => {
+      const text = taskInput.value.trim();
+      if (!text) return;
+
+      const div = document.createElement("div");
+      div.className = "redline-item";
+      div.innerHTML = '<label><input type="checkbox"><span>' + text + '</span></label>';
+      taskList.appendChild(div);
+      taskInput.value = "";
+
+      const checkbox = div.querySelector("input[type='checkbox']");
+      checkbox.addEventListener("change", () => {
+        div.classList.toggle("checked", checkbox.checked);
+      });
+    });
+  </script>
 </body>
 </html>
