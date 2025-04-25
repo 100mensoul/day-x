@@ -3,28 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DAYX｜整備カードUI</title>
+  <title>DAYX｜ピットで整える、1日の命運。</title>
   <style>
     body {
       font-family: "Helvetica Neue", sans-serif;
-      background: #0e0e11;
-      color: #f2f2f2;
+      background: #0a0a0a;
+      color: #eaeaea;
       margin: 0;
       padding: 0;
     }
     header {
       text-align: center;
       padding: 2em 1em 1em;
-      background-color: #1a1a1d;
-      border-bottom: 1px solid #333;
+      background: linear-gradient(to right, #111, #1c1c1c);
+      border-bottom: 1px solid #222;
     }
     h1 {
       font-size: 2rem;
-      margin-bottom: 0.2em;
+      margin-bottom: 0.3em;
+      letter-spacing: 1px;
     }
     p.tagline {
-      font-size: 1rem;
-      color: #999;
+      font-size: 0.95rem;
+      color: #888;
     }
     .dashboard {
       padding: 2em 1em;
@@ -32,63 +33,71 @@
       margin: auto;
     }
     .card {
-      background-color: #1f1f23;
-      padding: 1em;
-      margin-bottom: 1em;
-      border-left: 6px solid #ff3b3f;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      background-color: #161616;
+      padding: 1em 1.2em;
+      margin-bottom: 1.2em;
+      border-left: 5px solid #ff2e42;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.4);
     }
     .card.checked {
-      opacity: 0.5;
+      opacity: 0.6;
     }
-    .card h3 {
-      margin: 0 0 0.4em;
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-header input[type="checkbox"] {
+      margin-right: 0.8em;
+      width: 20px;
+      height: 20px;
+      accent-color: #ff2e42;
+    }
+    .card-header h3 {
       font-size: 1.1rem;
       font-weight: bold;
+      margin: 0;
+      flex-grow: 1;
     }
     .card p {
-      margin: 0 0 0.6em;
+      margin: 0.6em 0 0.8em;
       font-size: 0.95rem;
       color: #ccc;
     }
     .card-controls {
       display: flex;
-      align-items: center;
-      gap: 0.6em;
-      margin-top: 0.5em;
-    }
-    .card-controls input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
+      gap: 0.5em;
     }
     .card-controls button {
       padding: 0.3em 0.8em;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       border: none;
       border-radius: 6px;
-      background-color: #444;
+      background-color: #2a2a2a;
       color: white;
       cursor: pointer;
     }
+    .card-controls button:hover {
+      background-color: #444;
+    }
     .task-form {
-      margin-top: 2em;
       display: flex;
       flex-direction: column;
-      gap: 0.5em;
+      gap: 0.6em;
+      margin-top: 2em;
     }
     .task-form input, .task-form textarea {
       padding: 0.5em;
       border-radius: 6px;
-      border: 1px solid #555;
-      background-color: #0e0e11;
-      color: #f2f2f2;
-      width: 100%;
+      border: 1px solid #444;
+      background-color: #101010;
+      color: #eee;
     }
     .task-form button {
       align-self: flex-end;
-      padding: 0.6em 1.2em;
-      background-color: #ff3b3f;
+      padding: 0.6em 1.4em;
+      background-color: #ff2e42;
       border: none;
       border-radius: 8px;
       color: white;
@@ -134,14 +143,8 @@
       card.className = "card";
       if (checked) card.classList.add("checked");
 
-      const h3 = document.createElement("h3");
-      h3.textContent = title;
-
-      const p = document.createElement("p");
-      p.textContent = detail;
-
-      const controls = document.createElement("div");
-      controls.className = "card-controls";
+      const header = document.createElement("div");
+      header.className = "card-header";
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
@@ -150,6 +153,18 @@
         card.classList.toggle("checked", checkbox.checked);
         saveTasks();
       });
+
+      const h3 = document.createElement("h3");
+      h3.textContent = title;
+
+      header.appendChild(checkbox);
+      header.appendChild(h3);
+
+      const p = document.createElement("p");
+      p.textContent = detail;
+
+      const controls = document.createElement("div");
+      controls.className = "card-controls";
 
       const editBtn = document.createElement("button");
       editBtn.textContent = "編集";
@@ -170,11 +185,10 @@
         }
       };
 
-      controls.appendChild(checkbox);
       controls.appendChild(editBtn);
       controls.appendChild(delBtn);
 
-      card.appendChild(h3);
+      card.appendChild(header);
       card.appendChild(p);
       card.appendChild(controls);
       taskList.appendChild(card);
