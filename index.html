@@ -82,9 +82,7 @@
   <section class="dashboard">
     <div class="redline-box">
       <h2>整備リスト</h2>
-      <div id="task-list">
-        <!-- タスクはここに追加される -->
-      </div>
+      <div id="task-list"></div>
       <div class="redline-form">
         <input type="text" id="task-input" placeholder="やるべき整備を入力…" />
         <button id="add-task">追加</button>
@@ -97,21 +95,41 @@
     const taskList = document.getElementById("task-list");
     const addBtn = document.getElementById("add-task");
 
+    function saveTasks() {
+      const tasks = [];
+      taskList.querySelectorAll(".redline-item").forEach(div => {
+        const text = div.querySelector("span").textContent;
+        const checked = div.querySelector("input").checked;
+        tasks.push({ text, checked });
+      });
+      localStorage.setItem("redlineTasks", JSON.stringify(tasks));
+    }
+
+    function renderTask(text, checked = false) {
+      const div = document.createElement("div");
+      div.className = "redline-item";
+      if (checked) div.classList.add("checked");
+      div.innerHTML = '<label><input type="checkbox"' + (checked ? " checked" : "") + '><span>' + text + '</span></label>';
+      taskList.appendChild(div);
+
+      const checkbox = div.querySelector("input");
+      checkbox.addEventListener("change", () => {
+        div.classList.toggle("checked", checkbox.checked);
+        saveTasks();
+      });
+    }
+
     addBtn.addEventListener("click", () => {
       const text = taskInput.value.trim();
       if (!text) return;
-
-      const div = document.createElement("div");
-      div.className = "redline-item";
-      div.innerHTML = '<label><input type="checkbox"><span>' + text + '</span></label>';
-      taskList.appendChild(div);
+      renderTask(text);
+      saveTasks();
       taskInput.value = "";
-
-      const checkbox = div.querySelector("input[type='checkbox']");
-      checkbox.addEventListener("change", () => {
-        div.classList.toggle("checked", checkbox.checked);
-      });
     });
+
+    // 初期読み込み：localStorage から復元
+    const saved = JSON.parse(localStorage.getItem("redlineTasks") || "[]");
+    saved.forEach(task => renderTask(task.text, task.checked));
   </script>
 </body>
 </html>
