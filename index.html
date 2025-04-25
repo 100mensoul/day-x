@@ -30,13 +30,15 @@
     }
     .tagline {
       font-size: 0.95rem;
-      color: #aaa;
+      background: linear-gradient(to right, #d4af37, #f1e7b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       font-style: italic;
     }
     #motivation-key {
       margin-top: 0.8em;
       font-size: 0.95rem;
-      color: #ff4757;
+      color: #aaa;
       font-style: italic;
       animation: fadeIn 2s ease;
     }
@@ -51,10 +53,14 @@
       padding: 0.4em 1em;
       font-size: 0.8rem;
       background: transparent;
-      color: #ff2e42;
-      border: 1px solid #ff2e42;
+      color: #ccc;
+      border: 1px solid #555;
       border-radius: 6px;
       cursor: pointer;
+    }
+    #logoutBtn:hover {
+      background: #333;
+      color: #fff;
     }
     .dashboard {
       padding: 2em 1em;
@@ -95,6 +101,10 @@
       color: #ccc;
       margin: 0.3em 0;
     }
+    .card a {
+      color: #eee;
+      text-decoration: underline dotted;
+    }
     .priority {
       font-weight: bold;
     }
@@ -102,9 +112,9 @@
     .priority.medium { color: #ffa500; }
     .priority.low { color: #5cafff; }
     .priority.none { color: #777; }
-    .card a {
-      color: #ff5c5c;
-      text-decoration: none;
+    .timestamp {
+      font-size: 0.8rem;
+      color: #666;
     }
     .card-controls {
       display: flex;
@@ -153,8 +163,7 @@
     <div id="motivation-key"></div>
     <button id="logoutBtn">ログアウト</button>
   </header>
-
-  <section class="dashboard">
+    <section class="dashboard">
     <div id="task-list"></div>
     <form id="task-form" class="task-form">
       <input type="text" id="task-title" placeholder="整備項目（タイトル）" required />
@@ -274,8 +283,7 @@
       card.appendChild(priorityEl);
 
       const timeEl = document.createElement("p");
-      timeEl.style.fontSize = "0.8rem";
-      timeEl.style.color = "#666";
+      timeEl.className = "timestamp";
       timeEl.textContent = `追加日時: ${card.dataset.time}`;
       card.appendChild(timeEl);
 
@@ -292,7 +300,7 @@
         const newSite = prompt("サイトURLを編集：", site);
         const newPriority = prompt("優先度（none/low/medium/high）：", priority);
         card.remove();
-        renderTask(newTitle, newDetail, newPhone, newMap, newSite, newPriority, timeEl.textContent.replace("追加日時: ", ""), checkbox.checked);
+        renderTask(newTitle, newDetail, newPhone, newMap, newSite, newPriority, card.dataset.time, checkbox.checked);
         saveTasks();
       };
 
