@@ -13,6 +13,7 @@
       padding: 0;
     }
     header {
+      position: relative;
       text-align: center;
       padding: 2em 1em 1em;
       background: linear-gradient(to right, #111, #1c1c1c);
@@ -26,6 +27,18 @@
     p.tagline {
       font-size: 0.95rem;
       color: #888;
+    }
+    #logoutBtn {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      padding: 0.4em 0.8em;
+      font-size: 0.8rem;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
     .dashboard {
       padding: 2em 1em;
@@ -46,10 +59,9 @@
     .card-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 0.6em;
     }
     .card-header input[type="checkbox"] {
-      margin-right: 0.8em;
       width: 20px;
       height: 20px;
       accent-color: #ff2e42;
@@ -77,9 +89,6 @@
       background-color: #2a2a2a;
       color: white;
       cursor: pointer;
-    }
-    .card-controls button:hover {
-      background-color: #444;
     }
     .task-form {
       display: flex;
@@ -111,7 +120,9 @@
   <header>
     <h1>DAYX</h1>
     <p class="tagline">ピットで整える、1日の命運。</p>
+    <button id="logoutBtn">ログアウト</button>
   </header>
+
   <section class="dashboard">
     <div id="task-list"></div>
     <form id="task-form" class="task-form">
@@ -121,7 +132,20 @@
     </form>
   </section>
 
-  <script>
+  <script type="module">
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { auth } from './firebase-config.js';
+
+    // ログアウト処理
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      }).catch((error) => {
+        alert("ログアウトに失敗しました：" + error.message);
+      });
+    });
+
+    // 整備カードの機能
     const taskList = document.getElementById("task-list");
     const form = document.getElementById("task-form");
     const titleInput = document.getElementById("task-title");
