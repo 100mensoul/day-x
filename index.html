@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DAYX｜Redline整備シート</title>
+  <title>DAYX｜整備カードUI</title>
   <style>
     body {
       font-family: "Helvetica Neue", sans-serif;
@@ -28,64 +28,64 @@
     }
     .dashboard {
       padding: 2em 1em;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
     }
     .card {
       background-color: #1f1f23;
       padding: 1em;
-      margin-bottom: 2em;
+      margin-bottom: 1em;
+      border-left: 4px solid #ff3b3f;
       border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
-    .card h2 {
-      font-size: 1.2rem;
-      margin-bottom: 0.8em;
-      color: #ff4f4f;
+    .card.checked {
+      opacity: 0.5;
+      border-left-color: #ff3b3f;
     }
-    .task-item {
+    .card h3 {
+      margin: 0 0 0.4em;
+      font-size: 1.1rem;
+    }
+    .card p {
+      margin: 0 0 0.6em;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+    .card-controls {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.5em;
-    }
-    .task-left {
-      display: flex;
       align-items: center;
-      flex: 1;
     }
-    .task-item input[type="checkbox"] {
-      margin-right: 0.6em;
+    .card-controls input[type="checkbox"] {
+      margin-right: 0.5em;
     }
-    .task-item.checked span {
-      text-decoration: line-through;
-      text-decoration-color: #ff3b3f;
-      color: #ff3b3f;
-    }
-    .task-buttons button {
-      margin-left: 0.3em;
-      padding: 0.2em 0.6em;
+    .card-controls button {
+      margin-left: 0.4em;
+      padding: 0.3em 0.8em;
       background-color: #444;
+      color: white;
       border: none;
       border-radius: 4px;
-      color: white;
       cursor: pointer;
-      font-size: 0.8em;
+      font-size: 0.8rem;
     }
     .task-form {
+      margin-top: 2em;
       display: flex;
-      margin-top: 1em;
+      flex-direction: column;
+      gap: 0.5em;
     }
-    .task-form input {
-      flex: 1;
+    .task-form input, .task-form textarea {
       padding: 0.5em;
       border-radius: 6px;
       border: 1px solid #555;
       background-color: #0e0e11;
       color: #f2f2f2;
+      width: 100%;
     }
     .task-form button {
-      margin-left: 0.5em;
+      align-self: flex-end;
       padding: 0.5em 1em;
       background-color: #ff3b3f;
       border: none;
@@ -99,89 +99,93 @@
 <body>
   <header>
     <h1>DAYX</h1>
-    <p class="tagline">Redline整備シート：命を乗せた今日の整備</p>
+    <p class="tagline">ピットで整える、1日の命運。</p>
   </header>
   <section class="dashboard">
-    <div class="card">
-      <h2>整備リスト</h2>
-      <div id="task-list"></div>
-      <div class="task-form">
-        <input type="text" id="task-input" placeholder="やるべき整備を入力…" />
-        <button id="add-task">追加</button>
-      </div>
-    </div>
+    <div id="task-list"></div>
+    <form class="task-form" id="task-form">
+      <input type="text" id="task-title" placeholder="整備項目（タイトル）" required />
+      <textarea id="task-detail" placeholder="詳細・注意点など" rows="2"></textarea>
+      <button type="submit">カード追加</button>
+    </form>
   </section>
 
   <script>
-    const taskInput = document.getElementById("task-input");
     const taskList = document.getElementById("task-list");
-    const addBtn = document.getElementById("add-task");
+    const form = document.getElementById("task-form");
+    const titleInput = document.getElementById("task-title");
+    const detailInput = document.getElementById("task-detail");
 
     function saveTasks() {
       const tasks = [];
-      taskList.querySelectorAll(".task-item").forEach(div => {
-        const text = div.querySelector("span").textContent;
-        const checked = div.querySelector("input").checked;
-        tasks.push({ text, checked });
+      taskList.querySelectorAll(".card").forEach(card => {
+        const title = card.querySelector("h3").textContent;
+        const detail = card.querySelector("p").textContent;
+        const checked = card.querySelector("input").checked;
+        tasks.push({ title, detail, checked });
       });
-      localStorage.setItem("redlineTasks", JSON.stringify(tasks));
+      localStorage.setItem("dayxTasks", JSON.stringify(tasks));
     }
 
-    function renderTask(text, checked = false) {
-      const div = document.createElement("div");
-      div.className = "task-item";
-      if (checked) div.classList.add("checked");
+    function renderTask(title, detail, checked = false) {
+      const card = document.createElement("div");
+      card.className = "card";
+      if (checked) card.classList.add("checked");
 
-      const left = document.createElement("div");
-      left.className = "task-left";
-      left.innerHTML = '<label><input type="checkbox"' + (checked ? " checked" : "") + '><span>' + text + '</span></label>';
+      const h3 = document.createElement("h3");
+      h3.textContent = title;
 
-      const buttons = document.createElement("div");
-      buttons.className = "task-buttons";
+      const p = document.createElement("p");
+      p.textContent = detail;
 
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "編集";
-      editBtn.onclick = () => {
-        const newText = prompt("編集内容を入力：", text);
-        if (newText !== null && newText.trim()) {
-          div.querySelector("span").textContent = newText.trim();
-          saveTasks();
-        }
-      };
+      const controls = document.createElement("div");
+      controls.className = "card-controls";
 
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "削除";
-      deleteBtn.onclick = () => {
-        if (confirm("このタスクを削除しますか？")) {
-          div.remove();
-          saveTasks();
-        }
-      };
-
-      buttons.appendChild(editBtn);
-      buttons.appendChild(deleteBtn);
-      div.appendChild(left);
-      div.appendChild(buttons);
-      taskList.appendChild(div);
-
-      const checkbox = div.querySelector("input");
-      checkbox.addEventListener("change", () => {
-        div.classList.toggle("checked", checkbox.checked);
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = checked;
+      check.addEventListener("change", () => {
+        card.classList.toggle("checked", check.checked);
         saveTasks();
       });
+
+      const edit = document.createElement("button");
+      edit.textContent = "編集";
+      edit.onclick = () => {
+        const newTitle = prompt("タイトルを編集：", h3.textContent);
+        const newDetail = prompt("詳細を編集：", p.textContent);
+        if (newTitle !== null) h3.textContent = newTitle;
+        if (newDetail !== null) p.textContent = newDetail;
+        saveTasks();
+      };
+
+      const del = document.createElement("button");
+      del.textContent = "削除";
+      del.onclick = () => {
+        if (confirm("このカードを削除しますか？")) {
+          card.remove();
+          saveTasks();
+        }
+      };
+
+      controls.append(check, edit, del);
+      card.append(h3, p, controls);
+      taskList.appendChild(card);
     }
 
-    addBtn.addEventListener("click", () => {
-      const text = taskInput.value.trim();
-      if (!text) return;
-      renderTask(text);
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const title = titleInput.value.trim();
+      const detail = detailInput.value.trim();
+      if (!title) return;
+      renderTask(title, detail);
       saveTasks();
-      taskInput.value = "";
+      form.reset();
     });
 
-    // 初期読み込み：localStorage から復元
-    const saved = JSON.parse(localStorage.getItem("redlineTasks") || "[]");
-    saved.forEach(task => renderTask(task.text, task.checked));
+    // 初期読み込み
+    const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
+    saved.forEach(task => renderTask(task.title, task.detail, task.checked));
   </script>
 </body>
 </html>
