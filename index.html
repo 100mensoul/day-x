@@ -46,7 +46,13 @@
     .task-item {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 0.5em;
+    }
+    .task-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
     }
     .task-item input[type="checkbox"] {
       margin-right: 0.6em;
@@ -55,6 +61,16 @@
       text-decoration: line-through;
       text-decoration-color: #ff3b3f;
       color: #ff3b3f;
+    }
+    .task-buttons button {
+      margin-left: 0.3em;
+      padding: 0.2em 0.6em;
+      background-color: #444;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      font-size: 0.8em;
     }
     .task-form {
       display: flex;
@@ -115,7 +131,37 @@
       const div = document.createElement("div");
       div.className = "task-item";
       if (checked) div.classList.add("checked");
-      div.innerHTML = '<label><input type="checkbox"' + (checked ? " checked" : "") + '><span>' + text + '</span></label>';
+
+      const left = document.createElement("div");
+      left.className = "task-left";
+      left.innerHTML = '<label><input type="checkbox"' + (checked ? " checked" : "") + '><span>' + text + '</span></label>';
+
+      const buttons = document.createElement("div");
+      buttons.className = "task-buttons";
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "編集";
+      editBtn.onclick = () => {
+        const newText = prompt("編集内容を入力：", text);
+        if (newText !== null && newText.trim()) {
+          div.querySelector("span").textContent = newText.trim();
+          saveTasks();
+        }
+      };
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "削除";
+      deleteBtn.onclick = () => {
+        if (confirm("このタスクを削除しますか？")) {
+          div.remove();
+          saveTasks();
+        }
+      };
+
+      buttons.appendChild(editBtn);
+      buttons.appendChild(deleteBtn);
+      div.appendChild(left);
+      div.appendChild(buttons);
       taskList.appendChild(div);
 
       const checkbox = div.querySelector("input");
