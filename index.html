@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DAYX｜ピットで整える、1日の命運。</title>
+  <title>DAYX｜daily drive to your X-day</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -104,12 +104,6 @@
       font-size: 0.95rem;
       color: #ccc;
     }
-    .card a {
-      font-size: 0.85rem;
-      color: #66ccff;
-      display: block;
-      margin-top: 0.3em;
-    }
     .card-controls {
       display: flex;
       gap: 0.6em;
@@ -146,12 +140,29 @@
       font-family: inherit;
       font-size: 0.95rem;
     }
+    .task-form button {
+      align-self: flex-end;
+      padding: 0.7em 1.6em;
+      background-color: #ff2e42;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 46, 66, 0.4);
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+    .task-form button:hover {
+      background-color: #ff4757;
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>DAYX</h1>
-    <p class="tagline">ピットで整える、1日の命運。</p>
+    <p class="tagline">daily drive to your X-day</p>
     <div id="motivation-key"></div>
     <button id="logoutBtn">ログアウト</button>
   </header>
@@ -293,7 +304,6 @@
     const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
     saved.forEach(task => renderTask(task.title, task.detail, task.checked, task.phone, task.map, task.url));
 
-    // モチベーションキー
     const phrases = [
       "さあ、今日をドライブしよう。",
       "その日々が、Xデーを創る。",
@@ -302,8 +312,7 @@
       "エンジンは、君の中にある。",
       "今日も、君がハンドルを握ってる。"
     ];
-    const keyElement = document.getElementById("motivation-key");
-    keyElement.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    document.getElementById("motivation-key").textContent = phrases[Math.floor(Math.random() * phrases.length)];
   </script>
 </body>
 </html>
