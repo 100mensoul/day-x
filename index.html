@@ -3,133 +3,117 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DAYX｜daily drive to your X-day</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <title>DAYX｜ピットで整える、1日の命運。</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Titillium+Web:wght@300;400&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: "Orbitron", "Helvetica Neue", sans-serif;
-      background: #0a0a0a;
-      color: #eaeaea;
+      font-family: "Titillium Web", sans-serif;
+      background: linear-gradient(to bottom, #0a0a0a, #111);
+      color: #e0e0e0;
       margin: 0;
       padding: 0;
     }
     header {
       position: relative;
       text-align: center;
-      padding: 3em 1em 1.5em;
-      background: radial-gradient(circle at center, #1a1a1a, #0a0a0a);
-      border-bottom: 2px solid #333;
-      box-shadow: 0 0 20px rgba(255, 0, 30, 0.2);
+      padding: 2.5em 1em 1.5em;
+      background: #0d0d0d;
+      border-bottom: 1px solid #222;
     }
     h1 {
-      font-size: 3rem;
-      margin-bottom: 0.2em;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem;
       letter-spacing: 2px;
-      color: #ff2e42;
-      text-shadow: 0 0 10px rgba(255, 46, 66, 0.5);
+      color: #ffffff;
+      margin-bottom: 0.3em;
+      text-shadow: 0 0 10px rgba(255, 0, 60, 0.2);
     }
-    p.tagline {
+    .tagline {
+      font-family: 'Titillium Web', sans-serif;
       font-size: 1rem;
       color: #aaa;
-      font-style: italic;
+      margin: 0.2em 0;
     }
-    #motivation-key {
-      margin-top: 0.8em;
+    .tagline.jp {
+      color: #c44;
       font-size: 0.95rem;
-      color: #ff4757;
       font-style: italic;
-      animation: fadeIn 2s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
     #logoutBtn {
       position: absolute;
       top: 1.2em;
       right: 1.2em;
-      padding: 0.5em 1em;
+      padding: 0.4em 1em;
       font-size: 0.8rem;
-      background-color: #1e1e1e;
+      background: transparent;
       color: #ff2e42;
       border: 1px solid #ff2e42;
-      border-radius: 8px;
-      text-transform: uppercase;
+      border-radius: 6px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: all 0.2s ease;
     }
     #logoutBtn:hover {
-      background-color: #ff2e42;
-      color: #0a0a0a;
+      background: #ff2e42;
+      color: #fff;
     }
     .dashboard {
       padding: 2em 1em;
-      max-width: 720px;
+      max-width: 700px;
       margin: auto;
     }
     .card {
-      background: linear-gradient(135deg, #121212, #181818);
-      padding: 1.2em 1.5em;
-      margin-bottom: 1.5em;
-      border-left: 6px solid #ff2e42;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      background-color: #1a1a1a;
+      padding: 1.2em;
+      margin-bottom: 1.2em;
+      border-left: 4px solid #ff2e42;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      transition: all 0.2s ease;
     }
     .card.checked {
-      opacity: 0.5;
-      transform: scale(0.98);
-      background: #222;
-      border-left-color: #444;
+      opacity: 0.6;
+      border-left: 4px solid #555;
+      background-color: #222;
     }
     .card-header {
       display: flex;
       align-items: center;
-      gap: 0.8em;
+      gap: 0.6em;
     }
     .card-header input[type="checkbox"] {
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       accent-color: #ff2e42;
     }
     .card-header h3 {
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       font-weight: bold;
       margin: 0;
-      flex-grow: 1;
       color: #fff;
+      flex-grow: 1;
     }
     .card p {
-      margin: 0.6em 0;
-      font-size: 0.95rem;
+      margin: 0.6em 0 0.8em;
+      font-size: 0.9rem;
       color: #ccc;
-    }
-    .card a {
-      font-size: 0.85rem;
-      color: #66ccff;
-      display: block;
-      margin-top: 0.3em;
-      word-break: break-all;
+      white-space: pre-wrap;
     }
     .card-controls {
       display: flex;
-      gap: 0.6em;
-      margin-top: 0.5em;
+      gap: 0.5em;
     }
     .card-controls button {
-      padding: 0.4em 1em;
-      font-size: 0.8rem;
-      border: 1px solid #444;
+      padding: 0.35em 0.9em;
+      font-size: 0.75rem;
+      border: none;
       border-radius: 6px;
       background-color: #2c2c2c;
       color: white;
       cursor: pointer;
-      transition: 0.2s ease;
+      transition: background-color 0.2s ease;
     }
     .card-controls button:hover {
-      background-color: #ff2e42;
-      color: #0a0a0a;
-      border-color: #ff2e42;
+      background-color: #444;
     }
     .task-form {
       display: flex;
@@ -140,24 +124,22 @@
     .task-form input,
     .task-form textarea {
       padding: 0.6em;
-      border-radius: 8px;
+      border-radius: 6px;
       border: 1px solid #333;
-      background-color: #101010;
+      background-color: #121212;
       color: #eee;
-      font-family: inherit;
       font-size: 0.95rem;
     }
     .task-form button {
       align-self: flex-end;
-      padding: 0.7em 1.6em;
+      padding: 0.6em 1.4em;
       background-color: #ff2e42;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       color: white;
       font-weight: bold;
       font-size: 0.95rem;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(255, 46, 66, 0.4);
       transition: background-color 0.2s ease, transform 0.1s ease;
     }
     .task-form button:hover {
@@ -170,7 +152,7 @@
   <header>
     <h1>DAYX</h1>
     <p class="tagline">daily drive to your X-day</p>
-    <div id="motivation-key"></div>
+    <p class="tagline jp">日常を駆けろ、Xデーまで。</p>
     <button id="logoutBtn">ログアウト</button>
   </header>
 
@@ -179,9 +161,6 @@
     <form id="task-form" class="task-form">
       <input type="text" id="task-title" placeholder="整備項目（タイトル）" required />
       <textarea id="task-detail" placeholder="詳細・注意点など" rows="2"></textarea>
-      <input type="text" id="task-phone" placeholder="電話番号（任意）" />
-      <input type="text" id="task-map" placeholder="GoogleマップURL（任意）" />
-      <input type="text" id="task-url" placeholder="関連サイトURL（任意）" />
       <button type="submit">カード追加</button>
     </form>
   </section>
@@ -192,7 +171,7 @@
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
-        window.location.href = "login.html"; // ← login.html 確認済み
+        window.location.href = "login.html";
       }).catch((error) => {
         alert("ログアウトに失敗しました：" + error.message);
       });
@@ -202,9 +181,6 @@
     const form = document.getElementById("task-form");
     const titleInput = document.getElementById("task-title");
     const detailInput = document.getElementById("task-detail");
-    const phoneInput = document.getElementById("task-phone");
-    const mapInput = document.getElementById("task-map");
-    const urlInput = document.getElementById("task-url");
 
     function saveTasks() {
       const tasks = [];
@@ -212,21 +188,15 @@
         const title = card.querySelector("h3").textContent;
         const detail = card.querySelector("p").textContent;
         const checked = card.querySelector("input[type='checkbox']").checked;
-        const phone = card.dataset.phone || "";
-        const map = card.dataset.map || "";
-        const url = card.dataset.url || "";
-        tasks.push({ title, detail, checked, phone, map, url });
+        tasks.push({ title, detail, checked });
       });
       localStorage.setItem("dayxTasks", JSON.stringify(tasks));
     }
 
-    function renderTask(title, detail, checked = false, phone = "", map = "", url = "") {
+    function renderTask(title, detail, checked = false) {
       const card = document.createElement("div");
       card.className = "card";
       if (checked) card.classList.add("checked");
-      card.dataset.phone = phone;
-      card.dataset.map = map;
-      card.dataset.url = url;
 
       const header = document.createElement("div");
       header.className = "card-header";
@@ -248,11 +218,6 @@
       const p = document.createElement("p");
       p.textContent = detail;
 
-      const contact = document.createElement("div");
-      if (phone) contact.innerHTML += `<div><a href="tel:${phone}">TEL: ${phone}</a></div>`;
-      if (map) contact.innerHTML += `<div><a href="${map}" target="_blank">地図を開く</a></div>`;
-      if (url) contact.innerHTML += `<div><a href="${url}" target="_blank">関連サイト</a></div>`;
-
       const controls = document.createElement("div");
       controls.className = "card-controls";
 
@@ -261,18 +226,8 @@
       editBtn.onclick = () => {
         const newTitle = prompt("タイトルを編集：", h3.textContent);
         const newDetail = prompt("詳細を編集：", p.textContent);
-        const newPhone = prompt("電話番号：", phone);
-        const newMap = prompt("マップURL：", map);
-        const newUrl = prompt("サイトURL：", url);
         if (newTitle !== null) h3.textContent = newTitle;
         if (newDetail !== null) p.textContent = newDetail;
-        card.dataset.phone = newPhone;
-        card.dataset.map = newMap;
-        card.dataset.url = newUrl;
-        contact.innerHTML = '';
-        if (newPhone) contact.innerHTML += `<div><a href="tel:${newPhone}">TEL: ${newPhone}</a></div>`;
-        if (newMap) contact.innerHTML += `<div><a href="${newMap}" target="_blank">地図を開く</a></div>`;
-        if (newUrl) contact.innerHTML += `<div><a href="${newUrl}" target="_blank">関連サイト</a></div>`;
         saveTasks();
       };
 
@@ -290,7 +245,6 @@
 
       card.appendChild(header);
       card.appendChild(p);
-      card.appendChild(contact);
       card.appendChild(controls);
       taskList.appendChild(card);
     }
@@ -299,27 +253,14 @@
       e.preventDefault();
       const title = titleInput.value.trim();
       const detail = detailInput.value.trim();
-      const phone = phoneInput.value.trim();
-      const map = mapInput.value.trim();
-      const url = urlInput.value.trim();
       if (!title) return;
-      renderTask(title, detail, false, phone, map, url);
+      renderTask(title, detail);
       saveTasks();
       form.reset();
     });
 
     const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
-    saved.forEach(task => renderTask(task.title, task.detail, task.checked, task.phone, task.map, task.url));
-
-    const phrases = [
-      "さあ、今日をドライブしよう。",
-      "その日々が、Xデーを創る。",
-      "平凡な日々が、一番のドライブコース。",
-      "日常を駆けろ、Xデーまで。",
-      "エンジンは、君の中にある。",
-      "今日も、君がハンドルを握ってる。"
-    ];
-    document.getElementById("motivation-key").textContent = phrases[Math.floor(Math.random() * phrases.length)];
+    saved.forEach(task => renderTask(task.title, task.detail, task.checked));
   </script>
 </body>
 </html>
