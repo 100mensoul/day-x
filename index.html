@@ -104,6 +104,13 @@
       font-size: 0.95rem;
       color: #ccc;
     }
+    .card a {
+      font-size: 0.85rem;
+      color: #66ccff;
+      display: block;
+      margin-top: 0.3em;
+      word-break: break-all;
+    }
     .card-controls {
       display: flex;
       gap: 0.6em;
@@ -185,7 +192,7 @@
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
-        window.location.href = "login.html";
+        window.location.href = "login.html"; // ← login.html 確認済み
       }).catch((error) => {
         alert("ログアウトに失敗しました：" + error.message);
       });
@@ -242,9 +249,9 @@
       p.textContent = detail;
 
       const contact = document.createElement("div");
-      if (phone) contact.innerHTML += `<a href="tel:${phone}">TEL: ${phone}</a>`;
-      if (map) contact.innerHTML += `<a href="${map}" target="_blank">地図を開く</a>`;
-      if (url) contact.innerHTML += `<a href="${url}" target="_blank">関連サイト</a>`;
+      if (phone) contact.innerHTML += `<div><a href="tel:${phone}">TEL: ${phone}</a></div>`;
+      if (map) contact.innerHTML += `<div><a href="${map}" target="_blank">地図を開く</a></div>`;
+      if (url) contact.innerHTML += `<div><a href="${url}" target="_blank">関連サイト</a></div>`;
 
       const controls = document.createElement("div");
       controls.className = "card-controls";
@@ -263,9 +270,9 @@
         card.dataset.map = newMap;
         card.dataset.url = newUrl;
         contact.innerHTML = '';
-        if (newPhone) contact.innerHTML += `<a href="tel:${newPhone}">TEL: ${newPhone}</a>`;
-        if (newMap) contact.innerHTML += `<a href="${newMap}" target="_blank">地図を開く</a>`;
-        if (newUrl) contact.innerHTML += `<a href="${newUrl}" target="_blank">関連サイト</a>`;
+        if (newPhone) contact.innerHTML += `<div><a href="tel:${newPhone}">TEL: ${newPhone}</a></div>`;
+        if (newMap) contact.innerHTML += `<div><a href="${newMap}" target="_blank">地図を開く</a></div>`;
+        if (newUrl) contact.innerHTML += `<div><a href="${newUrl}" target="_blank">関連サイト</a></div>`;
         saveTasks();
       };
 
