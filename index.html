@@ -16,110 +16,124 @@
     header {
       position: relative;
       text-align: center;
-      padding: 2em 1em 1em;
-      background: linear-gradient(to right, #111, #1c1c1c);
-      border-bottom: 1px solid #222;
+      padding: 3em 1em 2em;
+      background: radial-gradient(circle at center, #1a1a1a, #0a0a0a);
+      border-bottom: 2px solid #333;
+      box-shadow: 0 0 20px rgba(255, 0, 30, 0.2);
     }
     h1 {
-      font-size: 2rem;
-      margin-bottom: 0.3em;
-      letter-spacing: 1px;
-      text-shadow: 0 0 5px rgba(255,255,255,0.2);
+      font-size: 3rem;
+      margin-bottom: 0.2em;
+      letter-spacing: 2px;
+      color: #ff2e42;
+      text-shadow: 0 0 10px rgba(255, 46, 66, 0.5);
     }
     p.tagline {
-      font-size: 0.95rem;
-      color: #888;
+      font-size: 1rem;
+      color: #aaa;
       font-style: italic;
     }
     #logoutBtn {
       position: absolute;
-      top: 1em;
-      right: 1em;
-      padding: 0.4em 0.8em;
+      top: 1.2em;
+      right: 1.2em;
+      padding: 0.5em 1em;
       font-size: 0.8rem;
-      background-color: #333;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      background-color: #1e1e1e;
+      color: #ff2e42;
+      border: 1px solid #ff2e42;
+      border-radius: 8px;
+      text-transform: uppercase;
       cursor: pointer;
+      transition: 0.2s;
+    }
+    #logoutBtn:hover {
+      background-color: #ff2e42;
+      color: #0a0a0a;
     }
     .dashboard {
       padding: 2em 1em;
-      max-width: 700px;
+      max-width: 720px;
       margin: auto;
     }
     .card {
-      background-color: #161616;
-      padding: 1em 1.2em;
-      margin-bottom: 1.2em;
-      border-left: 5px solid #ff2e42;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.4);
-      border-image: linear-gradient(to bottom, #ff2e42, #b3131d) 1;
-      transition: all 0.3s ease;
-      position: relative;
+      background: linear-gradient(135deg, #121212, #181818);
+      padding: 1.2em 1.5em;
+      margin-bottom: 1.5em;
+      border-left: 6px solid #ff2e42;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease, opacity 0.2s ease;
     }
     .card.checked {
-      opacity: 0.6;
+      opacity: 0.5;
       transform: scale(0.98);
-      background-color: #1e1e1e;
-      border-left: 5px solid #444;
+      background: #222;
+      border-left-color: #444;
     }
     .card-header {
       display: flex;
       align-items: center;
-      gap: 0.6em;
+      gap: 0.8em;
     }
     .card-header input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       accent-color: #ff2e42;
     }
     .card-header h3 {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: bold;
       margin: 0;
       flex-grow: 1;
+      color: #fff;
     }
     .card p {
-      margin: 0.6em 0 0.8em;
+      margin: 0.7em 0 1em;
       font-size: 0.95rem;
       color: #ccc;
     }
     .card-controls {
       display: flex;
-      gap: 0.5em;
+      gap: 0.6em;
     }
     .card-controls button {
-      padding: 0.3em 0.8em;
-      font-size: 0.75rem;
-      border: none;
+      padding: 0.4em 1em;
+      font-size: 0.8rem;
+      border: 1px solid #444;
       border-radius: 6px;
-      background-color: #2a2a2a;
+      background-color: #2c2c2c;
       color: white;
       cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .card-controls button:hover {
+      background-color: #ff2e42;
+      color: #0a0a0a;
+      border-color: #ff2e42;
     }
     .task-form {
       display: flex;
       flex-direction: column;
-      gap: 0.6em;
+      gap: 0.7em;
       margin-top: 2em;
     }
     .task-form input,
     .task-form textarea {
-      padding: 0.5em;
-      border-radius: 6px;
-      border: 1px solid #444;
+      padding: 0.7em;
+      border-radius: 8px;
+      border: 1px solid #333;
       background-color: #101010;
       color: #eee;
+      font-family: inherit;
+      font-size: 0.95rem;
     }
     .task-form button {
       align-self: flex-end;
-      padding: 0.6em 1.4em;
+      padding: 0.7em 1.6em;
       background-color: #ff2e42;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       color: white;
       font-weight: bold;
       font-size: 0.95rem;
