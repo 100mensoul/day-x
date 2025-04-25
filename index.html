@@ -72,6 +72,8 @@
       border-left: 4px solid #444;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
     }
     .card.high { border-left-color: #ff5c5c; }
     .card.medium { border-left-color: #ffa500; }
@@ -81,10 +83,38 @@
       opacity: 0.6;
       background-color: #222;
     }
+    .card.checked .card-header h3::before,
+    .card.checked .detail::before {
+      content: "";
+      position: absolute;
+      height: 2px;
+      background: #ff2e42;
+      animation: drawLine 0.6s forwards;
+    }
+    .card.checked .card-header h3::before {
+      top: 50%;
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%) scaleX(0);
+      transform-origin: left;
+    }
+    .card.checked .detail::before {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+    @keyframes drawLine {
+      to {
+        transform: scaleX(1);
+      }
+    }
     .card-header {
       display: flex;
       align-items: center;
       gap: 0.6em;
+      position: relative;
     }
     .card-header input[type="checkbox"] {
       width: 18px;
@@ -96,11 +126,13 @@
       margin: 0;
       color: #fff;
       flex-grow: 1;
+      position: relative;
     }
     .card p {
       font-size: 0.9rem;
       color: #ccc;
       margin: 0.3em 0;
+      position: relative;
     }
     .card a {
       color: #eee;
@@ -164,7 +196,8 @@
     <div id="motivation-key"></div>
     <button id="logoutBtn">ログアウト</button>
   </header>
-    <section class="dashboard">
+
+  <section class="dashboard">
     <div id="task-list"></div>
     <form id="task-form" class="task-form">
       <input type="text" id="task-title" placeholder="整備項目（タイトル）" required />
@@ -334,18 +367,17 @@
       form.reset();
     });
 
-    
     const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
 
-saved.sort((a, b) => {
-  const rank = { high: 0, medium: 1, low: 2, none: 3 };
-  if (a.checked !== b.checked) return a.checked ? 1 : -1;
-  return rank[a.priority] - rank[b.priority];
-});
+    saved.sort((a, b) => {
+      const rank = { high: 0, medium: 1, low: 2, none: 3 };
+      if (a.checked !== b.checked) return a.checked ? 1 : -1;
+      return rank[a.priority] - rank[b.priority];
+    });
 
-saved.forEach(task =>
-  renderTask(task.title, task.detail, task.phone, task.map, task.site, task.priority, task.time, task.checked)
-);
+    saved.forEach(task =>
+      renderTask(task.title, task.detail, task.phone, task.map, task.site, task.priority, task.time, task.checked)
+    );
   </script>
 </body>
 </html>
