@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAYX｜アーカイブ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Titillium+Web:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Titillium Web", sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 2em 1em;
+      background: #111;
+      border-bottom: 1px solid #222;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+    .archive-container {
+      max-width: 700px;
+      margin: 2em auto;
+      padding: 0 1em;
+    }
+    .card {
+      background-color: #1a1a1a;
+      padding: 1.2em;
+      margin-bottom: 1.2em;
+      border-left: 4px solid #444;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+    .card.high { border-left-color: #ff5c5c; }
+    .card.medium { border-left-color: #ffa500; }
+    .card.low { border-left-color: #5cafff; }
+    .card.none { border-left-color: #444; }
+    .card h3 {
+      margin: 0 0 0.5em;
+      font-size: 1.1rem;
+    }
+    .card p {
+      font-size: 0.9rem;
+      margin: 0.3em 0;
+    }
+    .card a {
+      color: #eee;
+      text-decoration: underline dotted;
+    }
+    .priority {
+      font-weight: bold;
+    }
+    .priority.high { color: #ff5c5c; }
+    .priority.medium { color: #ffa500; }
+    .priority.low { color: #5cafff; }
+    .priority.none { color: #777; }
+    .timestamp {
+      font-size: 0.8rem;
+      color: #666;
+    }
+    .restore-btn {
+      margin-top: 0.8em;
+      padding: 0.4em 1em;
+      font-size: 0.8rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #2c2c2c;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>アーカイブ一覧</h1>
+    <p style="color:#aaa; font-size: 0.9rem;">完了済みミッションはこちらに保存されます</p>
+  </header>
+
+  <div class="archive-container" id="archive-list"></div>
+
+  <script>
+    const archiveList = JSON.parse(localStorage.getItem("dayxArchive") || "[]");
+    const container = document.getElementById("archive-list");
+
+    function saveArchive(data) {
+      localStorage.setItem("dayxArchive", JSON.stringify(data));
+    }
+
+    function renderCard(task, index) {
+      const card = document.createElement("div");
+      card.className = `card ${task.priority || 'none'}`;
+
+      const title = document.createElement("h3");
+      title.textContent = task.title;
+
+      const detail = document.createElement("p");
+      detail.textContent = task.detail;
+      detail.className = "detail";
+
+      card.appendChild(title);
+      card.appendChild(detail);
+
+      if (task.phone) {
+        const tel = document.createElement("p");
+        tel.innerHTML = `<a href="tel:${task.phone}" class="phone">TEL: ${task.phone}</a>`;
+        card.appendChild(tel);
+      }
+
+      if (task.map) {
+        const map = document.createElement("p");
+        map.innerHTML = `<a href="${task.map}" target="_blank" class="map">地図を開く</a>`;
+        card.appendChild(map);
+      }
+
+      if (task.site) {
+        const site = document.createElement("p");
+        site.innerHTML = `<a href="${task.site}" target="_blank" class="site">関連サイト</a>`;
+        card.appendChild(site);
+      }
+
+      const priorityLabel = {
+        high: "エマージェンシー！",
+        medium: "整備推奨",
+        low: "軽点検",
+        none: "通常運行"
+      }[task.priority || "none"];
+
+      const priorityEl = document.createElement("p");
+      priorityEl.className = `priority ${task.priority}`;
+      priorityEl.textContent = priorityLabel;
+      card.appendChild(priorityEl);
+
+      const time = document.createElement("p");
+      time.className = "timestamp";
+      time.textContent = `追加日時: ${task.time || "-"}`;
+      card.appendChild(time);
+
+      const restoreBtn = document.createElement("button");
+      restoreBtn.className = "restore-btn";
+      restoreBtn.textContent = "復元";
+      restoreBtn.onclick = () => {
+        // 元に戻す
+        const tasks = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
+        tasks.push(task);
+        localStorage.setItem("dayxTasks", JSON.stringify(tasks));
+
+        // アーカイブから削除
+        archiveList.splice(index, 1);
+        saveArchive(archiveList);
+        location.reload();
+      };
+      card.appendChild(restoreBtn);
+
+      container.appendChild(card);
+    }
+
+    archiveList.forEach((task, index) => renderCard(task, index));
+  </script>
+</body>
+</html>
