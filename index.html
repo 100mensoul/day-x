@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DAYX｜ピットで整える、1日の命運。</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: "Helvetica Neue", sans-serif;
+      font-family: "Orbitron", "Helvetica Neue", sans-serif;
       background: #0a0a0a;
       color: #eaeaea;
       margin: 0;
@@ -23,10 +24,12 @@
       font-size: 2rem;
       margin-bottom: 0.3em;
       letter-spacing: 1px;
+      text-shadow: 0 0 5px rgba(255,255,255,0.2);
     }
     p.tagline {
       font-size: 0.95rem;
       color: #888;
+      font-style: italic;
     }
     #logoutBtn {
       position: absolute;
@@ -38,6 +41,7 @@
       color: white;
       border: none;
       border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
       cursor: pointer;
     }
     .dashboard {
@@ -52,9 +56,15 @@
       border-left: 5px solid #ff2e42;
       border-radius: 12px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      border-image: linear-gradient(to bottom, #ff2e42, #b3131d) 1;
+      transition: all 0.3s ease;
+      position: relative;
     }
     .card.checked {
       opacity: 0.6;
+      transform: scale(0.98);
+      background-color: #1e1e1e;
+      border-left: 5px solid #444;
     }
     .card-header {
       display: flex;
@@ -96,7 +106,8 @@
       gap: 0.6em;
       margin-top: 2em;
     }
-    .task-form input, .task-form textarea {
+    .task-form input,
+    .task-form textarea {
       padding: 0.5em;
       border-radius: 6px;
       border: 1px solid #444;
@@ -113,6 +124,11 @@
       font-weight: bold;
       font-size: 0.95rem;
       cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+    .task-form button:hover {
+      background-color: #ff4757;
+      transform: translateY(-1px);
     }
   </style>
 </head>
@@ -136,7 +152,6 @@
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { auth } from './firebase-config.js';
 
-    // ログアウト処理
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
         window.location.href = "login.html";
@@ -145,7 +160,6 @@
       });
     });
 
-    // 整備カードの機能
     const taskList = document.getElementById("task-list");
     const form = document.getElementById("task-form");
     const titleInput = document.getElementById("task-title");
