@@ -16,7 +16,7 @@
     header {
       position: relative;
       text-align: center;
-      padding: 2.5em 1em 1.5em;
+      padding: 2.5em 1em 1.2em;
       background: #0d0d0d;
       border-bottom: 1px solid #222;
     }
@@ -31,6 +31,17 @@
     .tagline {
       font-size: 0.95rem;
       color: #aaa;
+    }
+    #motivation-key {
+      margin-top: 0.8em;
+      font-size: 0.95rem;
+      color: #ff4757;
+      font-style: italic;
+      animation: fadeIn 2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     #logoutBtn {
       position: absolute;
@@ -131,6 +142,7 @@
   <header>
     <h1>DAYX</h1>
     <p class="tagline">ピットで整える、1日の命運。</p>
+    <div id="motivation-key"></div>
     <button id="logoutBtn">ログアウト</button>
   </header>
 
@@ -157,6 +169,16 @@
         alert("ログアウトに失敗しました：" + error.message);
       });
     });
+
+    // ランダムモチベーションキー
+    const phrases = [
+      "さあ、今日をドライブしよう。",
+      "その日々が、Xデーを創る。",
+      "日常を駆けろ、Xデーまで。",
+      "エンジンは、君の中にある。",
+    ];
+    document.getElementById("motivation-key").textContent =
+      phrases[Math.floor(Math.random() * phrases.length)];
 
     const taskList = document.getElementById("task-list");
     const form = document.getElementById("task-form");
@@ -205,6 +227,7 @@
       const p = document.createElement("p");
       p.className = "detail";
       p.textContent = detail;
+
       card.appendChild(header);
       card.appendChild(p);
 
