@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DAYX｜ピットで整える、1日の命運。</title>
+  <title>DAYX｜daily drive to your X-day</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Titillium+Web:wght@300;400&display=swap" rel="stylesheet">
   <style>
     body {
@@ -31,6 +31,7 @@
     .tagline {
       font-size: 0.95rem;
       color: #aaa;
+      font-style: italic;
     }
     #motivation-key {
       margin-top: 0.8em;
@@ -94,6 +95,13 @@
       color: #ccc;
       margin: 0.3em 0;
     }
+    .priority {
+      font-weight: bold;
+    }
+    .priority.high { color: #ff5c5c; }
+    .priority.medium { color: #ffa500; }
+    .priority.low { color: #5cafff; }
+    .priority.none { color: #777; }
     .card a {
       color: #ff5c5c;
       text-decoration: none;
@@ -117,7 +125,7 @@
       gap: 0.6em;
       margin-top: 2em;
     }
-    .task-form input, .task-form textarea {
+    .task-form input, .task-form textarea, .task-form select {
       padding: 0.6em;
       border-radius: 6px;
       border: 1px solid #333;
@@ -141,7 +149,7 @@
 <body>
   <header>
     <h1>DAYX</h1>
-    <p class="tagline">ピットで整える、1日の命運。</p>
+    <p class="tagline">daily drive to your X-day</p>
     <div id="motivation-key"></div>
     <button id="logoutBtn">ログアウト</button>
   </header>
@@ -154,6 +162,12 @@
       <input type="tel" id="task-phone" placeholder="電話番号（例: 08012345678）" />
       <input type="url" id="task-map" placeholder="Googleマップリンク" />
       <input type="url" id="task-site" placeholder="関連サイトURL" />
+      <select id="task-priority">
+        <option value="none">通常運行</option>
+        <option value="low">軽点検</option>
+        <option value="medium">整備推奨</option>
+        <option value="high">エマージェンシー！</option>
+      </select>
       <button type="submit">カード追加</button>
     </form>
   </section>
@@ -170,7 +184,6 @@
       });
     });
 
-    // ランダムモチベーションキー
     const phrases = [
       "さあ、今日をドライブしよう。",
       "その日々が、Xデーを創る。",
@@ -187,6 +200,16 @@
     const phoneInput = document.getElementById("task-phone");
     const mapInput = document.getElementById("task-map");
     const siteInput = document.getElementById("task-site");
+    const priorityInput = document.getElementById("task-priority");
+
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = ('0' + (date.getMonth() + 1)).slice(-2);
+      const d = ('0' + date.getDate()).slice(-2);
+      const h = ('0' + date.getHours()).slice(-2);
+      const min = ('0' + date.getMinutes()).slice(-2);
+      return `${y}/${m}/${d} ${h}:${min}`;
+    }
 
     function saveTasks() {
       const tasks = [];
@@ -196,15 +219,19 @@
         const phone = card.querySelector("a.phone")?.getAttribute("href")?.replace("tel:", "") || "";
         const map = card.querySelector("a.map")?.getAttribute("href") || "";
         const site = card.querySelector("a.site")?.getAttribute("href") || "";
+        const priority = card.dataset.priority || "none";
+        const time = card.dataset.time || "";
         const checked = card.querySelector("input[type='checkbox']").checked;
-        tasks.push({ title, detail, phone, map, site, checked });
+        tasks.push({ title, detail, phone, map, site, priority, time, checked });
       });
       localStorage.setItem("dayxTasks", JSON.stringify(tasks));
     }
 
-    function renderTask(title, detail, phone = "", map = "", site = "", checked = false) {
+    function renderTask(title, detail, phone = "", map = "", site = "", priority = "none", time = "", checked = false) {
       const card = document.createElement("div");
       card.className = "card";
+      card.dataset.priority = priority;
+      card.dataset.time = time || formatDate(new Date());
       if (checked) card.classList.add("checked");
 
       const header = document.createElement("div");
@@ -223,31 +250,34 @@
 
       header.appendChild(checkbox);
       header.appendChild(h3);
+      card.appendChild(header);
 
       const p = document.createElement("p");
       p.className = "detail";
       p.textContent = detail;
-
-      card.appendChild(header);
       card.appendChild(p);
 
-      if (phone) {
-        const phoneLink = document.createElement("p");
-        phoneLink.innerHTML = `<a href="tel:${phone}" class="phone">TEL: ${phone}</a>`;
-        card.appendChild(phoneLink);
-      }
+      if (phone) card.innerHTML += `<p><a href="tel:${phone}" class="phone">TEL: ${phone}</a></p>`;
+      if (map) card.innerHTML += `<p><a href="${map}" target="_blank" class="map">地図を開く</a></p>`;
+      if (site) card.innerHTML += `<p><a href="${site}" target="_blank" class="site">関連サイト</a></p>`;
 
-      if (map) {
-        const mapLink = document.createElement("p");
-        mapLink.innerHTML = `<a href="${map}" target="_blank" class="map">地図を開く</a>`;
-        card.appendChild(mapLink);
-      }
+      const priorityText = {
+        high: "エマージェンシー！",
+        medium: "整備推奨",
+        low: "軽点検",
+        none: "通常運行"
+      }[priority];
 
-      if (site) {
-        const siteLink = document.createElement("p");
-        siteLink.innerHTML = `<a href="${site}" target="_blank" class="site">関連サイト</a>`;
-        card.appendChild(siteLink);
-      }
+      const priorityEl = document.createElement("p");
+      priorityEl.className = `priority ${priority}`;
+      priorityEl.textContent = priorityText;
+      card.appendChild(priorityEl);
+
+      const timeEl = document.createElement("p");
+      timeEl.style.fontSize = "0.8rem";
+      timeEl.style.color = "#666";
+      timeEl.textContent = `追加日時: ${card.dataset.time}`;
+      card.appendChild(timeEl);
 
       const controls = document.createElement("div");
       controls.className = "card-controls";
@@ -255,13 +285,14 @@
       const editBtn = document.createElement("button");
       editBtn.textContent = "編集";
       editBtn.onclick = () => {
-        const newTitle = prompt("タイトルを編集：", h3.textContent);
-        const newDetail = prompt("詳細を編集：", p.textContent);
+        const newTitle = prompt("タイトルを編集：", title);
+        const newDetail = prompt("詳細を編集：", detail);
         const newPhone = prompt("電話番号を編集：", phone);
         const newMap = prompt("地図リンクを編集：", map);
         const newSite = prompt("サイトURLを編集：", site);
+        const newPriority = prompt("優先度（none/low/medium/high）：", priority);
         card.remove();
-        renderTask(newTitle, newDetail, newPhone, newMap, newSite, checkbox.checked);
+        renderTask(newTitle, newDetail, newPhone, newMap, newSite, newPriority, timeEl.textContent.replace("追加日時: ", ""), checkbox.checked);
         saveTasks();
       };
 
@@ -287,14 +318,17 @@
       const phone = phoneInput.value.trim();
       const map = mapInput.value.trim();
       const site = siteInput.value.trim();
+      const priority = priorityInput.value;
       if (!title) return;
-      renderTask(title, detail, phone, map, site);
+      renderTask(title, detail, phone, map, site, priority);
       saveTasks();
       form.reset();
     });
 
     const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
-    saved.forEach(task => renderTask(task.title, task.detail, task.phone, task.map, task.site, task.checked));
+    saved.forEach(task =>
+      renderTask(task.title, task.detail, task.phone, task.map, task.site, task.priority, task.time, task.checked)
+    );
   </script>
 </body>
 </html>
