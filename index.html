@@ -16,7 +16,7 @@
     header {
       position: relative;
       text-align: center;
-      padding: 3em 1em 2em;
+      padding: 3em 1em 1.5em;
       background: radial-gradient(circle at center, #1a1a1a, #0a0a0a);
       border-bottom: 2px solid #333;
       box-shadow: 0 0 20px rgba(255, 0, 30, 0.2);
@@ -32,6 +32,17 @@
       font-size: 1rem;
       color: #aaa;
       font-style: italic;
+    }
+    #motivation-key {
+      margin-top: 0.8em;
+      font-size: 0.95rem;
+      color: #ff4757;
+      font-style: italic;
+      animation: fadeIn 2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     #logoutBtn {
       position: absolute;
@@ -89,13 +100,20 @@
       color: #fff;
     }
     .card p {
-      margin: 0.7em 0 1em;
+      margin: 0.6em 0;
       font-size: 0.95rem;
       color: #ccc;
+    }
+    .card a {
+      font-size: 0.85rem;
+      color: #66ccff;
+      display: block;
+      margin-top: 0.3em;
     }
     .card-controls {
       display: flex;
       gap: 0.6em;
+      margin-top: 0.5em;
     }
     .card-controls button {
       padding: 0.4em 1em;
@@ -115,12 +133,12 @@
     .task-form {
       display: flex;
       flex-direction: column;
-      gap: 0.7em;
+      gap: 0.6em;
       margin-top: 2em;
     }
     .task-form input,
     .task-form textarea {
-      padding: 0.7em;
+      padding: 0.6em;
       border-radius: 8px;
       border: 1px solid #333;
       background-color: #101010;
@@ -128,28 +146,13 @@
       font-family: inherit;
       font-size: 0.95rem;
     }
-    .task-form button {
-      align-self: flex-end;
-      padding: 0.7em 1.6em;
-      background-color: #ff2e42;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-weight: bold;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
-    }
-    .task-form button:hover {
-      background-color: #ff4757;
-      transform: translateY(-1px);
-    }
   </style>
 </head>
 <body>
   <header>
     <h1>DAYX</h1>
     <p class="tagline">ピットで整える、1日の命運。</p>
+    <div id="motivation-key"></div>
     <button id="logoutBtn">ログアウト</button>
   </header>
 
@@ -158,6 +161,9 @@
     <form id="task-form" class="task-form">
       <input type="text" id="task-title" placeholder="整備項目（タイトル）" required />
       <textarea id="task-detail" placeholder="詳細・注意点など" rows="2"></textarea>
+      <input type="text" id="task-phone" placeholder="電話番号（任意）" />
+      <input type="text" id="task-map" placeholder="GoogleマップURL（任意）" />
+      <input type="text" id="task-url" placeholder="関連サイトURL（任意）" />
       <button type="submit">カード追加</button>
     </form>
   </section>
@@ -178,6 +184,9 @@
     const form = document.getElementById("task-form");
     const titleInput = document.getElementById("task-title");
     const detailInput = document.getElementById("task-detail");
+    const phoneInput = document.getElementById("task-phone");
+    const mapInput = document.getElementById("task-map");
+    const urlInput = document.getElementById("task-url");
 
     function saveTasks() {
       const tasks = [];
@@ -185,15 +194,21 @@
         const title = card.querySelector("h3").textContent;
         const detail = card.querySelector("p").textContent;
         const checked = card.querySelector("input[type='checkbox']").checked;
-        tasks.push({ title, detail, checked });
+        const phone = card.dataset.phone || "";
+        const map = card.dataset.map || "";
+        const url = card.dataset.url || "";
+        tasks.push({ title, detail, checked, phone, map, url });
       });
       localStorage.setItem("dayxTasks", JSON.stringify(tasks));
     }
 
-    function renderTask(title, detail, checked = false) {
+    function renderTask(title, detail, checked = false, phone = "", map = "", url = "") {
       const card = document.createElement("div");
       card.className = "card";
       if (checked) card.classList.add("checked");
+      card.dataset.phone = phone;
+      card.dataset.map = map;
+      card.dataset.url = url;
 
       const header = document.createElement("div");
       header.className = "card-header";
@@ -215,6 +230,11 @@
       const p = document.createElement("p");
       p.textContent = detail;
 
+      const contact = document.createElement("div");
+      if (phone) contact.innerHTML += `<a href="tel:${phone}">TEL: ${phone}</a>`;
+      if (map) contact.innerHTML += `<a href="${map}" target="_blank">地図を開く</a>`;
+      if (url) contact.innerHTML += `<a href="${url}" target="_blank">関連サイト</a>`;
+
       const controls = document.createElement("div");
       controls.className = "card-controls";
 
@@ -223,8 +243,18 @@
       editBtn.onclick = () => {
         const newTitle = prompt("タイトルを編集：", h3.textContent);
         const newDetail = prompt("詳細を編集：", p.textContent);
+        const newPhone = prompt("電話番号：", phone);
+        const newMap = prompt("マップURL：", map);
+        const newUrl = prompt("サイトURL：", url);
         if (newTitle !== null) h3.textContent = newTitle;
         if (newDetail !== null) p.textContent = newDetail;
+        card.dataset.phone = newPhone;
+        card.dataset.map = newMap;
+        card.dataset.url = newUrl;
+        contact.innerHTML = '';
+        if (newPhone) contact.innerHTML += `<a href="tel:${newPhone}">TEL: ${newPhone}</a>`;
+        if (newMap) contact.innerHTML += `<a href="${newMap}" target="_blank">地図を開く</a>`;
+        if (newUrl) contact.innerHTML += `<a href="${newUrl}" target="_blank">関連サイト</a>`;
         saveTasks();
       };
 
@@ -242,6 +272,7 @@
 
       card.appendChild(header);
       card.appendChild(p);
+      card.appendChild(contact);
       card.appendChild(controls);
       taskList.appendChild(card);
     }
@@ -250,14 +281,29 @@
       e.preventDefault();
       const title = titleInput.value.trim();
       const detail = detailInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const map = mapInput.value.trim();
+      const url = urlInput.value.trim();
       if (!title) return;
-      renderTask(title, detail);
+      renderTask(title, detail, false, phone, map, url);
       saveTasks();
       form.reset();
     });
 
     const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
-    saved.forEach(task => renderTask(task.title, task.detail, task.checked));
+    saved.forEach(task => renderTask(task.title, task.detail, task.checked, task.phone, task.map, task.url));
+
+    // モチベーションキー
+    const phrases = [
+      "さあ、今日をドライブしよう。",
+      "その日々が、Xデーを創る。",
+      "平凡な日々が、一番のドライブコース。",
+      "日常を駆けろ、Xデーまで。",
+      "エンジンは、君の中にある。",
+      "今日も、君がハンドルを握ってる。"
+    ];
+    const keyElement = document.getElementById("motivation-key");
+    keyElement.textContent = phrases[Math.floor(Math.random() * phrases.length)];
   </script>
 </body>
 </html>
