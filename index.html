@@ -84,32 +84,36 @@
       background-color: #222;
     }
     .card.checked .card-header h3::before,
-    .card.checked .detail::before {
-      content: "";
-      position: absolute;
-      height: 2px;
-      background: #ff2e42;
-      animation: drawLine 0.6s forwards;
-    }
-    .card.checked .card-header h3::before {
-      top: 50%;
-      left: 0;
-      width: 100%;
-      transform: translateY(-50%) scaleX(0);
-      transform-origin: left;
-    }
-    .card.checked .detail::before {
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      transform: scaleX(0);
-      transform-origin: left;
-    }
-    @keyframes drawLine {
-      to {
-        transform: scaleX(1);
-      }
-    }
+.card.checked .card-header h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #ff2e42;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: drawLine 0.6s forwards;
+}
+
+.card.checked .card-header h3::before {
+  top: 45%;
+}
+
+.card.checked .card-header h3::after {
+  top: 55%;
+}
+
+/* 詳細欄の赤線は無効化しておく */
+.card.checked .detail::before {
+  display: none;
+}
+
+@keyframes drawLine {
+  to {
+    transform: scaleX(1);
+  }
+}
     .card-header {
       display: flex;
       align-items: center;
