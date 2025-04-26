@@ -60,7 +60,7 @@
       background: #333;
       color: #fff;
     }
-    .dashboard {
+        .dashboard {
       padding: 2em 1em;
       max-width: 700px;
       margin: auto;
@@ -83,37 +83,32 @@
       opacity: 0.6;
       background-color: #222;
     }
-  .card.checked .card-header h3::before,
-.card.checked .card-header h3::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #ff2e42;
-  transform: scaleX(0);
-  transform-origin: left;
-  animation: drawLine 0.4s forwards;
-}
-
-.card.checked .card-header h3::before {
-  top: 43%;
-}
-
-.card.checked .card-header h3::after {
-  top: 57%;
-}
-
-/* 詳細欄の赤線は無効化しておく */
-.card.checked .detail::before {
-  display: none;
-}
-
-@keyframes drawLine {
-  to {
-    transform: scaleX(1);
-  }
-}
+    .card.checked .card-header h3::before,
+    .card.checked .card-header h3::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #ff2e42;
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: drawLine 0.4s forwards;
+    }
+    .card.checked .card-header h3::before {
+      top: 43%;
+    }
+    .card.checked .card-header h3::after {
+      top: 57%;
+    }
+    .card.checked .detail::before {
+      display: none;
+    }
+    @keyframes drawLine {
+      to {
+        transform: scaleX(1);
+      }
+    }
     .card-header {
       display: flex;
       align-items: center;
@@ -203,6 +198,7 @@
 
   <section class="dashboard">
     <div id="task-list"></div>
+
     <form id="task-form" class="task-form">
       <input type="text" id="task-title" placeholder="整備項目（タイトル）" required />
       <textarea id="task-detail" placeholder="詳細・注意点など" rows="2"></textarea>
@@ -221,7 +217,10 @@
 
   <script type="module">
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { auth } from './firebase-config.js';
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { auth, app } from './firebase-config.js';
+
+    const db = getDatabase(app);
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       signOut(auth).then(() => {
@@ -248,8 +247,7 @@
     const mapInput = document.getElementById("task-map");
     const siteInput = document.getElementById("task-site");
     const priorityInput = document.getElementById("task-priority");
-
-    function formatDate(date) {
+        function formatDate(date) {
       const y = date.getFullYear();
       const m = ('0' + (date.getMonth() + 1)).slice(-2);
       const d = ('0' + date.getDate()).slice(-2);
@@ -289,6 +287,12 @@
       checkbox.checked = checked;
       checkbox.addEventListener("change", () => {
         card.classList.toggle("checked", checkbox.checked);
+        if (checkbox.checked) {
+          showSendButton(card, title, detail, priority);
+        } else {
+          const sendBtn = card.querySelector(".send-garage");
+          if (sendBtn) sendBtn.remove();
+        }
         saveTasks();
       });
 
@@ -355,6 +359,44 @@
       controls.appendChild(delBtn);
       card.appendChild(controls);
       taskList.appendChild(card);
+
+      if (checked) {
+        showSendButton(card, title, detail, priority);
+      }
+    }
+
+    function showSendButton(card, title, detail, priority) {
+      let sendBtn = card.querySelector(".send-garage");
+      if (!sendBtn) {
+        sendBtn = document.createElement("button");
+        sendBtn.textContent = "ガレージへ伝送";
+        sendBtn.className = "send-garage";
+        sendBtn.style.marginTop = "0.5em";
+        sendBtn.style.padding = "0.4em 0.8em";
+        sendBtn.style.backgroundColor = "#ff2e42";
+        sendBtn.style.color = "white";
+        sendBtn.style.border = "none";
+        sendBtn.style.borderRadius = "6px";
+        sendBtn.style.cursor = "pointer";
+        sendBtn.onclick = async () => {
+          const distance = priority === "high" ? 20 : 10;
+          try {
+            await push(ref(db, "garage-records"), {
+              title,
+              detail,
+              completedAt: formatDate(new Date()),
+              priority,
+              distance
+            });
+            alert("ガレージに転送しました！");
+            card.remove();
+            saveTasks();
+          } catch (e) {
+            alert("転送失敗：" + e.message);
+          }
+        };
+        card.appendChild(sendBtn);
+      }
     }
 
     form.addEventListener("submit", e => {
@@ -372,13 +414,11 @@
     });
 
     const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
-
     saved.sort((a, b) => {
       const rank = { high: 0, medium: 1, low: 2, none: 3 };
       if (a.checked !== b.checked) return a.checked ? 1 : -1;
       return rank[a.priority] - rank[b.priority];
     });
-
     saved.forEach(task =>
       renderTask(task.title, task.detail, task.phone, task.map, task.site, task.priority, task.time, task.checked)
     );
