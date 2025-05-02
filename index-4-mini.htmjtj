@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAYX｜daily drive to your X-day</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Titillium+Web:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* --- 既存スタイルは省略 --- */
+
+    /* プログレスバー */
+    #progress {
+      margin-bottom: 1.5em;
+      text-align: center;
+    }
+    .progress-bar {
+      width: 100%;
+      max-width: 700px;
+      height: 12px;
+      background: #333;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 0.5em auto;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: #ff2e42;
+      transition: width 0.4s ease;
+    }
+    #progress-text {
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    /* 診断前用のスタイル */
+    .card.pending { border-left-color: #777; }
+    .priority.pending { color: #777; }
+
+    /* 走行距離表示 */
+    .distance {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-top: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DAYX</h1>
+    <p class="tagline">daily drive to your X-day</p>
+    <div id="motivation-key"></div>
+    <button id="logoutBtn">ログアウト</button>
+  </header>
+
+  <section class="dashboard">
+    <!-- ⑦ プログレスバーをヘッダー直下に追加 -->
+    <div id="progress">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <p id="progress-text">ロード中…</p>
+    </div>
+
+    <!-- ③ 入力フォームをタスクリストの前に配置 -->
+    <form id="task-form" class="task-form">
+      <input type="text" id="task-title" placeholder="整備項目（タイトル）" required />
+      <textarea id="task-detail" placeholder="詳細・注意点など" rows="2"></textarea>
+      <input type="tel" id="task-phone" placeholder="電話番号（例: 08012345678）" />
+      <input type="url" id="task-map" placeholder="Googleマップリンク" />
+      <input type="url" id="task-site" placeholder="関連サイトURL" />
+      <select id="task-priority">
+        <option value="high">エマージェンシー！</option>
+        <option value="medium">整備推奨</option>
+        <option value="low">軽点検</option>
+        <option value="none">通常運行</option>
+        <option value="pending">診断前</option> <!-- ② 診断前を追加 -->
+      </select>
+      <button type="submit">カード追加</button>
+    </form>
+
+    <!-- タスクリスト本体 -->
+    <div id="task-list"></div>
+
+    <a href="garage.html" style="color: #ff2e42; margin: 1em; display: inline-block;">ガレージへ</a>
+  </section>
+
+  <script type="module">
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { auth, app } from './firebase-config.js';
+
+    const db = getDatabase(app);
+
+    // ログアウト
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth)
+        .then(() => window.location.href = "login.html")
+        .catch(e => alert("ログアウトに失敗しました：" + e.message));
+    });
+
+    // ランダムモチベーション
+    const phrases = [
+      "さあ、今日をドライブしよう。",
+      "その日々が、Xデーを創る。",
+      "日常を駆けろ、Xデーまで。",
+      "エンジンは、君の中にある。",
+    ];
+    document.getElementById("motivation-key").textContent =
+      phrases[Math.floor(Math.random() * phrases.length)];
+
+    // --- プログレス更新関数 ⑦ ---
+    const progressFill = document.getElementById("progress-fill");
+    const progressText = document.getElementById("progress-text");
+    function updateProgress() {
+      const cards = document.querySelectorAll(".card");
+      const total = cards.length;
+      if (total === 0) {
+        progressFill.style.width = '0%';
+        progressText.textContent = 'タスクなし';
+        return;
+      }
+      const incomplete = Array.from(cards).filter(c => !c.classList.contains('checked')).length;
+      const pct = Math.round((incomplete / total) * 100);
+      progressFill.style.width = `${pct}%`;
+      progressText.textContent = `未処理タスク: ${pct}%`;
+    }
+
+    // --- 日付フォーマット ---
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = ('0' + (date.getMonth() + 1)).slice(-2);
+      const d = ('0' + date.getDate()).slice(-2);
+      const h = ('0' + date.getHours()).slice(-2);
+      const min = ('0' + date.getMinutes()).slice(-2);
+      return `${y}/${m}/${d} ${h}:${min}`;
+    }
+
+    // タスクリスト表示
+    const taskList = document.getElementById("task-list");
+    const form = document.getElementById("task-form");
+
+    function saveTasks() {
+      const tasks = [];
+      taskList.querySelectorAll(".card").forEach(card => {
+        tasks.push({
+          title: card.querySelector("h3").textContent,
+          detail: card.querySelector("p.detail").textContent,
+          phone: card.querySelector("a.phone")?.getAttribute("href")?.replace("tel:", "") || "",
+          map: card.querySelector("a.map")?.getAttribute("href") || "",
+          site: card.querySelector("a.site")?.getAttribute("href") || "",
+          priority: card.dataset.priority || "none",
+          time: card.dataset.time || "",
+          checked: card.classList.contains("checked"),
+          distance: parseInt(card.dataset.distance || '0', 10)  // ⑧ 走行距離を保存
+        });
+      });
+      localStorage.setItem("dayxTasks", JSON.stringify(tasks));
+      updateProgress();
+    }
+
+    // タスクを描画（distance 引数を追加）⑧
+    function renderTask(title, detail, phone = "", map = "", site = "", priority = "none", time = "", checked = false, distance = 0) {
+      const card = document.createElement("div");
+      card.className = `card ${priority}`;
+      card.dataset.priority = priority;
+      card.dataset.time = time || formatDate(new Date());
+      card.dataset.distance = distance;
+      if (checked) card.classList.add("checked");
+
+      // ヘッダー
+      const header = document.createElement("div");
+      header.className = "card-header";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = checked;
+      checkbox.addEventListener("change", () => {
+        card.classList.toggle("checked", checkbox.checked);
+        if (checkbox.checked) {
+          showSendButton(card, title, detail, priority);
+        }
+        saveTasks();
+      });
+      const h3 = document.createElement("h3");
+      h3.textContent = title;
+      header.append(checkbox, h3);
+      card.appendChild(header);
+
+      // 詳細
+      const p = document.createElement("p");
+      p.className = "detail";
+      p.textContent = detail;
+      card.appendChild(p);
+
+      // 電話・地図・関連サイトはポップアップなどに改修検討中（⑤）
+      if (phone) card.innerHTML += `<p><a href="tel:${phone}" class="phone">TEL: ${phone}</a></p>`;
+      if (map)   card.innerHTML += `<p><a href="${map}" target="_blank" class="map">地図を開く</a></p>`;
+      if (site)  card.innerHTML += `<p><a href="${site}" target="_blank" class="site">関連サイト</a></p>`;
+
+      // 優先度表示
+      const labels = {
+        high: "エマージェンシー！",
+        medium: "整備推奨",
+        low: "軽点検",
+        none: "通常運行",
+        pending: "診断前"
+      };
+      const prioEl = document.createElement("p");
+      prioEl.className = `priority ${priority}`;
+      prioEl.textContent = labels[priority];
+      card.appendChild(prioEl);
+
+      // 追加日時
+      const timeEl = document.createElement("p");
+      timeEl.className = "timestamp";
+      timeEl.textContent = `追加日時: ${card.dataset.time}`;
+      card.appendChild(timeEl);
+
+      // ⑧ 走行距離を表示
+      if (distance > 0) {
+        const distEl = document.createElement("p");
+        distEl.className = "distance";
+        distEl.textContent = `走行距離: ${distance} km`;
+        card.appendChild(distEl);
+      }
+
+      // 編集・削除
+      const ctrls = document.createElement("div");
+      ctrls.className = "card-controls";
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "編集";
+      editBtn.onclick = () => {
+        // 省略（既存の編集ロジック）
+      };
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "削除";
+      delBtn.onclick = () => {
+        if (confirm("このカードを削除しますか？")) {
+          card.remove();
+          saveTasks();
+        }
+      };
+      ctrls.append(editBtn, delBtn);
+      card.appendChild(ctrls);
+
+      taskList.appendChild(card);
+
+      // ①②⑧ TXボタン表示（チェック時）・ソート後に再描画されても反映
+      if (checked) showSendButton(card, title, detail, priority);
+
+      updateProgress();
+    }
+
+    // ① TXボタン：ガレージ転送 & 走行距離反映
+    function showSendButton(card, title, detail, priority) {
+      if (card.querySelector(".send-garage")) return;
+      const btn = document.createElement("button");
+      btn.textContent = "TXする？";
+      btn.className = "send-garage";
+      btn.style = "margin-top:.5em;padding:.4em .8em;background:#ff2e42;color:#fff;border:none;border-radius:6px;cursor:pointer;";
+      btn.onclick = async () => {
+        const distance = (priority === "high" ? 20 : 10);
+        try {
+          await push(ref(db, "garage-records"), {
+            title, detail,
+            completedAt: formatDate(new Date()),
+            priority, distance
+          });
+          alert(`ガレージに転送しました！走行距離: ${distance} km`); // ①
+          // card.remove(); → 消さずに走行距離を反映 ⑧
+          card.classList.add("checked");
+          card.dataset.distance = distance;
+          // 走行距離表示
+          if (!card.querySelector(".distance")) {
+            const d = document.createElement("p");
+            d.className = "distance";
+            d.textContent = `走行距離: ${distance} km`;
+            card.appendChild(d);
+          }
+          btn.remove();
+          saveTasks();
+        } catch (e) {
+          alert("転送失敗：" + e.message);
+        }
+      };
+      card.appendChild(btn);
+    }
+
+    // フォーム送信
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const t = form.querySelector("#task-title").value.trim();
+      if (!t) return;
+      renderTask(
+        t,
+        form.querySelector("#task-detail").value.trim(),
+        form.querySelector("#task-phone").value.trim(),
+        form.querySelector("#task-map").value.trim(),
+        form.querySelector("#task-site").value.trim(),
+        form.querySelector("#task-priority").value
+      );
+      saveTasks();
+      form.reset();
+    });
+
+    // 初期ロード：ソート付きで描画 ②
+    const saved = JSON.parse(localStorage.getItem("dayxTasks") || "[]");
+    const rank = { high:0, medium:1, low:2, none:3, pending:4 };
+    saved.sort((a,b) => {
+      if (a.checked !== b.checked) return a.checked ? 1 : -1;
+      return rank[a.priority] - rank[b.priority];
+    });
+    saved.forEach(t =>
+      renderTask(t.title, t.detail, t.phone, t.map, t.site, t.priority, t.time, t.checked, t.distance)
+    );
+  </script>
+</body>
+</html>
