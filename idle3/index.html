@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAYX: Idle Mode</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero fade-in">
+    <h1>Idle Mode</h1>
+    <p>やる気ゼロでもOK。今は心のエンジンを休ませる時間。</p>
+    <svg class="gear-svg" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" stroke="#81d4fa" stroke-width="6" fill="none" />
+      <circle cx="50" cy="50" r="20" stroke="#fdd835" stroke-width="6" fill="none" />
+    </svg>
+  </header>
+
+  <section class="check fade-in">
+    <h2>今日のコンディションチェック</h2>
+    <button onclick="showMessage('完全アイドリングモードがおすすめ')">だるい</button>
+    <button onclick="showMessage('低速巡航モードでゆるっと')">何もしたくない</button>
+    <button onclick="showMessage('ボーッと時間は心の燃料補給')">ボーッとしたい</button>
+    <p id="message" class="message"></p>
+  </section>
+
+  <section class="tips fade-in">
+    <h2>心のメンテナンスTips</h2>
+    <ul>
+      <li>静かに音楽を流す</li>
+      <li>好きな香りを試す</li>
+      <li>外を10分散歩する</li>
+      <li>無理に成果を求めない</li>
+      <li>“できなくてOK”を自分に許す</li>
+    </ul>
+  </section>
+
+  <section class="quote fade-in">
+    <h2>今日の癒しの言葉</h2>
+    <p id="dailyQuote"></p>
+  </section>
+
+  <section class="music fade-in">
+    <h2>癒しのBGM</h2>
+    <audio controls>
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+      お使いのブラウザはaudio要素をサポートしていません。
+    </audio>
+  </section>
+
+  <footer>
+    <p>アイドリングは前進の準備。</p>
+  </footer>
+
+  <script>
+    function showMessage(msg) {
+      document.getElementById('message').textContent = msg;
+    }
+
+    const quotes = [
+      "深呼吸して、ゆっくりいこう。",
+      "何もしない時間も大事。",
+      "今日できなくても、明日がある。",
+      "心のエンジンは静かに温めよう。",
+      "休むことは前進の一部。"
+    ];
+    document.getElementById('dailyQuote').textContent = quotes[new Date().getDay()];
+
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.fade-in').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 50) {
+          el.classList.add('visible');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
