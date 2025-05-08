@@ -79,7 +79,7 @@ button.selected {
 }
 
 .fade-in {
-  animation: fadeIn 2s forwards;
+  animation: fadeIn 3.5s forwards;
 }
 
 @keyframes fadeIn {
