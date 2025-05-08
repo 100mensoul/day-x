@@ -2,7 +2,7 @@ const gearColors = {
   LOW: '#0d47a1',
   SECOND: '#4fc3f7',
   '3rd': '#26a69a',
-  '4th': '#fdd835',
+  '4th': '#66bb6a',
   '5th': '#ffb74d',
   TOP: '#f06292'
 };
