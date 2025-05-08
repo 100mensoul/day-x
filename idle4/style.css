@@ -75,7 +75,7 @@ button.selected {
   font-size: 1.1rem;
   color: #00bcd4;
   opacity: 0;
-  min-height: 1.5em;
+  min-height: 6em;
 }
 
 .fade-in {
