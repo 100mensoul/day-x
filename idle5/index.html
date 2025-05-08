@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEST GEAR</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <section class="check">
+    <h2>今日のコンディションチェック</h2>
+    <button onclick="setGear('LOW')">だるい</button>
+    <button onclick="setGear('SECOND')">何もしたくない</button>
+    <button onclick="setGear('LOW')">ボーッとしたい</button>
+    <button onclick="openModal()">▶︎▶︎</button>
+  </section>
+
+  <section class="gear-section">
+    <p class="gear-title">BEST GEAR</p>
+    <div class="gear"></div>
+    <p class="gear-label">-</p>
+  </section>
+
+  <!-- モーダル -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2>今のコンディションを教えてください</h2>
+      <div class="modal-buttons" id="modal-buttons"></div>
+      <button onclick="confirmGear()">ベストギア判定</button>
+      <button onclick="closeModal()">閉じる</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
