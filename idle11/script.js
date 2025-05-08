@@ -8,8 +8,8 @@ const gearColors = {
 };
 
 const gearSpeeds = {
-  LOW: 115s',
-  SECOND: 74s',
+  LOW: 11s',
+  SECOND: 7s',
   '3rd': '3s',
   '4th': '1.5s',
   '5th': '0.8s',
