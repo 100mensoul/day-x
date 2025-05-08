@@ -30,7 +30,7 @@ body {
   border: 6px solid #81d4fa;
   border-top: 6px solid #fdd835;
   border-radius: 50%;
-  margin: 5rem auto 0;
+  margin: 6.5rem auto 0;
   animation: spin 2s linear infinite;
 }
 
