@@ -8,12 +8,12 @@ const gearColors = {
 };
 
 const gearSpeeds = {
-  LOW: '5s',
-  SECOND: '4s',
+  LOW: 115s',
+  SECOND: 74s',
   '3rd': '3s',
-  '4th': '2s',
-  '5th': '1.5s',
-  TOP: '1s'
+  '4th': '1.5s',
+  '5th': '0.8s',
+  TOP: '0.2s'
 };
 
 const gearMessages = {
