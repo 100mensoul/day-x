@@ -4,7 +4,7 @@ body {
   background: linear-gradient(to bottom, #ffffff, #e0f7fa);
   color: #333;
   text-align: center;
-  transition: background 0.5s;
+  transition: background 2s;
 }
 
 .hero {
