@@ -4,7 +4,7 @@ body {
   background: linear-gradient(to bottom, #ffffff, #e0f7fa);
   color: #333;
   text-align: center;
-  transition: background 2s;
+  transition: background 4s;
 }
 
 .hero {
@@ -78,7 +78,7 @@ button.selected {
 }
 
 .fade-in {
-  animation: fadeIn 0.6s forwards;
+  animation: fadeIn 2s forwards;
 }
 
 @keyframes fadeIn {
