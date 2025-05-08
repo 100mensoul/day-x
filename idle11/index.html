@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAYX: Idle Mode</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <h1>Idle Mode</h1>
+    <p>やる気ゼロでもOK。今は心のエンジンを休ませる時間。</p>
+  </header>
+
+  <section class="check">
+    <h2>コンディションテスト</h2>
+    <button onclick="setGear('LOW')">だるい</button>
+    <button onclick="setGear('SECOND')">何もしたくない</button>
+    <button onclick="setGear('LOW')">ボーッとしたい</button>
+    <button onclick="openModal()">▶︎▶︎</button>
+  </section>
+
+  <section class="gear-section">
+    <h3>Crew's Assessment</h3>
+    <p class="gear-message">完全アイドリングモードがおすすめ</p>
+    <p class="gear-title">BEST GEAR NOW...</p>
+    <div class="gear"></div>
+    <p class="gear-label">-</p>
+  </section>
+
+  <section class="tips">
+    <h2>心のメンテナンスTips</h2>
+    <ul>
+      <li>LOW: 静かに音楽を流す</li>
+      <li>SECOND: 好きな香りを試す</li>
+      <li>3rd: 外を10分散歩する</li>
+      <li>4th: 小さな達成を楽しむ</li>
+      <li>5th: 仲間と話して共有する</li>
+      <li>TOP: 全力を楽しむ、リフレッシュタイムを挟む</li>
+    </ul>
+  </section>
+
+  <section class="quote">
+    <h2>Doctor's Call</h2>
+    <p id="dailyQuote"></p>
+  </section>
+
+  <footer>
+    <p>
+      <a href="/mental-maintenance-lab" style="color: white; text-decoration: none;">
+        メンタル・メンテナンス・ラボ
+      </a>
+    </p>
+  </footer>
+
+  <!-- モーダル -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2>今のコンディションを教えてください</h2>
+      <div class="modal-buttons" id="modal-buttons"></div>
+      <div class="modal-footer">
+        <button class="modal-confirm" onclick="confirmGear()">ギア判定へ</button>
+        <button class="modal-close" onclick="closeModal()">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
