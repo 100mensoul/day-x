@@ -4,11 +4,13 @@ body {
   background: linear-gradient(to bottom, #ffffff, #e0f7fa);
   color: #333;
   text-align: center;
+  transition: background 0.5s;
 }
 
 .hero {
   padding: 3rem 1rem;
   background-color: #ffffff;
+  position: relative;
 }
 
 .hero h1 {
@@ -22,11 +24,14 @@ body {
   color: #555;
 }
 
-.gear-svg {
-  width: 80px;
-  height: 80px;
-  animation: spin 3s linear infinite;
-  margin: 1rem auto;
+.gear {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #81d4fa;
+  border-top: 6px solid #fdd835;
+  border-radius: 50%;
+  margin: 1rem auto 0;
+  animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
@@ -60,10 +65,24 @@ button:hover {
   background: #4fc3f7;
 }
 
+button.selected {
+  background: #4fc3f7;
+  box-shadow: 0 0 10px rgba(79, 195, 247, 0.7);
+}
+
 .message {
   margin-top: 1rem;
   font-size: 1.1rem;
   color: #00bcd4;
+  opacity: 0;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 
 .tips ul {
@@ -81,23 +100,8 @@ button:hover {
   color: #4fc3f7;
 }
 
-.music audio {
-  margin-top: 1rem;
-}
-
 footer {
   padding: 1rem;
   background-color: #fdd835;
   color: #fff;
-}
-
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease-out;
-}
-
-.fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
