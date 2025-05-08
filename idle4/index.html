@@ -45,6 +45,7 @@
   <script>
       function showMessage(msg, bgColor, button, speed) {
       const messageEl = document.getElementById('message');
+        const gearEl = document.querySelector('.gear');  // ← これを追加！
       messageEl.textContent = msg;
       messageEl.classList.remove('fade-in');
       void messageEl.offsetWidth; // trick to reset animation
