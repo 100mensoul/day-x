@@ -12,8 +12,8 @@ const gearSpeeds = {
   SECOND: '4s',
   '3rd': '3s',
   '4th': '2s',
-  '5th': '1.5s',
-  TOP: '1s'
+  '5th': '1s',
+  TOP: '0.3s'
 };
 
 let selectedGear = '';
