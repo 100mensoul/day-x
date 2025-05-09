@@ -9,43 +9,48 @@ body {
   font-family: 'Helvetica Neue', Arial, sans-serif;
   background: #f5f5f5;
   color: #333;
-  padding: 20px;
+  padding: 10px;
 }
 
 header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 h1 {
-  font-size: 1.8em;
+  font-size: 1.5em;
   font-weight: 700;
   color: #333;
 }
 
 h2 {
-  font-size: 1em;
+  font-size: 0.9em;
   color: #777;
   letter-spacing: 1px;
 }
 
 .table-container {
   width: 100%;
-  overflow-x: hidden;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  table-layout: fixed;
 }
 
 th, td {
-  padding: 12px;
+  padding: 10px;
   text-align: center;
   border-bottom: 1px solid #eee;
+  word-wrap: break-word;
+}
+
+th {
+  background: #f0f0f0;
 }
 
 .weekday {
