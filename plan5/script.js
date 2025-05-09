@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const today = new Date();
   const todayDate = today.getDate();
-  const todayMonth = today.getMonth() + 1; // getMonth() は0始まりなので+1
+  const todayMonth = today.getMonth() + 1;
+  const year = today.getFullYear();
 
   const rows = document.querySelectorAll('tbody tr');
   let count = 0;
@@ -10,11 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const day = parseInt(row.dataset.day);
     const month = parseInt(row.dataset.month);
 
-    if (
-      month > todayMonth || 
-      (month === todayMonth && day >= todayDate)
-    ) {
-      // 今日以降のデータ
+    // 曜日を英語で設定
+    const dateObj = new Date(year, month - 1, day);
+    const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' }); // 英語（例：Thu）
+    row.querySelector('.weekday').textContent = weekday;
+
+    // 今日以降の表示判定
+    if (month > todayMonth || (month === todayMonth && day >= todayDate)) {
       if (count < 7) {
         row.classList.remove('hidden');
         count++;
@@ -23,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         row.classList.add('next-week');
       }
     } else {
-      // 今日以前のデータ
       row.classList.add('hidden');
     }
   });
