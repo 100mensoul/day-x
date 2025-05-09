@@ -33,6 +33,7 @@ h2 {
   overflow-x: auto;
 }
 
+/*
 .scroll-hint {
   position: absolute;
   bottom: 10px;
@@ -42,6 +43,7 @@ h2 {
   font-family: 'Helvetica Neue', Arial, sans-serif;
   letter-spacing: 1px;
 }
+*/
 
 table {
   min-width: 700px;         /* ← 横スクロールの基準幅を700pxに */
