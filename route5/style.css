@@ -35,6 +35,7 @@ h2 {
 
 table {
   width: 100%;
+  table-layout: fixed; /* ← 列幅固定 */
   border-collapse: collapse;
   background: #1a1a1a;
   border-radius: 8px;
@@ -45,6 +46,8 @@ th, td {
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid #333;
+  word-wrap: break-word;
+  max-width: 150px;
 }
 
 th {
