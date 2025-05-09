@@ -48,6 +48,7 @@ th, td {
   text-align: center;
   border-bottom: 1px solid #eee;
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 th:nth-child(1), td:nth-child(1) {
@@ -59,7 +60,11 @@ th:nth-child(2), td:nth-child(2) {
 }
 
 th:nth-child(3), td:nth-child(3) {
-  width: 200px;
+  width: auto;
+}
+
+th:nth-child(4), td:nth-child(4) {
+  width: 150px;
 }
 
 .weekday {
@@ -69,12 +74,13 @@ th:nth-child(3), td:nth-child(3) {
 }
 
 .mission-label {
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: 12px;
   background: #e0e0e0;
   color: #333;
   font-size: 0.8em;
   display: inline-block;
+  line-height: 1.5;
 }
 
 .urgent {
@@ -87,15 +93,13 @@ th:nth-child(3), td:nth-child(3) {
 }
 
 #next-week-btn {
-  position: absolute;  
-  bottom: 10px;         /* 追加 */
-  right: 10px;          /* 追加（中央配置なら left: 50%; transform: translateX(-50%);） */
-  padding: 4px 10px;
-  font-size: 0.8em;
+  margin-top: 10px;
+  padding: 6px 12px;
+  font-size: 0.9em;
   border: none;
   background: #333;
   color: #fff;
-  border-radius: 20px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
