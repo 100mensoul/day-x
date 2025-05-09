@@ -34,18 +34,19 @@ h2 {
 }
 
 table {
+  min-width: 600px; /* 最低幅を設定し、スマホでは横スクロール */
   width: 100%;
   border-collapse: collapse;
   background: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  overflow: hidden;
 }
 
 th, td {
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid #eee;
+  white-space: nowrap;
 }
 
 th {
@@ -76,20 +77,4 @@ td {
 .urgent {
   background: #d32f2f;
   color: #fff;
-}
-
-@media (max-width: 600px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
-
-  th {
-    text-align: left;
-  }
-
-  td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
 }
