@@ -1,32 +1,35 @@
-document.addEventListener('DOMContentLoaded', () => {
-  fetch('schedule.json')
-    .then(response => response.json())
-    .then(scheduleData => {
-      const today = new Date();
-      const year = today.getFullYear();
-      const todayDate = today.getDate();
-      const todayMonth = today.getMonth() + 1;
+/* 既存のCSSはそのままでOK、以下を追加 */
 
-      const tbody = document.getElementById('schedule-body');
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-      for (let i = 0; i < 14; i++) {
-        const date = new Date(year, todayMonth - 1, todayDate + i);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+.modal.hidden {
+  display: none;
+}
 
-        const area = scheduleData[isoDate]?.area || "-";
-        const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 90%;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${day} <span class="weekday">${weekday}</span></td>
-          <td>${area}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-    })
-    .catch(error => {
-      console.error('Failed to load schedule.json:', error);
-    });
-});
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
