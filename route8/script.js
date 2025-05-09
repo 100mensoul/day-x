@@ -122,15 +122,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let detailsHtml = '';
         missions.forEach((m, index) => {
           detailsHtml += `
-            <p><strong>DEPARTURE TIME:</strong> ${m.details.departure_time}</p>
-            <p><strong>MEETING TIME:</strong> ${m.details.meeting_time}</p>
-            <p><strong>TRANSPORT:</strong> ${m.details.transport}</p>
-            <p><strong>DURATION:</strong> ${m.details.duration}</p>
-            <p><strong>ARRIVAL TIME:</strong> ${m.details.arrival_time}</p>
-            <p><strong>MAP:</strong> <a href="${m.details.map_url}" target="_blank">${m.details.map_url}</a></p>
-            <p><strong>RELATED PAGE:</strong> <a href="${m.details.related_url}" target="_blank">${m.details.related_url}</a></p>
-            <hr style="border-color:#333;">
-          `;
+  <p><strong>MORNING TIME:</strong> ${m.details.morning_time}</p>
+  <p><strong>DEPARTURE TIME:</strong> ${m.details.departure_time}</p>
+  <p><strong>TRANSPORT:</strong> ${m.details.transport}</p>
+  <p><strong>DURATION:</strong> ${m.details.duration}</p>
+  <p><strong>ARRIVAL TIME:</strong> ${m.details.arrival_time}</p>
+  <p><strong>START TIME:</strong> ${m.details.start_time}</p>
+  <p><strong>MAP:</strong> <a href="${m.details.map_url}" target="_blank">${m.details.map_url}</a></p>
+  <p><strong>RELATED PAGE:</strong> <a href="${m.details.related_url}" target="_blank">${m.details.related_url}</a></p>
+  <hr style="border-color:#333;">
+`;
         });
         detailModalBody.innerHTML = detailsHtml;
         loadComment();
