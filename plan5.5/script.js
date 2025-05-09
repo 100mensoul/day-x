@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
         const area = scheduleData[isoDate]?.area || "-";
-        const mission = scheduleData[isoDate]?.mission || "-";
         const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
 
         const tr = document.createElement('tr');
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.innerHTML = `
           <td>${day} <span class="weekday">${weekday}</span></td>
           <td>${area}</td>
-          <td class="mission-label">${mission}</td>
         `;
         tbody.appendChild(tr);
       }
@@ -34,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         nextWeekBtn.addEventListener('click', () => {
           document.querySelectorAll('.next-week').forEach(row => row.classList.remove('hidden'));
           nextWeekBtn.style.display = 'none';
-          document.querySelector('.table-container').classList.add('no-fade');
         });
       }
     })
