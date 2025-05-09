@@ -30,59 +30,28 @@ h2 {
 }
 
 .table-container {
-  position: relative;
-  overflow-x: auto;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 table {
-  min-width: 700px;
   width: 100%;
   border-collapse: collapse;
   background: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  table-layout: fixed; /* 列幅を固定 */
 }
 
 th, td {
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid #eee;
-  white-space: nowrap;
-  vertical-align: middle; /* 行の中央揃え */
-}
-
-th:nth-child(1), td:nth-child(1) {
-  width: 80px; /* DAYX */
-}
-
-th:nth-child(2), td:nth-child(2) {
-  width: 150px; /* AREA */
-}
-
-th:nth-child(3), td:nth-child(3) {
-  width: 200px; /* MISSION */
 }
 
 .weekday {
   display: block;
   font-size: 0.7em;
   color: #999;
-}
-
-.mission-label {
-  padding: 6px 12px;
-  border-radius: 12px;
-  background: #e0e0e0;
-  color: #333;
-  font-size: 0.8em;
-  display: inline-block;
-  line-height: 1.5;
-}
-
-.urgent {
-  background: #d32f2f;
-  color: #fff;
 }
 
 .hidden {
@@ -102,32 +71,4 @@ th:nth-child(3), td:nth-child(3) {
 
 #next-week-btn:hover {
   background: #555;
-}
-
-.table-container::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-  pointer-events: none;
-}
-
-.table-container.no-fade::after {
-  display: none;
-}
-
-/* スマホ対応: DAYXとAREA優先、MISSION横スクロール */
-@media screen and (max-width: 600px) {
-  th:nth-child(1), td:nth-child(1) {
-    width: 40%;
-  }
-  th:nth-child(2), td:nth-child(2) {
-    width: 60%;
-  }
-  th:nth-child(3), td:nth-child(3) {
-    width: auto;
-  }
 }
