@@ -41,7 +41,7 @@ h2 {
   right: 0;
   height: 100%;
   width: 40px;
-  background: linear-gradient(to right, rgba(255,255,255,0), rgba(10,10,10,1));
+  background: linear-gradient(to right, rgba(255,255,255,0), rgba(220,220,220,1));
   pointer-events: none;
 }
 
@@ -92,16 +92,4 @@ th:nth-child(3), td:nth-child(3) {
 .urgent {
   background: #d32f2f;
   color: #fff;
-}
-
-/* （次の段階用）右端フェード誘導 */
-.table-container::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 40px;
-  background: linear-gradient(to right, rgba(255,255,255,0), rgba(245,245,245,1));
-  pointer-events: none;
 }
