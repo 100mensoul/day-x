@@ -53,22 +53,3 @@ th, td {
   font-size: 0.7em;
   color: #999;
 }
-
-.hidden {
-  display: none;
-}
-
-#next-week-btn {
-  margin-top: 10px;
-  padding: 6px 12px;
-  font-size: 0.9em;
-  border: none;
-  background: #333;
-  color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#next-week-btn:hover {
-  background: #555;
-}
