@@ -18,17 +18,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = date.getMonth() + 1;
         const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-        const data = scheduleData[isoDate] || {};
-        const area = data.area || "-";
-        const mission = data.mission || "-";
-        const timeline = data.timeline || "-";
-        const briefing = data.briefing || "-";
-        const condition = data.condition || "-";
+        const data = scheduleData[isoDate];
+        const area = data?.area || "-";
+        const missions = data?.missions || [];
         const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="date-cell" data-date="${isoDate}" data-area="${area}" data-mission="${mission}" data-timeline="${timeline}" data-briefing="${briefing}" data-condition="${condition}" data-weekday="${weekday}">
+          <td class="date-cell" 
+              data-date="${isoDate}" 
+              data-area="${area}" 
+              data-missions='${JSON.stringify(missions)}' 
+              data-weekday="${weekday}">
             ${day} <span class="weekday">${weekday}</span>
           </td>
           <td>${area}</td>
@@ -40,19 +41,24 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.addEventListener('click', () => {
           const date = cell.dataset.date;
           const area = cell.dataset.area;
-          const mission = cell.dataset.mission;
-          const timeline = cell.dataset.timeline;
-          const briefing = cell.dataset.briefing;
-          const condition = cell.dataset.condition;
           const weekday = cell.dataset.weekday;
+          const missions = JSON.parse(cell.dataset.missions);
+
+          let missionsHtml = '';
+          missions.forEach((m, index) => {
+            missionsHtml += `
+              <p><strong>🎯 MISSION ${index + 1}:</strong> ${m.title}</p>
+              <p><strong>🕒 PLAN ${index + 1}:</strong> ${m.plan}</p>
+              <p><strong>🔧 BRIEFING ${index + 1}:</strong> ${m.notes}</p>
+              <p><strong>⛽ CONDITION ${index + 1}:</strong> ${m.condition}</p>
+              <hr style="border-color:#333;">
+            `;
+          });
 
           modalBody.innerHTML = `
-            <p><strong>DATE:</strong> ${date} (${weekday})</p>
-            <p><strong>AREA:</strong> ${area}</p>
-            <p><strong>MISSION:</strong> ${mission}</p>
-            <p><strong>TIMELINE:</strong> ${timeline}</p>
-            <p><strong>BRIEFING:</strong> ${briefing}</p>
-            <p><strong>CONDITION:</strong> ${condition}</p>
+            <p><strong>📅 DATE:</strong> ${date} (${weekday})</p>
+            <p><strong>📍 AREA:</strong> ${area}</p>
+            ${missionsHtml}
           `;
           modal.classList.remove('hidden');
         });
