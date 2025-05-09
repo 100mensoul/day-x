@@ -35,7 +35,6 @@ h2 {
 
 table {
   width: 100%;
-  table-layout: fixed;
   border-collapse: collapse;
   background: #1a1a1a;
   border-radius: 8px;
@@ -46,8 +45,6 @@ th, td {
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid #333;
-  word-wrap: break-word;
-  max-width: 150px;
 }
 
 th {
@@ -116,20 +113,23 @@ strong {
   color: #ff3c3c;
 }
 
-.translate-button {
-  margin-top: 10px;
-  padding: 6px 12px;
+/* Translation ボタン修正版 */
+#translate-btn {
+  background: #2a2a2a;          /* ダークグレー ← 修正箇所 */
+  color: #e0e0e0;               /* 上品な白文字 ← 修正箇所 */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
   font-size: 0.9em;
-  border: 1px solid #555;
-  border-radius: 4px;
-  background: transparent;
-  color: #aaa;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, border 0.2s;
+  transition: background 0.3s, transform 0.2s;
 }
 
-.translate-button:hover {
-  background: #333;
-  color: #fff;
-  border-color: #777;
+#translate-btn:hover {
+  background: #3a3a3a;          /* ほんのり明るいダークグレー ← 修正箇所 */
+  transform: translateY(-2px);  /* 少し持ち上がる ← 修正箇所 */
+}
+
+#translate-btn:active {
+  transform: translateY(0);     /* クリック時元に戻る ← 修正箇所 */
 }
