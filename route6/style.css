@@ -113,23 +113,30 @@ strong {
   color: #ff3c3c;
 }
 
-/* Translation ボタン修正版 */
-#translate-btn {
-  background: #2a2a2a;          /* ダークグレー ← 修正箇所 */
-  color: #e0e0e0;               /* 上品な白文字 ← 修正箇所 */
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.9em;
+/* Translation button */
+.translation-button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: transparent; /* ← 透明背景 */
+  border: 1px solid #555;  /* ← 細いグレーのボーダー */
+  color: #e0e0e0;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  font-size: 0.9em;
+  transition: background 0.2s, color 0.2s;
 }
 
-#translate-btn:hover {
-  background: #3a3a3a;          /* ほんのり明るいダークグレー ← 修正箇所 */
-  transform: translateY(-2px);  /* 少し持ち上がる ← 修正箇所 */
+.translation-button:hover {
+  background: #2a2a2a;
+  color: #fff;
 }
 
-#translate-btn:active {
-  transform: translateY(0);     /* クリック時元に戻る ← 修正箇所 */
+/* Smartphone adjustments */
+@media (max-width: 600px) {
+  th:nth-child(1), td:nth-child(1) {
+    width: 30%; /* DAYX列の幅 */
+  }
+  th:nth-child(2), td:nth-child(2) {
+    width: 70%; /* AREA列の幅 */
+  }
 }
