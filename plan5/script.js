@@ -1,41 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const today = new Date();
-  const todayDate = today.getDate();
-  const todayMonth = today.getMonth() + 1;
-  const year = today.getFullYear();
+  fetch('schedule.json')
+    .then(response => response.json())
+    .then(scheduleData => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const todayDate = today.getDate();
+      const todayMonth = today.getMonth() + 1;
 
-  const rows = document.querySelectorAll('tbody tr');
-  let count = 0;
+      const tbody = document.getElementById('schedule-body');
 
-  rows.forEach(row => {
-    const day = parseInt(row.dataset.day);
-    const month = parseInt(row.dataset.month);
+      for (let i = 0; i < 14; i++) {
+        const date = new Date(year, todayMonth - 1, todayDate + i);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const isoDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
-    // 曜日を英語で設定
-    const dateObj = new Date(year, month - 1, day);
-    const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'short' }); // 英語（例：Thu）
-    row.querySelector('.weekday').textContent = weekday;
+        const area = scheduleData[isoDate]?.area || "-";
+        const mission = scheduleData[isoDate]?.mission || "-";
+        const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
 
-    // 今日以降の表示判定
-    if (month > todayMonth || (month === todayMonth && day >= todayDate)) {
-      if (count < 7) {
-        row.classList.remove('hidden');
-        count++;
-      } else {
-        row.classList.add('hidden');
-        row.classList.add('next-week');
+        const tr = document.createElement('tr');
+        if (i >= 7) tr.classList.add('next-week', 'hidden');
+        tr.innerHTML = `
+          <td>${day} <span class="weekday">${weekday}</span></td>
+          <td>${area}</td>
+          <td class="mission-label">${mission}</td>
+        `;
+        tbody.appendChild(tr);
       }
-    } else {
-      row.classList.add('hidden');
-    }
-  });
 
-  const nextWeekBtn = document.querySelector('#next-week-btn');
-  if (nextWeekBtn) {
-    nextWeekBtn.addEventListener('click', () => {
-      document.querySelectorAll('.next-week').forEach(row => row.classList.remove('hidden'));
-      nextWeekBtn.style.display = 'none';
-      document.querySelector('.table-container').classList.add('no-fade');
+      const nextWeekBtn = document.querySelector('#next-week-btn');
+      if (nextWeekBtn) {
+        nextWeekBtn.addEventListener('click', () => {
+          document.querySelectorAll('.next-week').forEach(row => row.classList.remove('hidden'));
+          nextWeekBtn.style.display = 'none';
+          document.querySelector('.table-container').classList.add('no-fade');
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Failed to load schedule.json:', error);
     });
-  }
 });
