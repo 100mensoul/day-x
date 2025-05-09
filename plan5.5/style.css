@@ -41,6 +41,7 @@ table {
   background: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  table-layout: fixed; /* 列幅を固定 */
 }
 
 th, td {
@@ -48,23 +49,19 @@ th, td {
   text-align: center;
   border-bottom: 1px solid #eee;
   white-space: nowrap;
-  vertical-align: middle;
+  vertical-align: middle; /* 行の中央揃え */
 }
 
 th:nth-child(1), td:nth-child(1) {
-  width: 80px;
+  width: 80px; /* DAYX */
 }
 
 th:nth-child(2), td:nth-child(2) {
-  width: 150px;
+  width: 150px; /* AREA */
 }
 
 th:nth-child(3), td:nth-child(3) {
-  width: auto;
-}
-
-th:nth-child(4), td:nth-child(4) {
-  width: 150px;
+  width: 200px; /* MISSION */
 }
 
 .weekday {
@@ -120,4 +117,17 @@ th:nth-child(4), td:nth-child(4) {
 
 .table-container.no-fade::after {
   display: none;
+}
+
+/* スマホ対応: DAYXとAREA優先、MISSION横スクロール */
+@media screen and (max-width: 600px) {
+  th:nth-child(1), td:nth-child(1) {
+    width: 40%;
+  }
+  th:nth-child(2), td:nth-child(2) {
+    width: 60%;
+  }
+  th:nth-child(3), td:nth-child(3) {
+    width: auto;
+  }
 }
