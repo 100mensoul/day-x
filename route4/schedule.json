@@ -1,30 +1,16 @@
 {
   "2025-05-10": {
-    "area": "Odawara, Ikebukuro",
-    "missions": [
-      {
-        "title": "Edible City Screening + Mayor Talk",
-        "plan": "Morning Departure → Odawara",
-        "notes": "Transport undecided (car/train), lunch undecided",
-        "condition": "Low motivation, mild stress"
-      },
-      {
-        "title": "Family Dinner",
-        "plan": "18:00 Ikebukuro Dinner",
-        "notes": "Wife onboard, confirm reservation",
-        "condition": "Slightly better mood, family energy"
-      }
-    ]
+    "area": "Odawara",
+    "mission": "Edible City Screening + Mayor Talk",
+    "timeline": "Morning Departure → Odawara → 18:00 Ikebukuro Dinner",
+    "briefing": "Transport check: car or train, lunch plan pending, wife onboard",
+    "condition": "Low motivation, mild stress"
   },
   "2025-05-11": {
     "area": "Ikebukuro",
-    "missions": [
-      {
-        "title": "Shopping + Relax",
-        "plan": "Afternoon arrival → shopping → cafe",
-        "notes": "Bring shopping list, check weather",
-        "condition": "Relaxed, open-minded"
-      }
-    ]
+    "mission": "Family Dinner",
+    "timeline": "18:00 Ikebukuro Dinner",
+    "briefing": "Father + Wife attending, outfit check",
+    "condition": "Excited, slightly tired"
   }
 }
