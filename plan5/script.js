@@ -21,5 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('#next-week-btn').addEventListener('click', () => {
     document.querySelectorAll('.next-week').forEach(row => row.classList.remove('hidden'));
     document.querySelector('#next-week-btn').style.display = 'none';
+    document.querySelector('.table-container').classList.add('no-fade');  // ← フェード非表示
   });
 });
