@@ -3,7 +3,7 @@
     "area": "Odawara, Ikebukuro",
     "missions": [
       {
-        "title": "Edible City screening + Mayor Talk",
+        "title": "Edible City Screening + Mayor Talk",
         "plan": "Morning Departure → Odawara",
         "notes": "Transport undecided (car/train), lunch undecided",
         "condition": "Low motivation, mild stress"
@@ -11,8 +11,19 @@
       {
         "title": "Family Dinner",
         "plan": "18:00 Ikebukuro Dinner",
-        "notes": "Wife onboard",
+        "notes": "Wife onboard, confirm reservation",
         "condition": "Slightly better mood, family energy"
+      }
+    ]
+  },
+  "2025-05-11": {
+    "area": "Ikebukuro",
+    "missions": [
+      {
+        "title": "Shopping + Relax",
+        "plan": "Afternoon arrival → shopping → cafe",
+        "notes": "Bring shopping list, check weather",
+        "condition": "Relaxed, open-minded"
       }
     ]
   }
