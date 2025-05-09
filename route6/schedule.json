@@ -1,0 +1,42 @@
+{
+  "2025-05-10": {
+    "area": "Odawara, Ikebukuro",
+    "missions": [
+      {
+        "title": "Edible City Screening + Mayor Talk",
+        "title_ja": "エディブルシティ上映 + 市長対談",
+        "plan": "Morning Departure → Odawara",
+        "plan_ja": "朝出発 → 小田原",
+        "briefing": "Transport check: car or train, lunch pending, wife onboard",
+        "briefing_ja": "移動手段確認（車/電車）、昼食未定、妻同伴",
+        "condition": "Low motivation, mild stress",
+        "condition_ja": "気持ちが乗らない、ややストレス"
+      },
+      {
+        "title": "Family Dinner",
+        "title_ja": "家族ディナー",
+        "plan": "18:00 Ikebukuro Dinner",
+        "plan_ja": "18:00 池袋ディナー",
+        "briefing": "Father + Wife attending, outfit check",
+        "briefing_ja": "父と妻が参加、服装確認",
+        "condition": "Excited, slightly tired",
+        "condition_ja": "楽しみ、やや疲労"
+      }
+    ]
+  },
+  "2025-05-11": {
+    "area": "Ikebukuro",
+    "missions": [
+      {
+        "title": "Shopping + Relax",
+        "title_ja": "ショッピング + リラックス",
+        "plan": "Afternoon arrival → shopping → cafe",
+        "plan_ja": "午後到着 → 買い物 → カフェ",
+        "briefing": "Bring shopping list, check weather",
+        "briefing_ja": "買い物リストを持参、天気確認",
+        "condition": "Relaxed, open-minded",
+        "condition_ja": "リラックス、オープンマインド"
+      }
+    ]
+  }
+}
