@@ -34,17 +34,6 @@ h2 {
   overflow-x: auto;
 }
 
-.table-container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 40px;
-  background: linear-gradient(to right, rgba(255,255,255,0), rgba(245,245,245,1));
-  pointer-events: none;
-}
-
 table {
   min-width: 700px;         /* ← 横スクロールの基準幅を700pxに */
   width: 100%;
