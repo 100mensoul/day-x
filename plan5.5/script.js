@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const area = scheduleData[isoDate]?.area || "-";
         const mission = scheduleData[isoDate]?.mission || "-";
-        const route = scheduleData[isoDate]?.route || "-";
         const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
 
         const tr = document.createElement('tr');
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <td>${day} <span class="weekday">${weekday}</span></td>
           <td>${area}</td>
           <td class="mission-label">${mission}</td>
-          <td>${route}</td>
         `;
         tbody.appendChild(tr);
       }
