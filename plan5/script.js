@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const today = new Date();
   const todayDate = today.getDate();
+  const todayMonth = today.getMonth() + 1; // getMonth()は0始まりなので+1する
 
   const rows = document.querySelectorAll('tbody tr');
   let count = 0;
