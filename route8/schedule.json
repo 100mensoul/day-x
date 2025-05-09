@@ -12,11 +12,12 @@
         "condition_en": "Low motivation, mild stress",
         "condition_ja": "気持ちが乗らない、ややストレス",
         "details": {
+          "morning_time": "07:20",
           "departure_time": "08:00",
-          "meeting_time": "07:50",
-          "transport": "Train",
+          "transport": "my car",
           "duration": "1.5 hours",
           "arrival_time": "09:30",
+          "start_time": "10:00",
           "map_url": "https://maps.google.com/?q=odawara",
           "related_url": "https://odawara-event.jp"
         }
