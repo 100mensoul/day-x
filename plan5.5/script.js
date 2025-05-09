@@ -19,20 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const weekday = date.toLocaleDateString('en-US', { weekday: 'short' });
 
         const tr = document.createElement('tr');
-        if (i >= 7) tr.classList.add('next-week', 'hidden');
         tr.innerHTML = `
           <td>${day} <span class="weekday">${weekday}</span></td>
           <td>${area}</td>
         `;
         tbody.appendChild(tr);
-      }
-
-      const nextWeekBtn = document.querySelector('#next-week-btn');
-      if (nextWeekBtn) {
-        nextWeekBtn.addEventListener('click', () => {
-          document.querySelectorAll('.next-week').forEach(row => row.classList.remove('hidden'));
-          nextWeekBtn.style.display = 'none';
-        });
       }
     })
     .catch(error => {
