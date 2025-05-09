@@ -120,14 +120,16 @@ strong {
   margin-top: 10px;
   padding: 6px 12px;
   font-size: 0.9em;
-  border: none;
+  border: 1px solid #555;
   border-radius: 4px;
-  background: #ff3c3c;
-  color: #fff;
+  background: transparent;
+  color: #aaa;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
 .translate-button:hover {
-  background: #ff5e5e;
+  background: #333;
+  color: #fff;
+  border-color: #777;
 }
