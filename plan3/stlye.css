@@ -1,0 +1,95 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background: #f5f5f5;
+  color: #333;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #333;
+}
+
+h2 {
+  font-size: 1em;
+  color: #777;
+  letter-spacing: 1px;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #f0f0f0;
+  color: #555;
+  font-size: 0.9em;
+}
+
+td {
+  font-size: 0.9em;
+}
+
+.weekday {
+  display: block;
+  font-size: 0.7em;
+  color: #999;
+}
+
+.mission-label {
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #e0e0e0;
+  color: #333;
+  font-size: 0.8em;
+  display: inline-block;
+}
+
+.urgent {
+  background: #d32f2f;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+}
