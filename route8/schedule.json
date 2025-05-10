@@ -37,7 +37,7 @@
           "transport": "Train",
           "duration": "1 hour",
           "arrival_time": "17:00",
-          "map_url": "https://maps.google.com/?q=ikebukuro",
+          "map_url": "https://maps.app.goo.gl/Yni7ai1cm8cAfnJQ7?g_st=ic",
           "related_url": "https://ikebukuro-dinner.jp"
         }
       }
