@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🗒️DAYX - NOTEページ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    #noteInput {
+      width: 100%;
+      height: 150px;
+      font-size: 1rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 0.8rem;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      background: #333;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #555;
+    }
+    .entry {
+      background: white;
+      margin-top: 1rem;
+      padding: 1rem;
+      border-left: 4px solid #007BFF;
+      border-radius: 6px;
+    }
+    .timestamp {
+      font-size: 0.85rem;
+      color: #777;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🗒️ DAYX - NOTEページ</h1>
+  <textarea id="noteInput" placeholder="今の気持ち、不具合、違和感を書いてください..."></textarea>
+  <br />
+  <button onclick="saveNote()">保存</button>
+
+  <div id="noteList"></div>
+
+  <script>
+    // 保存
+    function saveNote() {
+      const input = document.getElementById('noteInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const note = {
+        text,
+        timestamp: new Date().toLocaleString()
+      };
+
+      const notes = JSON.parse(localStorage.getItem('dayx_notes') || '[]');
+      notes.unshift(note); // 新しいものを先頭に
+      localStorage.setItem('dayx_notes', JSON.stringify(notes));
+      input.value = '';
+      renderNotes();
+    }
+
+    // 表示
+    function renderNotes() {
+      const notes = JSON.parse(localStorage.getItem('dayx_notes') || '[]');
+      const list = document.getElementById('noteList');
+      list.innerHTML = '';
+
+      notes.forEach(note => {
+        const entry = document.createElement('div');
+        entry.className = 'entry';
+
+        const time = document.createElement('div');
+        time.className = 'timestamp';
+        time.textContent = note.timestamp;
+
+        const text = document.createElement('div');
+        text.textContent = note.text;
+
+        entry.appendChild(time);
+        entry.appendChild(text);
+        list.appendChild(entry);
+      });
+    }
+
+    renderNotes(); // 初期表示
+  </script>
+</body>
+</html>
