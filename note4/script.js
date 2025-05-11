@@ -61,7 +61,7 @@ function renderNotes() {
     const continueBtn = document.createElement('button');
     continueBtn.textContent = 'つづきを書く';
     continueBtn.onclick = () => {
-      window.location.href = `room/${note.id}/index.html`;
+      window.location.href = `note4/room/${note.id}/index.html`;
     };
 
     controls.appendChild(continueBtn);
