@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>DAYX JSON Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #fff;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      background: #222;
+      border: 1px solid #444;
+      color: #eee;
+    }
+    button {
+      margin-top: 16px;
+      padding: 10px 20px;
+      background: #333;
+      color: #eee;
+      border: 1px solid #666;
+      cursor: pointer;
+    }
+    .mission-block {
+      border: 1px solid #333;
+      padding: 15px;
+      margin-top: 20px;
+      background: #1a1a1a;
+    }
+    pre {
+      background: #222;
+      padding: 10px;
+      margin-top: 20px;
+      border: 1px solid #444;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>DAYX JSON Generator - Multi Missions</h1>
+
+  <label>日付（例: 2025-05-13）</label>
+  <input id="date" type="text">
+
+  <label>エリア</label>
+  <input id="area" type="text">
+
+  <div id="missions"></div>
+  <button onclick="addMission()">＋ ミッションを追加</button>
+
+  <button onclick="generateJSON()">JSON生成</button>
+  <button onclick="downloadJSON()">JSON保存</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    let missionCount = 0;
+
+    function addMission() {
+      missionCount++;
+      const container = document.createElement('div');
+      container.className = 'mission-block';
+      container.innerHTML = `
+        <h2>Mission ${missionCount}</h2>
+        <label>Title (EN):</label><input id="title_en_${missionCount}" type="text">
+        <label>Title (JA):</label><input id="title_ja_${missionCount}" type="text">
+        <label>Plan (EN):</label><input id="plan_en_${missionCount}" type="text">
+        <label>Plan (JA):</label><input id="plan_ja_${missionCount}" type="text">
+        <label>Briefing (EN):</label><textarea id="briefing_en_${missionCount}"></textarea>
+        <label>Briefing (JA):</label><textarea id="briefing_ja_${missionCount}"></textarea>
+        <label>Condition (EN):</label><input id="condition_en_${missionCount}" type="text">
+        <label>Condition (JA):</label><input id="condition_ja_${missionCount}" type="text">
+        <label>Departure Time:</label><input id="departure_time_${missionCount}" type="text">
+        <label>Meeting Time:</label><input id="meeting_time_${missionCount}" type="text">
+        <label>Duration:</label><input id="duration_${missionCount}" type="text">
+        <label>Arrival Time:</label><input id="arrival_time_${missionCount}" type="text">
+        <label>Start Time:</label><input id="start_time_${missionCount}" type="text">
+        <label>Transport:</label><input id="transport_${missionCount}" type="text">
+        <label>Map URL:</label><input id="map_url_${missionCount}" type="text">
+        <label>Related URL:</label><input id="related_url_${missionCount}" type="text">
+      `;
+      document.getElementById("missions").appendChild(container);
+    }
+
+    function generateJSON() {
+      const date = document.getElementById("date").value;
+      const area = document.getElementById("area").value;
+      const missions = [];
+
+      for (let i = 1; i <= missionCount; i++) {
+        missions.push({
+          title_en: document.getElementById(`title_en_${i}`).value,
+          title_ja: document.getElementById(`title_ja_${i}`).value,
+          plan_en: document.getElementById(`plan_en_${i}`).value,
+          plan_ja: document.getElementById(`plan_ja_${i}`).value,
+          briefing_en: document.getElementById(`briefing_en_${i}`).value,
+          briefing_ja: document.getElementById(`briefing_ja_${i}`).value,
+          condition_en: document.getElementById(`condition_en_${i}`).value,
+          condition_ja: document.getElementById(`condition_ja_${i}`).value,
+          details: {
+            departure_time: document.getElementById(`departure_time_${i}`).value,
+            meeting_time: document.getElementById(`meeting_time_${i}`).value,
+            duration: document.getElementById(`duration_${i}`).value,
+            arrival_time: document.getElementById(`arrival_time_${i}`).value,
+            start_time: document.getElementById(`start_time_${i}`).value,
+            transport: document.getElementById(`transport_${i}`).value,
+            map_url: document.getElementById(`map_url_${i}`).value,
+            related_url: document.getElementById(`related_url_${i}`).value
+          }
+        });
+      }
+
+      const fullJson = {
+        [date]: {
+          area,
+          missions
+        }
+      };
+
+      document.getElementById("output").textContent = JSON.stringify(fullJson, null, 2);
+    }
+
+    function downloadJSON() {
+      generateJSON();
+      const json = document.getElementById("output").textContent;
+      const blob = new Blob([json], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "schedule.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.onload = () => addMission(); // 最初に1個追加しておく
+  </script>
+
+</body>
+</html>
