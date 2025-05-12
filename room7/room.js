@@ -15,7 +15,7 @@ function loadRoom() {
 
   roomData.slice().reverse().forEach((entry, index) => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'chat-entry align-right';
+    wrapper.className = 'chat-entry';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
