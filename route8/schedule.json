@@ -57,11 +57,12 @@
         "condition_en": "",
         "condition_ja": "",
         "details": {
+          "morning_time": "8:00",
           "departure_time": "11:30",
           "meeting_time": "13:00",
           "duration": "45min",
           "arrival_time": "12:15",
-          "start_time": "13:30",
+          "start_time": "13:00",
           "transport": "car",
           "map_url": "https://maps.app.goo.gl/1ztPCRs6uN64VHbe9?g_st=com.google.maps.preview.copy",
           "related_url": ""
