@@ -111,10 +111,10 @@ button:hover {
 }
 
 #chatInput {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 /* コメント表示用テキストサイズを直接指定 */
 .chat-entry > div {
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
