@@ -1,0 +1,73 @@
+{
+  "2025-05-10": {
+    "area": "Odawara, Ikebukuro",
+    "missions": [
+      {
+        "title_en": "Edible City Screening + Mayor Talk",
+        "title_ja": "エディブルシティ上映 + 市長対談",
+        "plan_en": "Morning Departure → Odawara",
+        "plan_ja": "朝出発 → 小田原",
+        "briefing_en": "Transport check: car or train, lunch pending, wife onboard",
+        "briefing_ja": "移動手段確認（車/電車）、昼食未定、妻同伴",
+        "condition_en": "Low motivation, mild stress",
+        "condition_ja": "気持ちが乗らない、ややストレス",
+        "details": {
+          "morning_time": "07:20",
+          "departure_time": "08:00",
+          "transport": "my car",
+          "duration": "1.5 hours",
+          "arrival_time": "09:30",
+          "start_time": "10:00",
+          "map_url": "https://maps.app.goo.gl/x9GQYMJyCWeMG18b8?g_st=com.google.maps.preview.copy",
+          "related_url": "https://odawara-cinema.jp/movie-list/"
+        }
+      },
+      {
+        "title_en": "Family Dinner",
+        "title_ja": "家族ディナー",
+        "plan_en": "18:00 Ikebukuro Dinner",
+        "plan_ja": "18:00 池袋ディナー",
+        "briefing_en": "Father + Wife attending, outfit check",
+        "briefing_ja": "父と妻が参加、服装確認",
+        "condition_en": "Excited, slightly tired",
+        "condition_ja": "楽しみ、やや疲れ",
+        "details": {
+          "departure_time": "16:00",
+          "meeting_time": "15:50",
+          "transport": "Train",
+          "duration": "1 hour",
+          "arrival_time": "17:45",
+          "start_time": "18:00",
+          "map_url": "https://maps.app.goo.gl/Yni7ai1cm8cAfnJQ7?g_st=ic",
+          "related_url": "https://ikebukuro-dinner.jp"
+        }
+      }
+    ]
+  },
+  "2025-05-13": {
+    "area": "秋葉原",
+    "missions": [
+      {
+        "title_en": "interview",
+        "title_ja": "面接",
+        "plan_en": "",
+        "plan_ja": "",
+        "briefing_en": "",
+        "briefing_ja": "",
+        "condition_en": "",
+        "condition_ja": "",
+        "details": {
+          "morning_time": "8:00",
+          "departure_time": "11:30",
+          "meeting_time": "13:00",
+          "duration": "45min",
+          "arrival_time": "12:15",
+          "start_time": "13:00",
+          "transport": "car",
+          "map_url": "https://maps.app.goo.gl/1ztPCRs6uN64VHbe9?g_st=com.google.maps.preview.copy",
+          "related_url": ""
+        }
+      }
+    ]
+  }
+}
