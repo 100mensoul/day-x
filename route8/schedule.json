@@ -45,3 +45,30 @@
     ]
   }
 }
+{
+  "2025-05-13": {
+    "area": "秋葉原",
+    "missions": [
+      {
+        "title_en": "interview",
+        "title_ja": "面接",
+        "plan_en": "",
+        "plan_ja": "",
+        "briefing_en": "",
+        "briefing_ja": "",
+        "condition_en": "",
+        "condition_ja": "",
+        "details": {
+          "departure_time": "11:30",
+          "meeting_time": "13:00",
+          "duration": "45min",
+          "arrival_time": "12:15",
+          "start_time": "13:30",
+          "transport": "car",
+          "map_url": "https://maps.app.goo.gl/1ztPCRs6uN64VHbe9?g_st=com.google.maps.preview.copy",
+          "related_url": ""
+        }
+      }
+    ]
+  }
+}
