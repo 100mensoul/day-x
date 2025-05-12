@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>DAYX JSON Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 1.5em;
+      color: #fff;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      background: #222;
+      border: 1px solid #444;
+      color: #eee;
+    }
+    button {
+      margin-top: 16px;
+      padding: 10px 20px;
+      background: #333;
+      color: #eee;
+      border: 1px solid #666;
+      cursor: pointer;
+    }
+    pre {
+      background: #222;
+      padding: 10px;
+      margin-top: 20px;
+      border: 1px solid #444;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>DAYX JSON Generator</h1>
+
+  <label>日付（例: 2025-05-13）</label>
+  <input id="date" type="text" placeholder="YYYY-MM-DD">
+
+  <label>エリア</label>
+  <input id="area" type="text" placeholder="Odawara, Ikebukuro">
+
+  <label>タイトル（英）</label>
+  <input id="title_en" type="text">
+
+  <label>タイトル（日）</label>
+  <input id="title_ja" type="text">
+
+  <label>プラン（英）</label>
+  <input id="plan_en" type="text">
+
+  <label>プラン（日）</label>
+  <input id="plan_ja" type="text">
+
+  <label>ブリーフィング（英）</label>
+  <textarea id="briefing_en"></textarea>
+
+  <label>ブリーフィング（日）</label>
+  <textarea id="briefing_ja"></textarea>
+
+  <label>コンディション（英）</label>
+  <input id="condition_en" type="text">
+
+  <label>コンディション（日）</label>
+  <input id="condition_ja" type="text">
+
+  <label>出発時間</label>
+  <input id="departure_time" type="text" placeholder="HH:MM">
+
+  <label>集合時間</label>
+  <input id="meeting_time" type="text" placeholder="HH:MM">
+
+  <label>所要時間（例: 1 hour, 45 min）</label>
+  <input id="duration" type="text">
+
+  <label>到着時間</label>
+  <input id="arrival_time" type="text" placeholder="HH:MM">
+
+  <label>開始時間（任意）</label>
+  <input id="start_time" type="text" placeholder="HH:MM">
+
+  <label>交通手段</label>
+  <input id="transport" type="text" placeholder="car, train...">
+
+  <label>Google Map URL</label>
+  <input id="map_url" type="text">
+
+  <label>関連URL</label>
+  <input id="related_url" type="text">
+
+  <button onclick="generateJSON()">生成</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    function generateJSON() {
+      const date = document.getElementById("date").value;
+      const json = {
+        [date]: {
+          area: document.getElementById("area").value,
+          missions: [
+            {
+              title_en: document.getElementById("title_en").value,
+              title_ja: document.getElementById("title_ja").value,
+              plan_en: document.getElementById("plan_en").value,
+              plan_ja: document.getElementById("plan_ja").value,
+              briefing_en: document.getElementById("briefing_en").value,
+              briefing_ja: document.getElementById("briefing_ja").value,
+              condition_en: document.getElementById("condition_en").value,
+              condition_ja: document.getElementById("condition_ja").value,
+              details: {
+                departure_time: document.getElementById("departure_time").value,
+                meeting_time: document.getElementById("meeting_time").value,
+                duration: document.getElementById("duration").value,
+                arrival_time: document.getElementById("arrival_time").value,
+                start_time: document.getElementById("start_time").value,
+                transport: document.getElementById("transport").value,
+                map_url: document.getElementById("map_url").value,
+                related_url: document.getElementById("related_url").value
+              }
+            }
+          ]
+        }
+      };
+      document.getElementById("output").textContent = JSON.stringify(json, null, 2);
+    }
+  </script>
+
+</body>
+</html>
