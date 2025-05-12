@@ -13,7 +13,7 @@ h1 {
 #noteInput,
 #chatInput {
   width: 100%;
-  font-size: 3rem;
+  font-size: 1.2rem;
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -89,7 +89,7 @@ button:hover {
 
 .chat-entry {
   margin-bottom: 1rem;
-  font-size: 3rem;
+  font-size: 1rem;
 }
 
 .chat-timestamp {
