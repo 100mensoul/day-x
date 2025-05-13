@@ -2,7 +2,7 @@
 
 body {
   font-family: 'Manrope', 'Segoe UI', sans-serif;
-  background: #1b1c1e; /* ブラッククローム */
+  background: #1a1c1e; /* 漆黒に近いマット */
   color: #e2e2e2;
   margin: 0;
   padding: 1rem;
@@ -10,26 +10,29 @@ body {
 
 h1 {
   font-size: 2rem;
-  color: #e2e2e2;
+  color: #e5e7eb;
   margin-bottom: 0.2rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
+  font-weight: 600;
 }
 
 .subtitle {
   font-size: 0.95rem;
   color: #9ca3af;
   margin-bottom: 1.2rem;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
+  font-weight: 400;
 }
 
+/* 入力エリア */
 #noteInput,
 #chatInput {
   width: 100%;
   font-size: 1.1rem;
   padding: 1rem;
-  background: #2a2d32; /* ブラッククローム調 */
-  color: #ffffff;
-  border: 1px solid #444;
+  background: #25282c;
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   box-sizing: border-box;
 }
@@ -42,30 +45,36 @@ h1 {
   height: 100px;
 }
 
+/* ボタンスタイル（高級感・エッジ＋内側グロウ） */
 button {
   margin-top: 0.8rem;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   font-weight: 600;
-  background: linear-gradient(145deg, #1e2a36, #2f3e4c); /* ディープブルー＋陰影 */
-  color: #b2bec3;
-  border: none;
-  border-radius: 8px;
+  background: linear-gradient(145deg, #202c38, #303c48); /* 深いブルーグレーグラデ */
+  color: #c4cad3; /* 落ち着いたスチールグレー文字 */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 #4b5a69, 0 2px 4px rgba(0,0,0,0.5);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.05),
+    0 2px 4px rgba(0,0,0,0.4);
   transition: all 0.3s ease;
 }
 
 button:hover {
-  filter: brightness(1.05);
-  box-shadow: inset 0 1px 0 #5f6f80, 0 3px 6px rgba(0,0,0,0.6);
+  filter: brightness(1.07);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.08),
+    0 3px 6px rgba(0,0,0,0.5);
 }
 
+/* コメントブロック */
 .entry {
-  background: #23262a;
+  background: #232628;
   margin-top: 1rem;
   padding: 1rem;
-  border-left: 4px solid #3b82f6; /* 上品なブルーライン */
+  border-left: 4px solid #4b5563;
   border-radius: 8px;
   position: relative;
 }
@@ -74,6 +83,7 @@ button:hover {
   font-size: 0.8rem;
   color: #8e8e8e;
   margin-bottom: 0.3rem;
+  font-weight: 400;
 }
 
 .controls {
@@ -84,7 +94,7 @@ button:hover {
 
 .controls button {
   background: transparent;
-  color: #60a5fa;
+  color: #9ca3af;
   font-size: 0.85rem;
   border: none;
   margin-left: 0.5rem;
@@ -95,28 +105,30 @@ button:hover {
   text-decoration: underline;
 }
 
-/* コメントログ */
+/* コメントログエリア */
 #noteList,
 #chatLog {
   margin-top: 1rem;
-  background: #24272b;
+  background: #202225;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   max-height: 60vh;
   overflow-y: auto;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.03);
 }
 
-/* コメント個別 */
+/* コメントの階層感 */
 .chat-entry {
   margin-bottom: 1rem;
   opacity: 0.7;
   transition: opacity 0.3s;
   font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .chat-entry.newest {
   opacity: 1;
+  font-weight: 600;
 }
 
 .align-right {
