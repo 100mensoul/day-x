@@ -3,20 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>D-NOTE</title>
+  <title>Service Record</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <h1>D-LOG</h1>
-  <p class="subtitle">あなただけの整備記録</p>
+  <header>
+    <h1>Service Record</h1>
+    <p class="subtitle">ただ、記録するだけ<br>未来の自分へ残す整備記録</p>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <button onclick="window.location.href='index.html'">back</button>
+      <button id="toggleExport">record</button>
+    </div>
+  </header>
 
-  <textarea id="noteInput" placeholder="トピックの冒頭メモ（気持ち、不具合、テーマ）"></textarea>
-  <br />
-  <button id="saveButton">保存</button>
+  <div id="chatLog"></div>
 
-  <div id="noteList"></div>
+  <div id="inputArea" style="position: fixed; bottom: 0; left: 0; right: 0; background: #1a1c1e; padding: 1rem; box-shadow: 0 -2px 6px rgba(0,0,0,0.3);">
+    <textarea id="chatInput" placeholder="思ったこと、気づいたことのつづきを書いてください。" style="margin-bottom: 0.5rem;"></textarea>
+    <div style="text-align: right;">
+      <button id="sendButton">log it</button>
+    </div>
+  </div>
 
-  <script src="script.js"></script>
+  <button id="exportSelected" style="display:none; position: fixed; bottom: 90px; right: 1rem;">選択したコメントを出力する</button>
+
+  <script src="room.js"></script>
 </body>
 </html>
