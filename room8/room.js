@@ -13,11 +13,13 @@ function loadRoom() {
   roomData = JSON.parse(localStorage.getItem(`room_${roomId}`) || '[]');
   log.innerHTML = '';
 
-  roomData.forEach((entry, index) => {
+  const reversedData = roomData.slice().reverse();
+
+  reversedData.forEach((entry, index) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'chat-entry align-right';
 
-    if (index === roomData.length - 1) {
+    if (index === 0) {
       wrapper.classList.add('newest');
     }
 
@@ -26,7 +28,9 @@ function loadRoom() {
     checkbox.className = 'export-check';
     checkbox.checked = true;
     checkbox.style.display = 'none';
-    checkbox.dataset.index = index;
+
+    // 元の配列順に戻すために index を補正
+    checkbox.dataset.index = roomData.length - 1 - index;
 
     const content = document.createElement('div');
     content.textContent = entry.text;
@@ -36,12 +40,12 @@ function loadRoom() {
     log.appendChild(wrapper);
   });
 
-  scrollToBottom(); // ← コメント描画後に下までスクロール
+  scrollToTop();
 }
 
-function scrollToBottom() {
+function scrollToTop() {
   const log = document.getElementById('chatLog');
-  log.scrollTop = log.scrollHeight;
+  log.scrollTop = 0;
 }
 
 function sendEntry() {
