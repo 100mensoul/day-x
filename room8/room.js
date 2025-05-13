@@ -40,13 +40,20 @@ function loadRoom() {
 
   // 確実に描画後スクロール位置を上に戻す
   setTimeout(() => {
-    requestAnimationFrame(() => scrollToTop());
+    requestAnimationFrame(() => {
+      scrollToTop();
+    });
   }, 0);
 }
 
 function scrollToTop() {
   const log = document.getElementById('chatLog');
-  log.scrollTop = 0;
+  requestAnimationFrame(() => {
+    log.scrollTop = 0;
+    requestAnimationFrame(() => {
+      log.scrollTop = 0;
+    });
+  });
 }
 
 function sendEntry() {
