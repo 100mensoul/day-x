@@ -28,8 +28,6 @@ function loadRoom() {
     checkbox.className = 'export-check';
     checkbox.checked = true;
     checkbox.style.display = 'none';
-
-    // 元の配列順に戻すために index を補正
     checkbox.dataset.index = roomData.length - 1 - index;
 
     const content = document.createElement('div');
@@ -40,7 +38,8 @@ function loadRoom() {
     log.appendChild(wrapper);
   });
 
-  scrollToTop();
+  // 描画後にスクロールを上部にセット（修正ポイント）
+  setTimeout(scrollToTop, 0);
 }
 
 function scrollToTop() {
