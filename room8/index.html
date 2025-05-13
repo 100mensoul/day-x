@@ -3,31 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Service Record</title>
+  <title>Ｄ-NOTE</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header>
-    <h1>Service Record</h1>
-    <p class="subtitle">心のメンテナンスを綴ろう</p>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-      <button onclick="window.location.href='index.html'">back</button>
-      <button id="toggleExport">record</button>
-    </div>
-  </header>
+  <h1>Ｄ-NOTE</h1>
+  <p class="subtitle">あなただけの整備記録</p>
 
-  <div id="chatLog"></div>
-
-  <div id="inputArea" style="position: fixed; bottom: 0; left: 0; right: 0; background: #1a1c1e; padding: 1rem; box-shadow: 0 -2px 6px rgba(0,0,0,0.3);">
-    <textarea id="chatInput" placeholder="思ったこと、気づいたことのつづきを書いてください。" style="margin-bottom: 0.5rem;"></textarea>
-    <div style="text-align: right;">
-      <button id="sendButton">log it</button>
-    </div>
+  <textarea id="noteInput" placeholder="新しい記録テーマを入力してください"></textarea>
+  <div style="text-align: right;">
+    <button id="saveButton">記録を追加</button>
   </div>
 
-  <button id="exportSelected" style="display:none; position: fixed; bottom: 90px; right: 1rem;">選択したコメントを出力する</button>
+  <div id="noteList"></div>
 
-  <script src="room.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
