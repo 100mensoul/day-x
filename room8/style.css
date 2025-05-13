@@ -8,6 +8,14 @@ body {
   padding-bottom: 200px;
 }
 
+header {
+  position: sticky;
+  top: 0;
+  background: #1a1c1e;
+  padding-bottom: 0.5rem;
+  z-index: 10;
+}
+
 h1 {
   font-size: 2rem;
   color: #e5e7eb;
@@ -42,7 +50,7 @@ h1 {
 
 #chatInput {
   height: 100px;
-  overflow-y: auto;   /* ← スクロール可能にするため追加 */
+  overflow-y: auto;
   resize: vertical;
   max-height: 200px;
 }
