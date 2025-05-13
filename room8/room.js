@@ -13,14 +13,12 @@ function loadRoom() {
   roomData = JSON.parse(localStorage.getItem(`room_${roomId}`) || '[]');
   log.innerHTML = '';
 
-  const reversedData = roomData.slice().reverse();
-
-  reversedData.forEach((entry, index) => {
+  roomData.forEach((entry, index) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'chat-entry align-right';
 
-    if (index === 0) {
-      wrapper.classList.add('newest'); // 新しいコメントが一番上
+    if (index === roomData.length - 1) {
+      wrapper.classList.add('newest');
     }
 
     const checkbox = document.createElement('input');
@@ -28,9 +26,7 @@ function loadRoom() {
     checkbox.className = 'export-check';
     checkbox.checked = true;
     checkbox.style.display = 'none';
-
-    // 出力時に元のroomDataのindexと一致させるために再計算
-    checkbox.dataset.index = roomData.length - 1 - index;
+    checkbox.dataset.index = index;
 
     const content = document.createElement('div');
     content.textContent = entry.text;
@@ -39,6 +35,13 @@ function loadRoom() {
     wrapper.appendChild(content);
     log.appendChild(wrapper);
   });
+
+  scrollToBottom(); // ← コメント描画後に下までスクロール
+}
+
+function scrollToBottom() {
+  const log = document.getElementById('chatLog');
+  log.scrollTop = log.scrollHeight;
 }
 
 function sendEntry() {
