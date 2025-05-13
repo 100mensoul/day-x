@@ -38,8 +38,10 @@ function loadRoom() {
     log.appendChild(wrapper);
   });
 
-  // 描画後にスクロールを上部にセット（修正ポイント）
-  setTimeout(scrollToTop, 0);
+  // 確実に描画後スクロール位置を上に戻す
+  setTimeout(() => {
+    requestAnimationFrame(() => scrollToTop());
+  }, 0);
 }
 
 function scrollToTop() {
