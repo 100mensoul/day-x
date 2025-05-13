@@ -2,10 +2,10 @@
 
 body {
   font-family: 'Manrope', 'Segoe UI', sans-serif;
-  background: #1a1c1e; /* 漆黒に近いマット */
+  background: #1a1c1e;
   color: #e2e2e2;
   margin: 0;
-  padding: 1rem;
+  padding-bottom: 200px; /* 入力欄の高さ分のスペース確保 */
 }
 
 h1 {
@@ -19,12 +19,11 @@ h1 {
 .subtitle {
   font-size: 0.95rem;
   color: #9ca3af;
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
   letter-spacing: 0.02em;
   font-weight: 400;
 }
 
-/* 入力エリア */
 #noteInput,
 #chatInput {
   width: 100%;
@@ -45,31 +44,27 @@ h1 {
   height: 100px;
 }
 
-/* ボタンスタイル（高級感・エッジ＋内側グロウ） */
+/* ボタン */
 button {
-  margin-top: 0.8rem;
+  margin-top: 0.4rem;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   font-weight: 600;
-  background: linear-gradient(145deg, #202c38, #303c48); /* 深いブルーグレーグラデ */
-  color: #c4cad3; /* 落ち着いたスチールグレー文字 */
+  background: linear-gradient(145deg, #202c38, #303c48);
+  color: #c4cad3;
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   cursor: pointer;
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,0.05),
-    0 2px 4px rgba(0,0,0,0.4);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.05), 0 2px 4px rgba(0,0,0,0.4);
   transition: all 0.3s ease;
 }
 
 button:hover {
   filter: brightness(1.07);
-  box-shadow:
-    inset 0 1px 1px rgba(255,255,255,0.08),
-    0 3px 6px rgba(0,0,0,0.5);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.08), 0 3px 6px rgba(0,0,0,0.5);
 }
 
-/* コメントブロック */
+/* コメントカード */
 .entry {
   background: #232628;
   margin-top: 1rem;
@@ -105,10 +100,8 @@ button:hover {
   text-decoration: underline;
 }
 
-/* コメントログエリア */
-#noteList,
+/* コメントログ */
 #chatLog {
-  margin-top: 1rem;
   background: #202225;
   padding: 1rem;
   border-radius: 10px;
@@ -117,7 +110,7 @@ button:hover {
   box-shadow: inset 0 1px 2px rgba(255,255,255,0.03);
 }
 
-/* コメントの階層感 */
+/* コメント階層感 */
 .chat-entry {
   margin-bottom: 1rem;
   opacity: 0.7;
