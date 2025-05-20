@@ -85,3 +85,39 @@ renderPhotos();
 
 // グローバル関数化
 window.addPhoto = addPhoto;
+
+function addPhoto() {
+  const fileInput = document.getElementById('imageInput');
+  const tagInput = document.getElementById('tagInput');
+
+  const file = fileInput.files[0];
+  const tags = tagInput.value.split(',');
+
+  if (!file) {
+    alert('画像が選択されていません');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const newEntry = {
+      image: e.target.result,
+      tags: tags.map(t => t.trim()).filter(t => t)
+    };
+
+    photoData.push(newEntry);
+    localStorage.setItem(sectionId, JSON.stringify(photoData));
+    renderPhotos();
+
+    alert('写真を追加しました');
+
+    fileInput.value = '';
+    tagInput.value = '';
+  };
+
+  reader.onerror = function () {
+    alert('ファイルの読み込みに失敗しました');
+  };
+
+  reader.readAsDataURL(file);
+}
