@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>セクションビュー</title>
+  <link rel="stylesheet" href="section.css">
+</head>
+<body>
+  <header>
+    <h1 id="section-title">セクション名</h1>
+    <p id="section-subtitle">ユニット情報</p>
+  </header>
+
+  <main>
+    <div id="photo-grid" class="photo-grid">
+      <!-- 写真カードがここに追加される -->
+    </div>
+    <div class="upload-form">
+      <input type="file" id="imageInput" accept="image/*">
+      <input type="text" id="tagInput" placeholder="タグをカンマで区切って入力">
+      <button onclick="addPhoto()">写真を追加</button>
+    </div>
+  </main>
+
+  <script src="section.js"></script>
+</body>
+</html>
