@@ -1,0 +1,76 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', 'Manrope', sans-serif;
+  background-color: #000; /* 宇宙感 */
+  color: #eee;
+}
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 40px;
+  color: #ccc;
+  letter-spacing: 0.1rem;
+}
+
+.unit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #111, #222);
+}
+
+.unit-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-weight: bold;
+  margin-right: 20px;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.section {
+  flex: 1;
+  height: 100px;
+  margin: 0 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 0.05rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.section:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
+/* 惑星カラー */
+.wear {
+  background: linear-gradient(to bottom right, #ff5f6d, #ffc371); /* 金星（Venus） */
+  color: #000;
+}
+
+.ec {
+  background: linear-gradient(to bottom right, #78ffd6, #007991); /* 天王星（Uranus） */
+  color: #000;
+}
+
+.doc {
+  background: linear-gradient(to bottom right, #f5f7fa, #c3cfe2); /* 水星（Mercury） */
+  color: #222;
+}
