@@ -19,18 +19,17 @@
     .section-filter-btn:hover { background-color: #383838; }
     .section-filter-btn.active { background-color: #009999; color: #fff; font-weight: bold; }
     #editSectionBtn, 
-    .add-item-form button, /* This will be the "Add New Item" button */
+    .add-item-form button, /* This is the "Add New Item" button */
     .add-section-form-popup button { background-color: #007777; color: #eee; border: 1px solid #333; padding: 7px 14px; border-radius: 4px; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; font-size: 0.85rem; height: 34px; box-sizing: border-box; font-weight: normal; }
     #editSectionBtn:hover, .add-item-form button:hover, .add-section-form-popup button:hover { background-color: #009999; }
     
-    /* .add-item-form input[type="text"], .add-item-form select are removed from main form for this flow */
-    .add-section-form-popup input[type="text"],
-    .popup input#popupItemName, /* Specifically target item name in popup */
-    .popup select#popupItemSection /* Specifically target section select in popup */
+    .add-section-form-popup input[type="text"], /* For new section name in popup */
+    .popup input#popupItemName, /* Item name in main item popup */
+    .popup select#popupItemSection /* Section select in main item popup */
      { padding: 7px 9px; border: 1px solid #333; border-radius: 4px; background-color: #282828; color: #eee; font-size: 0.85rem; height: 34px; box-sizing: border-box; }
     
     .add-item-form { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-    /* Remove min-width from #itemSection as it's now only for pre-selection and hidden */
+    /* itemSection select is hidden in main form, only used for default section logic */
     /* .add-item-form select#itemSection { min-width: 100px; } */
 
 
@@ -41,7 +40,7 @@
     .item-no { font-size: 0.8em; color: #88dddd; margin-right: 0.5em; font-family: monospace;}
     .item.loadout { border-color: #00ffff; background-color: #113; }
     .popup-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-    .popup { background-color: #222; padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; color: #eee; box-sizing: border-box; }
+    .popup { background-color: #222; padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; color: #eee; box-sizing: border-box; overflow-y: auto; max-height: 90vh;} /* Added overflow and max-height for long popups */
     .popup input, .popup select, .popup textarea { width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 8px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; }
     .popup input[type="checkbox"] { width: auto; margin-right: 5px; }
     .popup > button { background: #00cccc; border: none; padding: 10px 15px; cursor: pointer; color: #000; font-weight: bold; margin-right: 10px; border-radius: 4px; margin-top: 5px; }
@@ -141,10 +140,10 @@
       <input id="inputCount" placeholder="Quantity">
       <div>Location:</div>
       <div id="locationCheckboxes">
-          <label><input type="checkbox" class="locCheck" value="tokyo"> Tokyo</label>
-          <label><input type="checkbox" class="locCheck" value="himeji"> Himeji</label>
-          <label><input type="checkbox" class="locCheck" value="baggage"> Baggage</label>
-          <label><input type="checkbox" class="locCheck" value="car"> Car</label>
+          <label><input type="checkbox" class="locCheck" data-location-value="tokyo"> Tokyo</label>
+          <label><input type="checkbox" class="locCheck" data-location-value="himeji"> Himeji</label>
+          <label><input type="checkbox" class="locCheck" data-location-value="baggage"> Baggage</label>
+          <label><input type="checkbox" class="locCheck" data-location-value="car"> Car</label>
       </div>
       <input id="inputStatus" placeholder="Condition">
       <textarea id="inputMemo" rows="2" placeholder="Memo..."></textarea>
@@ -169,12 +168,18 @@
 
 <script>
   let items = [];
-  let sections = ['wear', 'ec'];
-  let currentItem = null; // The item currently being edited or viewed in popup
-  let isNewItemInPopup = false; // Flag to indicate if the popup is for a new item
+  let sections = ['wear', 'ec']; // Default initial sections
+  let currentItem = null;
+  let isNewItemInPopup = false;
   let nextItemNo = 1;
 
-  const LOCATION_DETAILS = { /* ... (same as before) ... */ };
+  const LOCATION_DETAILS = {
+    'tokyo': { label: '東京', class: 'tokyo' },
+    'himeji': { label: '姫路', class: 'himeji' },
+    'baggage': { label: '手荷物', class: 'baggage' },
+    'car': { label: '車', class: 'car' }
+  };
+
   let activeLocationFilter = null;
   let showLoadoutFilterActive = false;
   let isAllModeActive = true; 
@@ -204,7 +209,8 @@
 
     if (savedNextItemNo) {
         nextItemNo = parseInt(savedNextItemNo, 10);
-    } else {
+        if (isNaN(nextItemNo) || nextItemNo < 1) nextItemNo = 1; // Basic validation
+    } else { // Calculate from existing items if not saved
         if (items.length > 0) {
             nextItemNo = Math.max(0, ...items.map(item => item.itemNo || 0)) + 1;
         } else {
@@ -212,29 +218,44 @@
         }
     }
     
-    items.forEach((item, index) => { // Ensure all items have an itemNo
-        if (item.itemNo === undefined) {
-            // This logic for assigning to old items needs care to avoid conflicts if nextItemNo was reset
-            // A more robust way would be to find max existing itemNo and start from there if savedNextItemNo is missing
+    // Ensure all items have necessary properties
+    items.forEach((item, index) => {
+        if (item.itemNo === undefined || item.itemNo === null || isNaN(item.itemNo)) { // Assign/fix itemNo
             item.itemNo = nextItemNo++; 
         }
-        if (!item.id) item.id = Date.now().toString(36) + Math.random().toString(36).substr(2) + index; // Ensure unique ID
+        if (!item.id) item.id = Date.now().toString(36) + Math.random().toString(36).substr(2) + index;
+        if (!Array.isArray(item.location)) item.location = [];
+        if (!Array.isArray(item.tags)) item.tags = [];
     });
-    // Recalculate nextItemNo to be safe after potentially assigning to old items
+    // Recalculate nextItemNo to be definitely higher than any existing itemNo
     if (items.length > 0) {
         const maxExistingNo = Math.max(0, ...items.map(item => item.itemNo || 0));
         nextItemNo = Math.max(nextItemNo, maxExistingNo + 1);
     } else {
-        nextItemNo = 1;
+        nextItemNo = 1; // Reset if no items
     }
   }
   
-  function updateTopFilterButtonsUI() { /* ... (same as before) ... */ }
+  function updateTopFilterButtonsUI() {
+    document.querySelectorAll('#topButtonFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+    const allBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="all"]');
+    if (isAllModeActive) {
+        if (allBtn) allBtn.classList.add('active');
+    } else {
+        if (allBtn) allBtn.classList.remove('active');
+        const loadlistBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="loadlist"]');
+        if (showLoadoutFilterActive && loadlistBtn) loadlistBtn.classList.add('active');
+        if (activeLocationFilter) {
+            const locBtn = document.querySelector(`#topButtonFilters .filter-btn[data-location="${activeLocationFilter}"]`);
+            if (locBtn) locBtn.classList.add('active');
+        }
+    }
+  }
   
   function renderSections() {
     const sectionFiltersContainer = document.getElementById('sectionFilters');
-    const itemSectionDropdown = document.getElementById('itemSection');
-    const popupSectionDropdown = document.getElementById('popupItemSection');
+    const itemSectionDropdown = document.getElementById('itemSection'); // For pre-selection logic
+    const popupSectionDropdown = document.getElementById('popupItemSection'); // For popup editing
     
     sectionFiltersContainer.innerHTML = '';
     itemSectionDropdown.innerHTML = '';
@@ -264,27 +285,49 @@
 
     if (sections.length === 0) {
         const noSectionText = "No sections defined";
-        // Populate hidden pre-select dropdown
-        if (itemSectionDropdown.options.length === 0) {
-            const noOptPre = document.createElement('option');
-            noOptPre.value = ""; noOptPre.textContent = noSectionText; noOptPre.disabled = true; 
-            itemSectionDropdown.appendChild(noOptPre);
-        }
-        // Populate popup dropdown
-        if (popupSectionDropdown.options.length === 0) {
-            const noOptPopup = document.createElement('option');
-            noOptPopup.value = ""; noOptPopup.textContent = noSectionText; noOptPopup.disabled = true; 
-            popupSectionDropdown.appendChild(noOptPopup);
-        }
+        const createNoSectionOption = () => {
+            const opt = document.createElement('option');
+            opt.value = ""; opt.textContent = noSectionText; opt.disabled = true; 
+            return opt;
+        };
+        if (itemSectionDropdown.options.length === 0) itemSectionDropdown.appendChild(createNoSectionOption());
+        if (popupSectionDropdown.options.length === 0) popupSectionDropdown.appendChild(createNoSectionOption());
     }
   }
 
   function renderItems() {
     const itemList = document.getElementById('itemList');
     let itemsToDisplay = items;
-    if (!isAllModeActive) { itemsToDisplay = items.filter(/* ... (filter logic same as before) ... */); }
-    const displayedItemsSorted = itemsToDisplay.slice().reverse(); // Newest first
-    function renderLocationsHTML(itemLocations) { /* ... (same as before) ... */ }
+    if (!isAllModeActive) { 
+        itemsToDisplay = items.filter(item => {
+            if (showLoadoutFilterActive && !item.loadout) return false;
+            if (activeLocationFilter && (!Array.isArray(item.location) || !item.location.includes(activeLocationFilter))) return false;
+            const selectedSectionButtons = [...document.querySelectorAll('#sectionFilters .section-filter-btn.active')];
+            const selectedSections = selectedSectionButtons.map(btn => btn.dataset.section);
+            const sectionButtonsExist = document.querySelectorAll('#sectionFilters .section-filter-btn').length > 0;
+            if (sectionButtonsExist) {
+                if (selectedSections.length > 0) {
+                    if (!item.section || !selectedSections.includes(item.section)) return false;
+                } else { return false; }
+            }
+            return true;
+        });
+    }
+    const displayedItemsSorted = itemsToDisplay.slice().reverse();
+
+    function renderLocationsHTML(itemLocations) {
+      if (!Array.isArray(itemLocations) || itemLocations.length === 0) return '';
+      return itemLocations.map(locKey => {
+        const locDetail = LOCATION_DETAILS[locKey];
+        if (!locDetail) return `<span class="location-badge">${locKey}</span>`;
+        let badgeClass = `location-badge ${locDetail.class}`;
+        if (locKey === activeLocationFilter && !isAllModeActive) { 
+            badgeClass += ' active-filter-highlight';
+        }
+        return `<span class="${badgeClass}">${locDetail.label}</span>`;
+      }).join('');
+    }
+
     itemList.innerHTML = '';
     displayedItemsSorted.forEach(item => {
       const div = document.createElement('div');
@@ -304,10 +347,12 @@
       tagsDiv.className = 'tags';
       tagsDiv.textContent = item.tags && item.tags.length > 0 ? item.tags.join(', ') : '';
       detailsDiv.appendChild(itemNameLine); detailsDiv.appendChild(tagsDiv);
-      detailsDiv.onclick = () => openPopup(item, false); // Pass false for existing item
+      detailsDiv.onclick = () => openPopup(item, false);
+      
       const locationsDiv = document.createElement('div');
       locationsDiv.className = 'locations-container'; 
-      locationsDiv.innerHTML = renderLocationsHTML(item.location);
+      locationsDiv.innerHTML = renderLocationsHTML(item.location || []);
+      
       div.appendChild(detailsDiv); div.appendChild(locationsDiv); 
       itemList.appendChild(div);
     });
@@ -318,20 +363,19 @@
   function prepareNewItemPopup() {
     const defaultSection = document.getElementById('itemSection').value || (sections.length > 0 ? sections[0] : "");
     const newItem = { 
-      id: Date.now().toString(36) + Math.random().toString(36).substr(2), 
-      itemNo: nextItemNo, // Use current nextItemNo for the new item
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2) + "N", // Add N for new to ensure unique ID
+      itemNo: nextItemNo, 
       name: "", 
       section: defaultSection, 
       loadout: false, location: [], tags: [],
       site: '', url: '', count: '1', status: '', memo: ''
     };
-    openPopup(newItem, true); // Open popup for this new, unsaved item object
+    openPopup(newItem, true);
   }
 
   function openPopup(itemData, isNew = false) {
-    currentItem = itemData; // Store the item object (could be new or existing)
+    currentItem = itemData; 
     isNewItemInPopup = isNew;
-
     document.getElementById('popupOverlay').style.display = 'flex';
     const popupHeader = document.querySelector('.popup-header');
     const itemNameInput = document.getElementById('popupItemName');
@@ -339,6 +383,10 @@
 
     itemNameInput.value = itemData.name || '';
     popupSectionSelect.value = itemData.section || (sections.length > 0 ? sections[0] : "");
+
+    document.querySelectorAll('#locationCheckboxes .locCheck').forEach(cb => {
+        cb.checked = Array.isArray(itemData.location) && itemData.location.includes(cb.dataset.locationValue);
+    });
 
     if (isNew) {
         if(popupHeader) popupHeader.innerHTML = `Add New Item <span class="item-no-popup">${formatItemNo(itemData.itemNo)}</span>`;
@@ -349,8 +397,7 @@
         document.getElementById('inputMemo').value = '';
         document.getElementById('inputTags').value = '';
         document.getElementById('inputLoadout').checked = false;
-        document.querySelectorAll('.locCheck').forEach(cb => cb.checked = false);
-    } else { // Existing item
+    } else { 
         if(popupHeader) popupHeader.innerHTML = `Item Details <span class="item-no-popup">${formatItemNo(itemData.itemNo)}</span>`;
         document.getElementById('inputSite').value = itemData.site || '';
         document.getElementById('inputURL').value = itemData.url || '';
@@ -359,23 +406,17 @@
         document.getElementById('inputMemo').value = itemData.memo || '';
         document.getElementById('inputTags').value = itemData.tags && Array.isArray(itemData.tags) ? itemData.tags.join(', ') : '';
         document.getElementById('inputLoadout').checked = itemData.loadout || false;
-        document.querySelectorAll('.locCheck').forEach(cb => {
-          cb.checked = Array.isArray(itemData.location) && itemData.location.includes(cb.value);
-        });
     }
   }
                                                    
   function savePopup() {
     if (!currentItem) return;
-
     const itemNameFromPopup = document.getElementById('popupItemName').value.trim();
     if (!itemNameFromPopup) {
         alert("Item name cannot be empty.");
         document.getElementById('popupItemName').focus();
         return;
     }
-
-    // Update the currentItem object (whether it's new or existing)
     currentItem.name = itemNameFromPopup;
     currentItem.section = document.getElementById('popupItemSection').value;
     currentItem.site = document.getElementById('inputSite').value;
@@ -385,23 +426,29 @@
     currentItem.memo = document.getElementById('inputMemo').value;
     currentItem.tags = document.getElementById('inputTags').value.split(',').map(t => t.trim()).filter(t => t);
     currentItem.loadout = document.getElementById('inputLoadout').checked;
-    currentItem.location = [...document.querySelectorAll('.locCheck:checked')].map(cb => cb.value);
+    
+    currentItem.location = [];
+    document.querySelectorAll('#locationCheckboxes .locCheck:checked').forEach(cb => {
+        currentItem.location.push(cb.dataset.locationValue);
+    });
 
     if (isNewItemInPopup) {
-        // If it was a new item, it now gets officially added to the items array
-        items.push(currentItem);
-        nextItemNo++; // Increment the global counter for the next new item
+        const existingItemIndex = items.findIndex(i => i.id === currentItem.id);
+        if (existingItemIndex === -1) { items.push(currentItem); } // Add if truly new
+        else { items[existingItemIndex] = currentItem; } // Should not happen if ID is unique for new
+
+        if (currentItem.itemNo >= nextItemNo) { // Ensure nextItemNo is always ahead
+            nextItemNo = currentItem.itemNo + 1;
+        }
     }
-    // If it was an existing item, currentItem is a reference to an object in 'items', so it's already updated.
+    // For existing items, currentItem is already a reference in the 'items' array, so updates are direct.
     
-    isNewItemInPopup = false; // Reset flag
-    renderItems(); // This will re-render the list and save to storage
+    isNewItemInPopup = false;
+    renderItems(); 
     closePopup();
   }
 
   function closePopup() { 
-    // If a new item popup was closed without saving, currentItem (the temp object) is just discarded.
-    // No need to explicitly remove from 'items' because it wasn't officially added until savePopup.
     isNewItemInPopup = false;
     document.getElementById('popupOverlay').style.display = 'none'; 
     const popupHeader = document.querySelector('.popup-header');
@@ -412,16 +459,65 @@
   function deleteCurrentItem() {
     if (currentItem && confirm(`Are you sure you want to delete item "${currentItem.name}" (${formatItemNo(currentItem.itemNo)})?`)) {
       items = items.filter(item => item.id !== currentItem.id);
-      // Item numbers are not re-sequenced. nextItemNo continues from where it was.
       renderItems(); 
       closePopup();
     }
   }
   
-  // --- editSectionBtn, addSection, top filter listeners ---
-  document.getElementById('editSectionBtn').onclick = function(){ /* ... (same as before) ... */ };
-  function addSection(isFromPopup = false){ /* ... (same as before) ... */ };
-  document.querySelectorAll('#topButtonFilters .filter-btn').forEach(button => { /* ... (same as before) ... */ });
+  document.getElementById('editSectionBtn').onclick = function () {
+    isAllModeActive = false; 
+    const editor = document.getElementById('sectionEditor');
+    const list = document.getElementById('sectionEditList'); list.innerHTML = '';
+    sections.forEach((sec, index) => {
+      const li = document.createElement('li');
+      const input = document.createElement('input'); input.type = 'text'; input.value = sec; input.className = 'rename-input';
+      input.onchange = () => {
+        const oldName = sections[index]; const newName = input.value.trim().toLowerCase();
+        if (newName && newName !== oldName && !sections.includes(newName)) {
+          sections[index] = newName; items.forEach(item => { if (item.section === oldName) item.section = newName; });
+          saveToStorage(); renderSections(); renderItems();
+        } else if (newName !== oldName) { alert(`Section name "${newName}" is invalid or already exists.`); input.value = oldName;
+        } else if (!newName) { alert("Section name cannot be empty."); input.value = oldName; }
+      };
+      const deleteBtn = document.createElement('button'); deleteBtn.className = 'delete-btn'; deleteBtn.textContent = '✕';
+      deleteBtn.onclick = () => {
+        const sectionToDelete = sections[index];
+        if (confirm(`Delete section "${sectionToDelete}"? This will remove the section from all associated items.`)) {
+          sections.splice(index, 1); items.forEach(item => { if (item.section === sectionToDelete) delete item.section; });
+          saveToStorage(); renderSections(); renderItems(); document.getElementById('editSectionBtn').click(); 
+        }
+      };
+      li.appendChild(input); li.appendChild(deleteBtn); list.appendChild(li);
+    });
+    editor.classList.remove('hidden');
+  };
+
+  function addSection(isFromPopup = false) {
+    if (!isFromPopup) { console.warn("addSection called incorrectly."); return; }
+    const nameInput = document.getElementById('newSectionNamePopup');
+    if (!nameInput) { console.error("Popup's new section name input not found!"); return; }
+    const name = nameInput.value.trim().toLowerCase();
+    if (name && !sections.includes(name)) {
+      sections.push(name); nameInput.value = ''; saveToStorage();
+      isAllModeActive = false; renderSections(); renderItems(); 
+    } else if (sections.includes(name)) { alert(`Section "${name}" already exists.`);
+    } else if (!name) { alert("Section name cannot be empty."); }
+  }
+  
+  document.querySelectorAll('#topButtonFilters .filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const filterType = button.dataset.filterType; const location = button.dataset.location;
+        if (filterType === 'all') {
+            isAllModeActive = true; activeLocationFilter = null; showLoadoutFilterActive = false;
+            document.querySelectorAll('#sectionFilters .section-filter-btn').forEach(sfBtn => sfBtn.classList.add('active'));
+        } else {
+            isAllModeActive = false; 
+            if (filterType === 'loadlist') { showLoadoutFilterActive = !showLoadoutFilterActive;
+            } else if (filterType === 'location') { activeLocationFilter = (activeLocationFilter === location) ? null : location; }
+        }
+        renderItems();
+    });
+  });
 
   // Initial Load
   loadFromStorage();
