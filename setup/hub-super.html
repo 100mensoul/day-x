@@ -551,6 +551,10 @@
     editor.classList.remove('hidden');
   };
 
+  function closeSectionEditor() {
+    document.getElementById('sectionEditor').classList.add('hidden');
+}
+
   function addSection(isFromPopup = false) {
     if (!isFromPopup) { console.warn("addSection called incorrectly."); return; }
     const nameInput = document.getElementById('newSectionNamePopup');
