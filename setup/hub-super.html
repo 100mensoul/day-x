@@ -248,41 +248,53 @@
     }
   }
 
-  function openPopup(item) {
-    currentItem = item;
-    document.getElementById('popupOverlay').style.display = 'flex';
-    document.getElementById('inputSite').value = item.site || '';
-    document.getElementById('inputURL').value = item.url || '';
-    document.getElementById('inputCount').value = item.count || '';
-    document.getElementById('inputLocation').value = item.location || 'tokyo';
-    document.getElementById('inputStatus').value = item.status || '';
-    document.getElementById('inputMemo').value = item.memo || '';
-    document.getElementById('inputTags').value = item.tags ? item.tags.join(', ') : '';
-    document.getElementById('inputLoadout').checked = item.loadout || false;
-  }
+function openPopup(item) {
+  currentItem = item;
+  document.getElementById('popupOverlay').style.display = 'flex';
+  document.getElementById('inputSite').value = item.site || '';
+  document.getElementById('inputURL').value = item.url || '';
+  document.getElementById('inputCount').value = item.count || '';
+  document.getElementById('inputStatus').value = item.status || '';
+  document.getElementById('inputMemo').value = item.memo || '';
+  document.getElementById('inputTags').value = item.tags ? item.tags.join(', ') : '';
+  document.getElementById('inputLoadout').checked = item.loadout || false;
 
-  function savePopup() {
-    if (currentItem) {
-      currentItem.site = document.getElementById('inputSite').value;
-      currentItem.url = document.getElementById('inputURL').value;
-      currentItem.count = document.getElementById('inputCount').value;
-      currentItem.location = document.getElementById('inputLocation').value;
-      currentItem.status = document.getElementById('inputStatus').value;
-      currentItem.memo = document.getElementById('inputMemo').value;
-      currentItem.tags = document.getElementById('inputTags').value
-        .split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag.length > 0);
-      currentItem.loadout = document.getElementById('inputLoadout').checked;
-      renderItems();
-      closePopup();
-    }
+  // ✅ location表示（複数対応）
+  document.querySelectorAll('.locCheck').forEach(cb => {
+    cb.checked = item.location?.includes(cb.value);
+  });
+}
+
+                                                   
+
+function savePopup() {
+  if (currentItem) {
+    currentItem.site = document.getElementById('inputSite').value;
+    currentItem.url = document.getElementById('inputURL').value;
+    currentItem.count = document.getElementById('inputCount').value;
+    currentItem.status = document.getElementById('inputStatus').value;
+    currentItem.memo = document.getElementById('inputMemo').value;
+    currentItem.tags = document.getElementById('inputTags').value
+      .split(',').map(t => t.trim()).filter(t => t);
+    currentItem.loadout = document.getElementById('inputLoadout').checked;
+
+    // ✅ location保存（複数対応）
+    currentItem.location = [...document.querySelectorAll('.locCheck')]
+      .filter(cb => cb.checked)
+      .map(cb => cb.value);
+
+    renderItems();
+    closePopup();
   }
+}
 
   function closePopup() {
     document.getElementById('popupOverlay').style.display = 'none';
   }
 
+
+
+  
   // 初期処理
   loadFromStorage();
   renderSections();
