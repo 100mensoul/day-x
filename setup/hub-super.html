@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <title>SUPER HUB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- スマホ対応のため追加 -->
   <style>
     body {
       margin: 0;
@@ -22,29 +23,87 @@
       margin-bottom: 2rem;
     }
 
-    .filters, .add-item-form, .add-section-form {
+    /* Updated Filter Styles */
+    .filters-container { /* General container for filter sections */
+      display: flex;
+      flex-direction: column; /* Stack filter groups vertically */
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #topButtonFilters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem; /* Gap between buttons */
+    }
+    #topButtonFilters .filter-btn {
+        padding: 8px 15px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+        background-color: #282828;
+        color: #eee;
+        font-size: 0.9rem;
+    }
+    #topButtonFilters .filter-btn:hover {
+        background-color: #383838;
+    }
+    #topButtonFilters .filter-btn.active {
+        background-color: #00aaaa;
+        color: #000;
+        font-weight: bold;
+    }
+
+    #sectionFilters { /* For section checkboxes */
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+    #sectionFilters label {
+        padding: 5px 8px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        background-color: #282828;
+        color: #eee;
+    }
+    #sectionFilters label:hover {
+        background-color: #353535;
+    }
+    #sectionFilters input[type="checkbox"] {
+        margin-right: 5px;
+    }
+
+
+    .add-item-form, .add-section-form {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
-    .filters label, .filters button { /* Combined for consistency */
-        padding: 5px 8px;
+    .add-item-form input, .add-item-form select, .add-item-form button,
+    .add-section-form input, .add-section-form button {
+        padding: 8px 10px;
         border: 1px solid #333;
         border-radius: 4px;
+        background-color: #282828;
+        color: #eee;
+    }
+    .add-item-form button, .add-section-form button {
         cursor: pointer;
-        transition: background-color 0.2s;
-        background-color: #282828; /* Default background for buttons */
-        color: #eee; /* Default text color for buttons */
+        background-color: #007777; /* Adjusted button color */
     }
-    .filters label:hover, .filters button:hover {
-        background-color: #353535;
+    .add-item-form button:hover, .add-section-form button:hover {
+        background-color: #009999;
     }
-    .filters button.active-filter { /* For All Locations button */
-        background-color: #00aaaa;
-        color: #000;
-        font-weight: bold;
+    .add-item-form input, .add-item-form select,
+    .add-section-form input {
+        min-width: 150px; /* Give some base width */
     }
 
 
@@ -62,12 +121,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      /* cursor: pointer; Will be applied to a specific part if needed */
     }
-    .item-details-clickable { /* New class for the part that opens popup */
+    .item-details-clickable {
         flex-grow: 1;
         cursor: pointer;
-        padding-right: 1rem; /* Space before location badges */
+        padding-right: 1rem;
     }
 
 
@@ -84,21 +142,24 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      padding: 15px; /* Add padding for small screens */
     }
 
     .popup {
       background-color: #222;
       padding: 20px;
       border-radius: 10px;
-      width: 400px;
+      width: 100%; /* Start with 100% */
+      max-width: 400px; /* Max width for popup */
       color: #eee;
+      box-sizing: border-box;
     }
 
     .popup input, .popup select, .popup textarea {
       width: 100%;
       box-sizing: border-box;
       margin-bottom: 10px;
-      padding: 6px;
+      padding: 8px; /* Increased padding */
       background: #111;
       border: 1px solid #444;
       color: #fff;
@@ -113,14 +174,15 @@
     .popup button {
       background: #00cccc;
       border: none;
-      padding: 8px 12px;
+      padding: 10px 15px; /* Increased padding */
       cursor: pointer;
       color: #000;
       font-weight: bold;
       margin-right: 10px;
       border-radius: 4px;
+      margin-top: 5px; /* Add margin for wrapped buttons */
     }
-    .popup button.delete-item-btn { /* Style for delete button in popup */
+    .popup button.delete-item-btn {
         background-color: #cc0000;
         color: #fff;
     }
@@ -140,7 +202,7 @@
       margin-top: 5px;
     }
 
-    .locations-container { /* Container for location badges on the item */
+    .locations-container {
         display: flex;
         gap: 5px;
         flex-wrap: wrap;
@@ -156,13 +218,11 @@
       font-weight: 500;
       white-space: nowrap;
       display: inline-block;
-      cursor: pointer; /* Make badges clickable for filtering */
+      /* cursor: pointer; Removed as badges are not primary filter triggers anymore */
       transition: transform 0.1s ease;
     }
-    .location-badge:hover {
-        transform: scale(1.1);
-    }
-    .location-badge.active-filter-highlight { /* Highlight if this location is the active filter */
+    /* .location-badge:hover { transform: scale(1.1); } */ /* Optional: remove hover if not clickable */
+    .location-badge.active-filter-highlight {
         outline: 2px solid #00ffff;
         box-shadow: 0 0 5px #00ffff;
     }
@@ -177,7 +237,7 @@
       background: #00cccc;
       color: #000;
       border: none;
-      padding: 8px 14px;
+      padding: 10px 16px; /* Increased padding */
       font-weight: bold;
       border-radius: 6px;
       cursor: pointer;
@@ -199,11 +259,13 @@
       background-color: #2a2a2a;
       padding: 20px;
       border-radius: 10px;
-      width: 450px;
+      width: 90%; /* Responsive width */
+      max-width: 450px; /* Max width */
       color: #eee;
       z-index: 1001;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
       border: 1px solid #555;
+      box-sizing: border-box;
     }
 
     .section-editor h2 {
@@ -234,7 +296,7 @@
     #sectionEditList input.rename-input {
       flex-grow: 1;
       margin-right: 10px;
-      padding: 6px;
+      padding: 8px; /* Increased padding */
       background: #111;
       border: 1px solid #444;
       color: #fff;
@@ -245,7 +307,7 @@
       background: #ff4444;
       color: #fff;
       border: none;
-      padding: 4px 8px;
+      padding: 6px 10px; /* Adjusted padding */
       border-radius: 4px;
       cursor: pointer;
       font-weight: bold;
@@ -257,15 +319,97 @@
     .section-editor button {
       background: #00cccc;
       border: none;
-      padding: 8px 12px;
+      padding: 10px 15px; /* Increased padding */
       cursor: pointer;
       color: #000;
       font-weight: bold;
       border-radius: 4px;
       transition: background 0.2s ease;
+      margin-top: 10px; /* Spacing for buttons */
     }
     .section-editor button:hover {
       background: #00eeee;
+    }
+
+    /* --- Smartphone Adjustments --- */
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+        h1 {
+            font-size: 2rem;
+        }
+        .filters-container,
+        .add-item-form, .add-section-form {
+            gap: 1rem; /* Reduce gap slightly */
+        }
+        
+        #topButtonFilters .filter-btn {
+            padding: 10px 10px; /* Adjust padding for better tap targets */
+            font-size: 0.85rem;
+            flex-grow: 1; /* Allow buttons to fill space and wrap */
+            min-width: 70px; /* Minimum width for buttons */
+            text-align: center;
+        }
+        
+        .add-item-form, .add-section-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .add-item-form input, .add-item-form select, .add-item-form button,
+        .add-section-form input, .add-section-form button {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            box-sizing: border-box;
+        }
+        .add-item-form input, .add-item-form select {
+            min-width: 0; /* Override desktop min-width */
+        }
+
+
+        .item {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0.8rem;
+        }
+        .item-details-clickable {
+            margin-bottom: 0.75rem;
+            padding-right: 0;
+            width: 100%; /* Take full width */
+        }
+        .locations-container {
+            justify-content: flex-start;
+            width: 100%;
+        }
+        .location-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.7rem;
+        }
+        p.subtitle {
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+        #topButtonFilters .filter-btn {
+            font-size: 0.8rem;
+             min-width: 60px;
+        }
+        .popup button {
+             width: calc(50% - 5px); /* Two buttons per row in popup */
+             margin-right: 5px;
+        }
+        .popup button:nth-child(odd) { /* Adjust for delete button later if needed */
+            /* margin-right: 10px; */
+        }
+         .popup button:last-of-type { /* Make delete button full width if it's the last one visible */
+            /* width: 100%;
+            margin-right: 0; */
+        }
     }
 
   </style>
@@ -273,18 +417,21 @@
 <body>
   <h1>SUPER HUB</h1>
   <p class="subtitle">
-    This is the terminal board console for managing all parts — from enduring equipment to expendable inventory — across all sections.
+    This is the terminal board console for managing all parts across all sections.
   </p>
 
-  <section class="filters">
-    <label><input type="checkbox" id="toggleLoadout" /> Show Loadout Only</label>
-    <label><input type="radio" name="type" value="all" checked /> All</label>
-    <label><input type="radio" name="type" value="equipment" /> Equipment</label>
-    <label><input type="radio" name="type" value="inventory" /> Inventory</label>
-    <button id="showAllLocationsBtn">All Locations</button> <!-- Button to show all locations -->
-  </section>
+  <div class="filters-container">
+    <section id="topButtonFilters">
+      <button data-filter-type="all" class="filter-btn active">ALL</button>
+      <button data-filter-type="loadlist" class="filter-btn">LOADLIST</button>
+      <button data-filter-type="location" data-location="tokyo" class="filter-btn">東京</button>
+      <button data-filter-type="location" data-location="himeji" class="filter-btn">姫路</button>
+      <button data-filter-type="location" data-location="baggage" class="filter-btn">手荷物</button>
+      <button data-filter-type="location" data-location="car" class="filter-btn">車</button>
+    </section>
 
-  <section class="filters" id="sectionFilters"></section>
+    <section id="sectionFilters"></section>
+  </div>
   
   <section style="text-align: center; margin-bottom: 1.5rem;">
     <button id="editSectionBtn">SECTION EDIT</button>
@@ -297,10 +444,7 @@
 
   <section class="add-item-form">
     <input type="text" id="itemName" placeholder="Item name">
-    <select id="itemType">
-      <option value="equipment">Equipment</option>
-      <option value="inventory">Inventory</option>
-    </select>
+    <!-- Item Type select removed -->
     <select id="itemSection"></select>
     <button onclick="addItem()">Add Item</button>
   </section>
@@ -327,7 +471,7 @@
       <label><input type="checkbox" id="inputLoadout"> Include in Loadout</label><br><br>
       <button onclick="savePopup()">Save</button>
       <button onclick="closePopup()">Close</button>
-      <button onclick="deleteCurrentItem()" class="delete-item-btn">Delete Item</button> <!-- Delete button -->
+      <button onclick="deleteCurrentItem()" class="delete-item-btn">Delete Item</button>
     </div>
   </div>
 
@@ -344,7 +488,6 @@
   let sections = ['wear', 'ec'];
   let currentItem = null;
 
-  // Mappable locations for display and consistency
   const LOCATION_DETAILS = {
     'tokyo': { label: '東京', class: 'tokyo' },
     'himeji': { label: '姫路', class: 'himeji' },
@@ -352,7 +495,9 @@
     'car': { label: '車', class: 'car' }
   };
 
-  let activeLocationFilter = null; // null or 'all' means no specific location filter
+  // Filters state
+  let activeLocationFilter = null; // null or 'tokyo', 'himeji', etc.
+  let showLoadoutFilterActive = false;
 
   function saveToStorage() {
     localStorage.setItem('superhub_items', JSON.stringify(items));
@@ -367,31 +512,36 @@
     items.forEach(item => {
         if (!item.location) item.location = [];
         if (!item.tags) item.tags = [];
-        // Ensure item has a unique ID if it doesn't already
         if (!item.id) item.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+        // delete item.type; // Optionally remove 'type' from old data on load, or just ignore it
     });
   }
 
-  // Function to handle location filter activation
-  function setLocationFilter(locationId, event) {
-    if (event) event.stopPropagation(); // Prevent popup from opening when clicking badge
+  function updateTopFilterButtonsUI() {
+    document.querySelectorAll('#topButtonFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
 
-    if (activeLocationFilter === locationId) { // If clicking the same active filter, deactivate it
-        activeLocationFilter = null;
-    } else {
-        activeLocationFilter = locationId;
+    const loadlistBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="loadlist"]');
+    if (showLoadoutFilterActive) {
+        if(loadlistBtn) loadlistBtn.classList.add('active');
     }
-    updateShowAllLocationsButtonState();
-    renderItems();
-  }
 
-  function updateShowAllLocationsButtonState() {
-    const btn = document.getElementById('showAllLocationsBtn');
-    if (activeLocationFilter === null) {
-        btn.classList.add('active-filter');
+    if (activeLocationFilter) {
+        const locBtn = document.querySelector(`#topButtonFilters .filter-btn[data-location="${activeLocationFilter}"]`);
+        if (locBtn) locBtn.classList.add('active');
     } else {
-        btn.classList.remove('active-filter');
+        // If no location filter is active, "ALL" button is active, unless ONLY loadout is active.
+        if (!showLoadoutFilterActive) { // If loadout is not active, and location is not active, ALL is active.
+            const allBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="all"]');
+            if (allBtn) allBtn.classList.add('active');
+        } else { // If loadout IS active, and location is not, ALL is not active.
+             const allBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="all"]');
+            if (allBtn) allBtn.classList.remove('active');
+        }
     }
+     // If both loadout and a location are active, ALL should be inactive. The above handles this.
+     // If only loadout is active, ALL is inactive.
+     // If only a location is active, ALL is inactive.
+     // If NEITHER is active, ALL is active.
   }
 
 
@@ -403,7 +553,14 @@
 
     sections.forEach(sec => {
       const label = document.createElement('label');
-      label.innerHTML = `<input type="checkbox" class="sectionFilter" value="${sec}" checked> ${sec}`;
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'sectionFilter';
+      checkbox.value = sec;
+      checkbox.checked = true;
+      checkbox.addEventListener('change', renderItems);
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(` ${sec}`));
       sectionFiltersContainer.appendChild(label);
 
       const option = document.createElement('option');
@@ -418,30 +575,28 @@
         noSectionOption.disabled = true;
         sectionSelectDropdown.appendChild(noSectionOption);
     }
-
-    document.querySelectorAll('.sectionFilter').forEach(cb =>
-      cb.addEventListener('change', renderItems)
-    );
   }
 
   function renderItems() {
     const itemList = document.getElementById('itemList');
-    const showLoadoutOnly = document.getElementById('toggleLoadout').checked;
-    const selectedType = document.querySelector('input[name="type"]:checked').value;
     const selectedSectionCheckboxes = [...document.querySelectorAll('.sectionFilter:checked')];
     const selectedSections = selectedSectionCheckboxes.map(cb => cb.value);
     
     const filtered = items.filter(item => {
-      if (showLoadoutOnly && !item.loadout) return false;
-      if (selectedType !== "all" && item.type !== selectedType) return false;
+      if (showLoadoutFilterActive && !item.loadout) return false;
       
-      if (selectedSections.length > 0) {
+      // Section filter
+      if (selectedSections.length > 0 && sections.length > 0) { // Apply section filter only if there are sections and some are selected
           if (!item.section || !selectedSections.includes(item.section)) {
               return false;
           }
+      } else if (sections.length > 0 && selectedSections.length === 0) { // If sections exist but none selected, show nothing
+          return false;
       }
+      // If no sections are defined at all, don't filter by section.
 
-      if (activeLocationFilter && activeLocationFilter !== 'all') { // 'all' is now handled by null
+      // Location filter
+      if (activeLocationFilter) {
         if (!item.location || !Array.isArray(item.location) || !item.location.includes(activeLocationFilter)) {
           return false;
         }
@@ -453,14 +608,13 @@
       if (!Array.isArray(itemLocations) || itemLocations.length === 0) return '';
       return itemLocations.map(locKey => {
         const locDetail = LOCATION_DETAILS[locKey];
-        if (!locDetail) return `<span class="location-badge">${locKey}</span>`; // Fallback for unknown location
+        if (!locDetail) return `<span class="location-badge">${locKey}</span>`;
         
         let badgeClass = `location-badge ${locDetail.class}`;
-        if (locKey === activeLocationFilter) {
-            badgeClass += ' active-filter-highlight'; // Highlight if this location is the current filter
+        if (locKey === activeLocationFilter) { // Highlight badge if it matches the active top filter
+            badgeClass += ' active-filter-highlight';
         }
-        // The data-location attribute will be used to identify which location was clicked
-        return `<span class="${badgeClass}" data-location="${locKey}">${locDetail.label}</span>`;
+        return `<span class="${badgeClass}">${locDetail.label}</span>`;
       }).join('');
     }
 
@@ -468,9 +622,8 @@
     filtered.forEach(item => {
       const div = document.createElement('div');
       div.className = 'item' + (item.loadout ? ' loadout' : '');
-      div.dataset.itemId = item.id; // For easier reference, e.g., for deletion
+      div.dataset.itemId = item.id;
 
-      // Div for item name and tags, which is clickable for popup
       const detailsDiv = document.createElement('div');
       detailsDiv.className = 'item-details-clickable';
       detailsDiv.innerHTML = `
@@ -479,37 +632,36 @@
       `;
       detailsDiv.onclick = () => openPopup(item);
 
-      // Container for location badges
       const locationsDiv = document.createElement('div');
       locationsDiv.className = 'locations-container';
       locationsDiv.innerHTML = renderLocationsHTML(item.location);
       
-      // Add click listeners to individual location badges within this item
-      locationsDiv.querySelectorAll('.location-badge').forEach(badge => {
-        badge.onclick = (event) => setLocationFilter(badge.dataset.location, event);
-      });
+      // Removed: Location badges no longer trigger filters on click
+      // locationsDiv.querySelectorAll('.location-badge').forEach(badge => {
+      //   badge.onclick = (event) => setLocationFilter(badge.dataset.location, event);
+      // });
 
       div.appendChild(detailsDiv);
       div.appendChild(locationsDiv);
       itemList.appendChild(div);
     });
 
-    updateShowAllLocationsButtonState(); // Ensure "All Locations" button state is correct
+    updateTopFilterButtonsUI();
     saveToStorage();
   }
 
   function addItem() {
     const nameInput = document.getElementById('itemName');
-    const type = document.getElementById('itemType').value;
+    // const type = document.getElementById('itemType').value; // Removed
     const section = document.getElementById('itemSection').value;
     const name = nameInput.value.trim();
 
     if (name) {
       const newItem = { 
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2), // Unique ID
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
         name, 
-        type, 
-        section: section || undefined,
+        // type, // Removed
+        section: section || undefined, // Keep section logic
         loadout: false, 
         location: [], 
         tags: [] 
@@ -525,7 +677,7 @@
   document.getElementById('editSectionBtn').onclick = function () {
     const editor = document.getElementById('sectionEditor');
     const list = document.getElementById('sectionEditList');
-    list.innerHTML = '';
+    list.innerHTML = ''; // Clear previous list
 
     sections.forEach((sec, index) => {
       const li = document.createElement('li');
@@ -533,26 +685,9 @@
       input.type = 'text';
       input.value = sec;
       input.className = 'rename-input';
-
-      const deleteBtn = document.createElement('button');
-      deleteBtn.className = 'delete-btn';
-      deleteBtn.textContent = '✕';
-      deleteBtn.onclick = () => {
-        if (confirm(`Delete section "${sec}"? This will remove the section from all associated items.`)) {
-          const sectionToDelete = sections[index];
-          sections.splice(index, 1);
-          items.forEach(item => {
-            if (item.section === sectionToDelete) delete item.section;
-          });
-          saveToStorage();
-          renderSections();
-          renderItems();
-          document.getElementById('editSectionBtn').click();
-        }
-      };
-
-      input.onchange = () => {
-        const oldName = sec;
+      // Debounce or onblur save for renaming might be better, but onchange is simpler for now
+      input.onchange = () => { // Save on change
+        const oldName = sections[index]; // Use current section name from array
         const newName = input.value.trim().toLowerCase();
         if (newName && newName !== oldName && !sections.includes(newName)) {
           sections[index] = newName;
@@ -560,13 +695,36 @@
             if (item.section === oldName) item.section = newName;
           });
           saveToStorage();
-          renderSections();
-          renderItems();
-        } else if (newName !== oldName) {
+          renderSections(); // Re-render section filters and dropdown
+          renderItems();    // Re-render items based on new section names
+          // No need to reopen editor, current changes are applied
+        } else if (newName !== oldName) { // Invalid or duplicate
           alert(`Section name "${newName}" is invalid or already exists.`);
-          input.value = oldName;
+          input.value = oldName; // Revert
+        } else if (!newName) { // Empty name
+            alert("Section name cannot be empty.");
+            input.value = oldName; // Revert
         }
       };
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.textContent = '✕';
+      deleteBtn.onclick = () => {
+        const sectionToDelete = sections[index]; // Get current name before potential edits
+        if (confirm(`Delete section "${sectionToDelete}"? This will remove the section from all associated items.`)) {
+          sections.splice(index, 1);
+          items.forEach(item => {
+            if (item.section === sectionToDelete) delete item.section;
+          });
+          saveToStorage();
+          renderSections();
+          renderItems();
+          // Re-populate editor after deletion to reflect changes
+          document.getElementById('editSectionBtn').click(); 
+        }
+      };
+      
       li.appendChild(input);
       li.appendChild(deleteBtn);
       list.appendChild(li);
@@ -576,6 +734,11 @@
 
   function closeSectionEditor() {
     document.getElementById('sectionEditor').classList.add('hidden');
+    // After closing, re-render sections and items in case names were changed but not saved by onchange (e.g. focus lost)
+    // This is a bit redundant if onchange always fires, but safe.
+    // However, with onchange, this might not be strictly necessary.
+    // renderSections(); 
+    // renderItems();
   }
 
   function addSection() {
@@ -595,11 +758,8 @@
   }
 
   function openPopup(item) {
-    currentItem = items.find(i => i.id === item.id); // Ensure currentItem is the one from the main array
-    if (!currentItem) {
-        console.error("Item not found for popup:", item);
-        return;
-    }
+    currentItem = items.find(i => i.id === item.id);
+    if (!currentItem) return;
     document.getElementById('popupOverlay').style.display = 'flex';
     document.getElementById('inputSite').value = currentItem.site || '';
     document.getElementById('inputURL').value = currentItem.url || '';
@@ -626,7 +786,6 @@
       currentItem.loadout = document.getElementById('inputLoadout').checked;
       currentItem.location = [...document.querySelectorAll('.locCheck:checked')].map(cb => cb.value);
       
-      // Update the item in the main items array (currentItem is already a reference)
       renderItems();
       closePopup();
     }
@@ -634,36 +793,43 @@
 
   function closePopup() {
     document.getElementById('popupOverlay').style.display = 'none';
-    currentItem = null; // Clear current item
+    currentItem = null;
   }
 
   function deleteCurrentItem() {
     if (currentItem && confirm(`Are you sure you want to delete item "${currentItem.name}"?`)) {
       items = items.filter(item => item.id !== currentItem.id);
-      renderItems(); // This will also call saveToStorage()
+      renderItems();
       closePopup();
     }
   }
   
+  // Event listeners for new top filter buttons
+  document.querySelectorAll('#topButtonFilters .filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const filterType = button.dataset.filterType;
+        const location = button.dataset.location;
+
+        if (filterType === 'all') {
+            activeLocationFilter = null;
+            showLoadoutFilterActive = false; // "ALL" resets both location and loadout
+        } else if (filterType === 'loadlist') {
+            showLoadoutFilterActive = !showLoadoutFilterActive;
+        } else if (filterType === 'location') {
+            if (activeLocationFilter === location) { // Clicking active location button deactivates it
+                activeLocationFilter = null;
+            } else {
+                activeLocationFilter = location;
+            }
+        }
+        renderItems(); // This will also call updateTopFilterButtonsUI
+    });
+  });
+
   // Initial setup
   loadFromStorage();
   renderSections();
   renderItems(); // Initial render
-  updateShowAllLocationsButtonState(); // Set initial state for "All Locations" button
-
-  // Event listener for "All Locations" button
-  document.getElementById('showAllLocationsBtn').addEventListener('click', () => {
-    activeLocationFilter = null; // Set to null to show all
-    updateShowAllLocationsButtonState();
-    renderItems();
-  });
-
-
-  document.querySelectorAll('input[name="type"], #toggleLoadout')
-    .forEach(el => el.addEventListener('change', () => {
-        // No need to directly call updateShowAllLocationsButtonState here unless these filters affect it
-        renderItems();
-    }));
 
 </script>
 </body>
