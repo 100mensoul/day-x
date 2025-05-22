@@ -5,7 +5,6 @@
   <title>SUPER HUB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* CSSは前回のものから大きな変更なし */
     body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #111; color: #eee; padding: 15px; }
     h1 { font-size: 2.2rem; color: #00ffff; text-align: center; margin-top: 0; margin-bottom: 0.5rem; }
     p.subtitle { text-align: center; color: #aaa; margin-bottom: 1.2rem; font-size: 0.9rem; }
@@ -19,17 +18,27 @@
     .section-filter-btn { padding: 6px 12px; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: background-color 0.2s, color 0.2s; background-color: #282828; color: #eee; font-size: 0.85rem; }
     .section-filter-btn:hover { background-color: #383838; }
     .section-filter-btn.active { background-color: #009999; color: #fff; font-weight: bold; }
-    #editSectionBtn, .add-item-form button, .add-section-form-popup button { background-color: #007777; color: #eee; border: 1px solid #333; padding: 7px 14px; border-radius: 4px; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; font-size: 0.85rem; height: 34px; box-sizing: border-box; font-weight: normal; }
+    #editSectionBtn, 
+    .add-item-form button, /* This will be the "Add New Item" button */
+    .add-section-form-popup button { background-color: #007777; color: #eee; border: 1px solid #333; padding: 7px 14px; border-radius: 4px; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; font-size: 0.85rem; height: 34px; box-sizing: border-box; font-weight: normal; }
     #editSectionBtn:hover, .add-item-form button:hover, .add-section-form-popup button:hover { background-color: #009999; }
-    .add-item-form input[type="text"], .add-item-form select, .add-section-form-popup input[type="text"] { padding: 7px 9px; border: 1px solid #333; border-radius: 4px; background-color: #282828; color: #eee; font-size: 0.85rem; height: 34px; box-sizing: border-box; }
+    
+    /* .add-item-form input[type="text"], .add-item-form select are removed from main form for this flow */
+    .add-section-form-popup input[type="text"],
+    .popup input#popupItemName, /* Specifically target item name in popup */
+    .popup select#popupItemSection /* Specifically target section select in popup */
+     { padding: 7px 9px; border: 1px solid #333; border-radius: 4px; background-color: #282828; color: #eee; font-size: 0.85rem; height: 34px; box-sizing: border-box; }
+    
     .add-item-form { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-    .add-item-form input[type="text"]#itemName { min-width: 140px; }
-    .add-item-form select#itemSection { min-width: 100px; }
+    /* Remove min-width from #itemSection as it's now only for pre-selection and hidden */
+    /* .add-item-form select#itemSection { min-width: 100px; } */
+
+
     .item-list { max-width: 800px; margin: 0 auto; }
     .item { background-color: #222; border: 1px solid #444; border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
     .item-details-clickable { flex-grow: 1; cursor: pointer; padding-right: 1rem; }
-    .item-name-line { display: flex; align-items: baseline; }
-    .item-no { font-size: 0.8em; color: #88dddd; margin-right: 0.5em; }
+    .item-name-line { display: flex; align-items: baseline; } 
+    .item-no { font-size: 0.8em; color: #88dddd; margin-right: 0.5em; font-family: monospace;}
     .item.loadout { border-color: #00ffff; background-color: #113; }
     .popup-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
     .popup { background-color: #222; padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; color: #eee; box-sizing: border-box; }
@@ -39,9 +48,10 @@
     .popup button.delete-item-btn { background-color: #cc0000; color: #fff; }
     .popup button.delete-item-btn:hover { background-color: #aa0000; }
     .popup-header { font-size: 1.2rem; margin-bottom: 10px; }
+    .popup-header .item-no-popup { font-family: monospace; color: #88dddd;}
     .tags { font-size: 0.85rem; color: #ccc; margin-top: 5px; }
     .locations-container { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
-    .location-badge { color: #000; background-color: #00aaaa; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; white-space: nowrap; display: inline-block; transition: transform 0.1s ease; }
+    .location-badge { color: #000; background-color: #00aaaa; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; white-space: nowrap; display: inline-block; }
     .location-badge.active-filter-highlight { outline: 2px solid #00ffff; box-shadow: 0 0 5px #00ffff; }
     .location-badge.tokyo { background-color: #00ccff; } .location-badge.himeji { background-color: #ffcc00; } .location-badge.baggage { background-color: #ff8888; } .location-badge.car { background-color: #aaffaa; }
     .hidden { display: none !important; }
@@ -69,8 +79,8 @@
         .section-filter-btn { padding: 7px 9px; font-size: 0.75rem; }
         #editSectionBtn { padding: 7px 10px; font-size: 0.75rem; height: 32px; }
         .add-item-form { flex-direction: column; align-items: stretch; gap: 0.5rem; margin-bottom: 0.8rem; }
-        .add-item-form input[type="text"], .add-item-form select, .add-item-form button { width: 100%; margin-bottom: 0.3rem; padding: 9px 10px; font-size: 0.85rem; }
-        .add-item-form input[type="text"], .add-item-form select { min-width: 0; height: 34px; }
+        .add-item-form select, .add-item-form button { width: 100%; margin-bottom: 0.3rem; padding: 9px 10px; font-size: 0.85rem; }
+        .add-item-form select { min-width: 0; height: 34px; }
         .add-item-form button { height: 34px; }
         .item { flex-direction: column; align-items: flex-start; padding: 0.7rem; }
         .item-details-clickable { margin-bottom: 0.6rem; padding-right: 0; width: 100%; }
@@ -87,8 +97,7 @@
         #sectionFilters { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; flex-grow: 1; }
         .section-filter-btn { width: auto; padding: 5px 10px; font-size: 0.75rem; height: 30px; flex-shrink: 0; }
         .add-item-form { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.5rem; margin-bottom: 1rem; }
-        /* ItemName input is removed from here in this new flow */
-        .add-item-form select#itemSection { flex-grow: 1; min-width: 100px; width: auto; height: 32px; font-size: 0.8rem; padding: 5px 8px; }
+        .add-item-form select#itemSection { display: none; } 
         .add-item-form button#addItemBtn { width: auto; padding: 5px 12px; font-size: 0.75rem; height: 32px; flex-shrink: 0; }
         .popup button { width: calc(50% - 5px); margin-right: 5px; font-size: 0.85rem; padding: 8px 10px; }
         .popup button:nth-child(2n) { margin-right: 0; }
@@ -97,12 +106,17 @@
 </head>
 <body>
   <h1>SUPER HUB</h1>
-  <p class="subtitle">
-    This is the terminal board console for managing all parts across all sections.
-  </p>
+  <p class="subtitle">This is the terminal board console for managing all parts across all sections.</p>
 
   <div class="filters-container">
-    <section id="topButtonFilters"><!-- ... (buttons) ... --></section>
+    <section id="topButtonFilters">
+      <button data-filter-type="all" class="filter-btn active">ALL</button>
+      <button data-filter-type="loadlist" class="filter-btn">LOADLIST</button>
+      <button data-filter-type="location" data-location="tokyo" class="filter-btn">東京</button>
+      <button data-filter-type="location" data-location="himeji" class="filter-btn">姫路</button>
+      <button data-filter-type="location" data-location="baggage" class="filter-btn">手荷物</button>
+      <button data-filter-type="location" data-location="car" class="filter-btn">車</button>
+    </section>
   </div>
   
   <div class="controls-row">
@@ -110,12 +124,9 @@
     <div id="sectionFilters"></div>
   </div>
 
-  <!-- Add Item form now primarily triggers the popup flow -->
   <section class="add-item-form">
-    <!-- Item name input is removed, as it will be handled in popup -->
-    <!-- Section select can optionally be kept to pre-select section for new item, or removed -->
-    <select id="itemSection" style="display: none;"></select> <!-- Keep for logic, but hide if not pre-selecting -->
-    <button id="addItemBtn" onclick="addNewItemAndOpenPopup()">Add New Item</button>
+    <select id="itemSection" style="display: none;"></select> 
+    <button id="addItemBtn" onclick="prepareNewItemPopup()">Add New Item</button>
   </section>
 
   <section class="item-list" id="itemList"></section>
@@ -123,13 +134,18 @@
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
       <div class="popup-header">Item Details</div>
-      <!-- Add Item Name input to the popup -->
       <input id="popupItemName" placeholder="Item Name"> 
+      <select id="popupItemSection"></select>
       <input id="inputSite" placeholder="Purchase Site Name">
       <input id="inputURL" placeholder="URL">
       <input id="inputCount" placeholder="Quantity">
       <div>Location:</div>
-        <div id="locationCheckboxes"><!-- ... (checkboxes) ... --></div>
+      <div id="locationCheckboxes">
+          <label><input type="checkbox" class="locCheck" value="tokyo"> Tokyo</label>
+          <label><input type="checkbox" class="locCheck" value="himeji"> Himeji</label>
+          <label><input type="checkbox" class="locCheck" value="baggage"> Baggage</label>
+          <label><input type="checkbox" class="locCheck" value="car"> Car</label>
+      </div>
       <input id="inputStatus" placeholder="Condition">
       <textarea id="inputMemo" rows="2" placeholder="Memo..."></textarea>
       <input id="inputTags" placeholder="Tags (comma separated)">
@@ -148,34 +164,127 @@
         <input type="text" id="newSectionNamePopup" placeholder="New Section Name">
         <div> <button onclick="addSection(true)">Add Section</button> </div>
     </div>
-    <div style="text-align:center; margin-top: 1rem;">
-      <button onclick="closeSectionEditor()">Close</button>
-    </div>
+    <div style="text-align:center; margin-top: 1rem;"> <button onclick="closeSectionEditor()">Close</button> </div>
   </div>
 
 <script>
   let items = [];
   let sections = ['wear', 'ec'];
-  let currentItem = null; // Holds the item being edited in the popup
-  let isNewItemInPopup = false; // Flag to know if popup is for a new item
+  let currentItem = null; // The item currently being edited or viewed in popup
+  let isNewItemInPopup = false; // Flag to indicate if the popup is for a new item
   let nextItemNo = 1;
 
-  const LOCATION_DETAILS = { /* ... */ };
+  const LOCATION_DETAILS = { /* ... (same as before) ... */ };
   let activeLocationFilter = null;
   let showLoadoutFilterActive = false;
   let isAllModeActive = true; 
 
-  function saveToStorage() { /* ... (includes nextItemNo) ... */ }
-  function loadFromStorage() { /* ... (includes nextItemNo logic) ... */ }
-  function updateTopFilterButtonsUI() { /* ... */ }
-  function renderSections() { /* ... */ }
+  function formatItemNo(num) {
+    return `[${String(num).padStart(4, '0')}]`;
+  }
+
+  function saveToStorage() {
+    localStorage.setItem('superhub_items', JSON.stringify(items));
+    localStorage.setItem('superhub_sections', JSON.stringify(sections));
+    localStorage.setItem('superhub_nextItemNo', nextItemNo.toString());
+  }
+
+  function loadFromStorage() {
+    const savedItems = localStorage.getItem('superhub_items');
+    const savedSections = localStorage.getItem('superhub_sections');
+    const savedNextItemNo = localStorage.getItem('superhub_nextItemNo');
+
+    if (savedItems) items = JSON.parse(savedItems);
+    if (savedSections && JSON.parse(savedSections).length > 0) {
+        sections = JSON.parse(savedSections);
+    } else if (sections.length === 0 && items.some(item => item.section)) {
+        const uniqueSectionsFromItems = [...new Set(items.map(item => item.section).filter(Boolean))];
+        if (uniqueSectionsFromItems.length > 0) sections = uniqueSectionsFromItems;
+    }
+
+    if (savedNextItemNo) {
+        nextItemNo = parseInt(savedNextItemNo, 10);
+    } else {
+        if (items.length > 0) {
+            nextItemNo = Math.max(0, ...items.map(item => item.itemNo || 0)) + 1;
+        } else {
+            nextItemNo = 1;
+        }
+    }
+    
+    items.forEach((item, index) => { // Ensure all items have an itemNo
+        if (item.itemNo === undefined) {
+            // This logic for assigning to old items needs care to avoid conflicts if nextItemNo was reset
+            // A more robust way would be to find max existing itemNo and start from there if savedNextItemNo is missing
+            item.itemNo = nextItemNo++; 
+        }
+        if (!item.id) item.id = Date.now().toString(36) + Math.random().toString(36).substr(2) + index; // Ensure unique ID
+    });
+    // Recalculate nextItemNo to be safe after potentially assigning to old items
+    if (items.length > 0) {
+        const maxExistingNo = Math.max(0, ...items.map(item => item.itemNo || 0));
+        nextItemNo = Math.max(nextItemNo, maxExistingNo + 1);
+    } else {
+        nextItemNo = 1;
+    }
+  }
+  
+  function updateTopFilterButtonsUI() { /* ... (same as before) ... */ }
+  
+  function renderSections() {
+    const sectionFiltersContainer = document.getElementById('sectionFilters');
+    const itemSectionDropdown = document.getElementById('itemSection');
+    const popupSectionDropdown = document.getElementById('popupItemSection');
+    
+    sectionFiltersContainer.innerHTML = '';
+    itemSectionDropdown.innerHTML = '';
+    popupSectionDropdown.innerHTML = '';
+
+    const activeSectionButtonsBeforeRender = isAllModeActive ? sections : 
+        [...document.querySelectorAll('#sectionFilters .section-filter-btn.active')].map(btn => btn.dataset.section);
+
+    sections.forEach(sec => {
+      const button = document.createElement('button');
+      button.className = 'section-filter-btn';
+      button.textContent = sec; button.dataset.section = sec;
+      if (isAllModeActive || activeSectionButtonsBeforeRender.includes(sec) || (activeSectionButtonsBeforeRender.length === 0 && sections.length > 0 && !isAllModeActive) ) {
+           button.classList.add('active');
+      }
+      button.onclick = () => { isAllModeActive = false; button.classList.toggle('active'); renderItems(); };
+      sectionFiltersContainer.appendChild(button);
+      
+      const optionPreselect = document.createElement('option');
+      optionPreselect.value = sec; optionPreselect.textContent = sec;
+      itemSectionDropdown.appendChild(optionPreselect);
+
+      const optionPopup = document.createElement('option');
+      optionPopup.value = sec; optionPopup.textContent = sec;
+      popupSectionDropdown.appendChild(optionPopup);
+    });
+
+    if (sections.length === 0) {
+        const noSectionText = "No sections defined";
+        // Populate hidden pre-select dropdown
+        if (itemSectionDropdown.options.length === 0) {
+            const noOptPre = document.createElement('option');
+            noOptPre.value = ""; noOptPre.textContent = noSectionText; noOptPre.disabled = true; 
+            itemSectionDropdown.appendChild(noOptPre);
+        }
+        // Populate popup dropdown
+        if (popupSectionDropdown.options.length === 0) {
+            const noOptPopup = document.createElement('option');
+            noOptPopup.value = ""; noOptPopup.textContent = noSectionText; noOptPopup.disabled = true; 
+            popupSectionDropdown.appendChild(noOptPopup);
+        }
+    }
+  }
 
   function renderItems() {
     const itemList = document.getElementById('itemList');
     let itemsToDisplay = items;
-    if (!isAllModeActive) { itemsToDisplay = items.filter(/* ... */); }
-    const displayedItemsSorted = itemsToDisplay.slice().reverse();
-    function renderLocationsHTML(itemLocations) { /* ... */ }
+    if (!isAllModeActive) { itemsToDisplay = items.filter(/* ... (filter logic same as before) ... */); }
+    const displayedItemsSorted = itemsToDisplay.slice().reverse(); // Newest first
+    function renderLocationsHTML(itemLocations) { /* ... (same as before) ... */ }
     itemList.innerHTML = '';
     displayedItemsSorted.forEach(item => {
       const div = document.createElement('div');
@@ -187,15 +296,15 @@
       itemNameLine.className = 'item-name-line';
       const itemNoSpan = document.createElement('span');
       itemNoSpan.className = 'item-no';
-      itemNoSpan.textContent = `No.${item.itemNo || 'N/A'}`;
+      itemNoSpan.textContent = formatItemNo(item.itemNo || 0);
       const itemNameStrong = document.createElement('strong');
-      itemNameStrong.textContent = item.name || "(Untitled)"; // Show (Untitled) if name is empty
+      itemNameStrong.textContent = item.name || "(Untitled)";
       itemNameLine.appendChild(itemNoSpan); itemNameLine.appendChild(itemNameStrong);
       const tagsDiv = document.createElement('div');
       tagsDiv.className = 'tags';
       tagsDiv.textContent = item.tags && item.tags.length > 0 ? item.tags.join(', ') : '';
       detailsDiv.appendChild(itemNameLine); detailsDiv.appendChild(tagsDiv);
-      detailsDiv.onclick = () => openPopup(item); // Existing items
+      detailsDiv.onclick = () => openPopup(item, false); // Pass false for existing item
       const locationsDiv = document.createElement('div');
       locationsDiv.className = 'locations-container'; 
       locationsDiv.innerHTML = renderLocationsHTML(item.location);
@@ -206,73 +315,52 @@
     saveToStorage();
   }
 
-  // Renamed addItem to reflect new behavior
-  function addNewItemAndOpenPopup() {
-    const defaultSection = document.getElementById('itemSection').value || (sections.length > 0 ? sections[0] : undefined);
-    
+  function prepareNewItemPopup() {
+    const defaultSection = document.getElementById('itemSection').value || (sections.length > 0 ? sections[0] : "");
     const newItem = { 
       id: Date.now().toString(36) + Math.random().toString(36).substr(2), 
-      itemNo: nextItemNo, // Assign current nextItemNo, increment happens after successful save or handled differently
-      name: `New Item (No.${nextItemNo})`, // Temporary name
+      itemNo: nextItemNo, // Use current nextItemNo for the new item
+      name: "", 
       section: defaultSection, 
-      loadout: false, 
-      location: [], 
-      tags: [],
-      // other fields to empty/default
-      site: '', url: '', count: '', status: '', memo: ''
+      loadout: false, location: [], tags: [],
+      site: '', url: '', count: '1', status: '', memo: ''
     };
-    
-    // Add to items array temporarily or handle this carefully
-    // items.push(newItem); // Add to the end for now, will be re-rendered
-    // currentItem = newItem; // Set as current for the popup
-    // isNewItemInPopup = true; // Set flag
-
-    // renderItems(); // Render to show it in the list (might be at the bottom initially before sort)
-    openPopup(newItem, true); // Pass a flag to indicate it's a new item
+    openPopup(newItem, true); // Open popup for this new, unsaved item object
   }
 
-
-  function openPopup(item, isNew = false) {
-    currentItem = item; // This might be an existing item or a new one passed from addNewItemAndOpenPopup
+  function openPopup(itemData, isNew = false) {
+    currentItem = itemData; // Store the item object (could be new or existing)
     isNewItemInPopup = isNew;
 
     document.getElementById('popupOverlay').style.display = 'flex';
-    
-    // Populate popup fields
     const popupHeader = document.querySelector('.popup-header');
-    const itemNameInput = document.getElementById('popupItemName'); // New input for item name
+    const itemNameInput = document.getElementById('popupItemName');
+    const popupSectionSelect = document.getElementById('popupItemSection');
+
+    itemNameInput.value = itemData.name || '';
+    popupSectionSelect.value = itemData.section || (sections.length > 0 ? sections[0] : "");
 
     if (isNew) {
-        // For new items, set defaults or clear fields
-        itemNameInput.value = ""; // Clear for user to type, or use item.name as placeholder
-        itemNameInput.placeholder = item.name; // Show temporary name as placeholder
-        if(popupHeader) popupHeader.textContent = `Add New Item (No.${item.itemNo})`;
+        if(popupHeader) popupHeader.innerHTML = `Add New Item <span class="item-no-popup">${formatItemNo(itemData.itemNo)}</span>`;
         document.getElementById('inputSite').value = '';
         document.getElementById('inputURL').value = '';
-        document.getElementById('inputCount').value = '1'; // Default quantity
+        document.getElementById('inputCount').value = '1';
         document.getElementById('inputStatus').value = '';
         document.getElementById('inputMemo').value = '';
         document.getElementById('inputTags').value = '';
         document.getElementById('inputLoadout').checked = false;
         document.querySelectorAll('.locCheck').forEach(cb => cb.checked = false);
-        
-        // Temporarily add to items array if it's truly new and not yet in the list.
-        // This is tricky if we want to cancel. A better way is to only add on successful save.
-        // For now, let's assume 'item' passed IS the new item object, already given a temp name and itemNo.
-    } else {
-        // For existing items
-        itemNameInput.value = item.name || '';
-        itemNameInput.placeholder = "Item Name";
-        if(popupHeader) popupHeader.textContent = `Item Details (No.${item.itemNo || 'N/A'})`;
-        document.getElementById('inputSite').value = item.site || '';
-        document.getElementById('inputURL').value = item.url || '';
-        document.getElementById('inputCount').value = item.count || '';
-        document.getElementById('inputStatus').value = item.status || '';
-        document.getElementById('inputMemo').value = item.memo || '';
-        document.getElementById('inputTags').value = item.tags && Array.isArray(item.tags) ? item.tags.join(', ') : '';
-        document.getElementById('inputLoadout').checked = item.loadout || false;
+    } else { // Existing item
+        if(popupHeader) popupHeader.innerHTML = `Item Details <span class="item-no-popup">${formatItemNo(itemData.itemNo)}</span>`;
+        document.getElementById('inputSite').value = itemData.site || '';
+        document.getElementById('inputURL').value = itemData.url || '';
+        document.getElementById('inputCount').value = itemData.count || '';
+        document.getElementById('inputStatus').value = itemData.status || '';
+        document.getElementById('inputMemo').value = itemData.memo || '';
+        document.getElementById('inputTags').value = itemData.tags && Array.isArray(itemData.tags) ? itemData.tags.join(', ') : '';
+        document.getElementById('inputLoadout').checked = itemData.loadout || false;
         document.querySelectorAll('.locCheck').forEach(cb => {
-          cb.checked = Array.isArray(item.location) && item.location.includes(cb.value);
+          cb.checked = Array.isArray(itemData.location) && itemData.location.includes(cb.value);
         });
     }
   }
@@ -287,8 +375,9 @@
         return;
     }
 
-    // Update currentItem with popup data
+    // Update the currentItem object (whether it's new or existing)
     currentItem.name = itemNameFromPopup;
+    currentItem.section = document.getElementById('popupItemSection').value;
     currentItem.site = document.getElementById('inputSite').value;
     currentItem.url = document.getElementById('inputURL').value;
     currentItem.count = document.getElementById('inputCount').value;
@@ -299,58 +388,42 @@
     currentItem.location = [...document.querySelectorAll('.locCheck:checked')].map(cb => cb.value);
 
     if (isNewItemInPopup) {
-        // It's a new item, officially add it to the list if not already, and increment master itemNo
-        const existingItemIndex = items.findIndex(i => i.id === currentItem.id);
-        if (existingItemIndex === -1) { // Should not happen if handled correctly in addNewItem...
-            items.push(currentItem); // Add if somehow not pushed yet
-        }
-        // The itemNo was already assigned when `addNewItemAndOpenPopup` created `newItem`
-        // So, we just need to ensure `nextItemNo` is incremented for the *next* new item.
-        if (currentItem.itemNo >= nextItemNo) { // If the current new item used up nextItemNo
-            nextItemNo = currentItem.itemNo + 1;
-        }
-        isNewItemInPopup = false; // Reset flag
+        // If it was a new item, it now gets officially added to the items array
+        items.push(currentItem);
+        nextItemNo++; // Increment the global counter for the next new item
     }
+    // If it was an existing item, currentItem is a reference to an object in 'items', so it's already updated.
     
-    renderItems(); // This will save to storage
+    isNewItemInPopup = false; // Reset flag
+    renderItems(); // This will re-render the list and save to storage
     closePopup();
   }
 
   function closePopup() { 
-    if (isNewItemInPopup && currentItem) {
-        // If it was a new item popup and it's closed without saving a proper name,
-        // or if we decide to always remove on close if new:
-        // items = items.filter(item => item.id !== currentItem.id); // Remove the temp item
-        // For now, let's assume savePopup handles adding it. If closed, it's just closed.
-        // If the item name is still the temporary one, it means it wasn't properly saved.
-        const itemNameFromPopup = document.getElementById('popupItemName').value.trim();
-        if (!itemNameFromPopup || currentItem.name === `New Item (No.${currentItem.itemNo})`) {
-            // Optionally remove if no valid name was set.
-            // For simplicity now, we don't remove. User must save.
-        }
-    }
-    isNewItemInPopup = false; // Reset flag regardless
+    // If a new item popup was closed without saving, currentItem (the temp object) is just discarded.
+    // No need to explicitly remove from 'items' because it wasn't officially added until savePopup.
+    isNewItemInPopup = false;
     document.getElementById('popupOverlay').style.display = 'none'; 
     const popupHeader = document.querySelector('.popup-header');
-    if(popupHeader) popupHeader.textContent = `Item Details`; // Reset header
+    if(popupHeader) popupHeader.textContent = `Item Details`;
     currentItem = null; 
-    // renderItems(); // Render if an item was potentially removed (not doing that now on close)
   }
 
   function deleteCurrentItem() {
-    if (currentItem && confirm(`Are you sure you want to delete item "${currentItem.name}" (No.${currentItem.itemNo})?`)) {
+    if (currentItem && confirm(`Are you sure you want to delete item "${currentItem.name}" (${formatItemNo(currentItem.itemNo)})?`)) {
       items = items.filter(item => item.id !== currentItem.id);
+      // Item numbers are not re-sequenced. nextItemNo continues from where it was.
       renderItems(); 
       closePopup();
     }
   }
   
-  // editSectionBtn, addSection, top filter listeners remain the same
-  document.getElementById('editSectionBtn').onclick = function(){ /* ... */ };
-  function addSection(isFromPopup = false){ /* ... */ };
-  document.querySelectorAll('#topButtonFilters .filter-btn').forEach(button => { /* ... */ });
+  // --- editSectionBtn, addSection, top filter listeners ---
+  document.getElementById('editSectionBtn').onclick = function(){ /* ... (same as before) ... */ };
+  function addSection(isFromPopup = false){ /* ... (same as before) ... */ };
+  document.querySelectorAll('#topButtonFilters .filter-btn').forEach(button => { /* ... (same as before) ... */ });
 
-
+  // Initial Load
   loadFromStorage();
   renderSections(); 
   renderItems();
