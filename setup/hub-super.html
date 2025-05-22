@@ -215,10 +215,10 @@
       div.className = 'item' + (item.loadout ? ' loadout' : '');
       div.innerHTML = `
         <div>
-          <div><strong>${item.name}</strong> (${item.type})</div>
+          <div><strong>${item.name}</strong></div>
           <div class="tags">${item.tags ? item.tags.join(', ') : ''}</div>
         </div>
-        <div>▶</div>
+        <div>(${item.type})</div>
       `;
       div.onclick = () => openPopup(item);
       itemList.appendChild(div);
