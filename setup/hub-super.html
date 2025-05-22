@@ -302,6 +302,73 @@
     }
   }
 
+
+    // セクション編集UI表示
+document.getElementById('editSectionBtn').onclick = function () {
+  const editor = document.getElementById('sectionEditor');
+  const list = document.getElementById('sectionEditList');
+  list.innerHTML = '';
+
+  sections.forEach((sec, index) => {
+    const li = document.createElement('li');
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = sec;
+    input.className = 'rename-input';
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = '✕';
+    deleteBtn.onclick = () => {
+      if (confirm(`Delete section "${sec}"?`)) {
+        // remove section
+        sections.splice(index, 1);
+        // update items that used this section
+        items.forEach(item => {
+          if (item.section === sec) {
+            delete item.section;
+          }
+        });
+        saveToStorage();
+        renderSections();
+        renderItems();
+        // update editor UI
+        document.getElementById('editSectionBtn').click();
+      }
+    };
+
+    input.onchange = () => {
+      const newName = input.value.trim().toLowerCase();
+      if (newName && !sections.includes(newName)) {
+        // rename in sections[]
+        sections[index] = newName;
+        // rename in items
+        items.forEach(item => {
+          if (item.section === sec) item.section = newName;
+        });
+        saveToStorage();
+        renderSections();
+        renderItems();
+        document.getElementById('editSectionBtn').click();
+      } else {
+        input.value = sec; // revert if invalid
+      }
+    };
+
+    li.appendChild(input);
+    li.appendChild(deleteBtn);
+    list.appendChild(li);
+  });
+
+  editor.classList.remove('hidden');
+};
+
+function closeSectionEditor() {
+  document.getElementById('sectionEditor').classList.add('hidden');
+}
+
+
   function addSection() {
     const name = document.getElementById('newSectionName').value.trim().toLowerCase();
     if (name && !sections.includes(name)) {
@@ -367,3 +434,14 @@ function savePopup() {
   document.querySelectorAll('input[name="type"], #toggleLoadout')
     .forEach(el => el.addEventListener('change', renderItems));
 </script>
+
+     <!-- SECTION EDIT PANEL -->
+    <div id="sectionEditor" class="section-editor hidden">
+      <h2>Edit Sections</h2>
+      <ul id="sectionEditList"></ul>
+      <div style="text-align:center; margin-top: 1rem;">
+        <button onclick="closeSectionEditor()">Close</button>
+      </div>
+    </div>
+    </body>
+    </html>
