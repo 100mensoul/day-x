@@ -218,8 +218,14 @@
           <div><strong>${item.name}</strong></div>
           <div class="tags">${item.tags ? item.tags.join(', ') : ''}</div>
         </div>
-        <div>(${item.type})</div>
+        <div class="locations">${renderLocations(item.location)}</div>
       `;
+
+
+
+
+
+      
       div.onclick = () => openPopup(item);
       itemList.appendChild(div);
     });
