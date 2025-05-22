@@ -72,6 +72,7 @@
 
     .popup input, .popup select, .popup textarea {
       width: 100%;
+      box-sizing: border-box; /* Added for consistent sizing */
       margin-bottom: 10px;
       padding: 6px;
       background: #111;
@@ -100,9 +101,15 @@
       margin-top: 5px;
     }
 
+    .locations { /* Added to align location badges */
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
     .location-badge {
       color: #000;
-      background-color: #00aaaa; /* デフォルト色（使うか任意） */
+      background-color: #00aaaa;
       padding: 3px 8px;
       border-radius: 12px;
       font-size: 0.75rem;
@@ -112,21 +119,10 @@
       display: inline-block;
     }
 
-    /* ロケーションごとの色分け */
-    .location-badge.tokyo {
-      background-color: #00ccff; /* シアン系 */
-    }
-    .location-badge.himeji {
-      background-color: #ffcc00; /* イエロー系 */
-    }
-    .location-badge.baggage {
-      background-color: #ff8888; /* ピンク系 */
-    }
-    .location-badge.car {
-      background-color: #aaffaa; /* グリーン系 */
-    }
-
-
+    .location-badge.tokyo { background-color: #00ccff; }
+    .location-badge.himeji { background-color: #ffcc00; }
+    .location-badge.baggage { background-color: #ff8888; }
+    .location-badge.car { background-color: #aaffaa; }
 
     #editSectionBtn {
       background: #00cccc;
@@ -142,6 +138,87 @@
       background: #00eeee;
     }
 
+    /* Styles for Section Editor */
+    .hidden {
+      display: none !important;
+    }
+
+    .section-editor {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #2a2a2a; /* Slightly different from popup for distinction */
+      padding: 20px;
+      border-radius: 10px;
+      width: 450px;
+      color: #eee;
+      z-index: 1001; /* Ensure it's above popup if they can overlap */
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      border: 1px solid #555;
+    }
+
+    .section-editor h2 {
+      text-align: center;
+      color: #00ffff;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    #sectionEditList {
+      list-style-type: none;
+      padding: 0;
+      max-height: 300px; /* Added for scrollability if many sections */
+      overflow-y: auto; /* Added for scrollability */
+    }
+
+    #sectionEditList li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #444;
+    }
+    #sectionEditList li:last-child {
+      border-bottom: none;
+    }
+
+    #sectionEditList input.rename-input {
+      flex-grow: 1;
+      margin-right: 10px;
+      padding: 6px;
+      background: #111;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 4px;
+    }
+
+    #sectionEditList button.delete-btn {
+      background: #ff4444;
+      color: #fff;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #sectionEditList button.delete-btn:hover {
+      background: #dd2222;
+    }
+
+    .section-editor button { /* General button styling within section editor, e.g., Close button */
+      background: #00cccc;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+    .section-editor button:hover {
+      background: #00eeee;
+    }
   </style>
 </head>
 <body>
@@ -160,8 +237,8 @@
   <section class="filters" id="sectionFilters"></section>
   
   <section style="text-align: center; margin-bottom: 1.5rem;">
-  <button id="editSectionBtn">SECTION EDIT</button>
-</section>
+    <button id="editSectionBtn">SECTION EDIT</button>
+  </section>
 
   <section class="add-section-form">
     <input type="text" id="newSectionName" placeholder="New Section (e.g., tools)">
@@ -202,19 +279,17 @@
       <button onclick="closePopup()">Close</button>
     </div>
   </div>
-  
- <!-- SECTION EDIT PANEL -->
-      <div id="sectionEditor" class="section-editor hidden"> <!-- MOVED HERE and added class -->
-        <h2>Edit Sections</h2>
-        <ul id="sectionEditList"></ul>
-        <div style="text-align:center; margin-top: 1rem;">
-          <button onclick="closeSectionEditor()">Close</button>
-        </div>
-      </div>
 
-  
+  <!-- SECTION EDIT PANEL -->
+  <div id="sectionEditor" class="section-editor hidden"> <!-- MOVED HERE and added class -->
+    <h2>Edit Sections</h2>
+    <ul id="sectionEditList"></ul>
+    <div style="text-align:center; margin-top: 1rem;">
+      <button onclick="closeSectionEditor()">Close</button>
+    </div>
+  </div>
+
 <script>
-  // Part 2（後半JS）は次に送ります…
   let items = [];
   let sections = ['wear', 'ec'];
   let currentItem = null;
@@ -266,24 +341,22 @@
       return true;
     });
 
+    // Corrected renderLocations function
     function renderLocations(locArray) {
-      if (!Array.isArray(locArray)) return '';
+      if (!Array.isArray(locArray) || locArray.length === 0) return '';
+      const labelMap = {
+        tokyo: '東京',
+        himeji: '姫路',
+        baggage: '手荷物',
+        car: '車'
+      };
       return locArray.map(loc => {
-        const labelMap = {
-          tokyo: '東京',
-          himeji: '姫路',
-          baggage: '手荷物',
-          car: '車'
-        };
-      return locArray.map(loc => {
-      return `<span class="location-badge ${loc}">${labelMap[loc] || loc}</span>`;
+        return `<span class="location-badge ${loc}">${labelMap[loc] || loc}</span>`;
       }).join('');
     }
 
-
-
     itemList.innerHTML = '';
-    filtered.forEach((item, index) => {
+    filtered.forEach((item) => { // Removed index as it's not used here
       const div = document.createElement('div');
       div.className = 'item' + (item.loadout ? ' loadout' : '');
       div.innerHTML = `
@@ -306,137 +379,138 @@
     const type = document.getElementById('itemType').value;
     const section = document.getElementById('itemSection').value;
     if (name.trim()) {
-      items.push({ name, type, section, loadout: false });
+      items.push({ name, type, section, loadout: false, location: [] }); // Added empty location array
       document.getElementById('itemName').value = '';
       renderItems();
     }
   }
 
+  document.getElementById('editSectionBtn').onclick = function () {
+    const editor = document.getElementById('sectionEditor');
+    const list = document.getElementById('sectionEditList');
+    list.innerHTML = '';
 
-    // セクション編集UI表示
-document.getElementById('editSectionBtn').onclick = function () {
-  const editor = document.getElementById('sectionEditor');
-  const list = document.getElementById('sectionEditList');
-  list.innerHTML = '';
+    sections.forEach((sec, index) => {
+      const li = document.createElement('li');
 
-  sections.forEach((sec, index) => {
-    const li = document.createElement('li');
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = sec;
+      input.className = 'rename-input';
 
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = sec;
-    input.className = 'rename-input';
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-btn';
+      deleteBtn.textContent = '✕';
+      deleteBtn.onclick = () => {
+        if (confirm(`Delete section "${sec}"? This will remove the section from all associated items.`)) {
+          const sectionToDelete = sections[index]; // Store before splice
+          sections.splice(index, 1);
+          
+          items.forEach(item => {
+            if (item.section === sectionToDelete) {
+              // Optionally, assign to a default section or mark as 'unsectioned'
+              // For now, just removing it. Consider user experience here.
+              delete item.section; 
+            }
+          });
+          saveToStorage();
+          renderSections();
+          renderItems();
+          // Re-render the editor list
+          document.getElementById('editSectionBtn').click(); 
+        }
+      };
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'delete-btn';
-    deleteBtn.textContent = '✕';
-    deleteBtn.onclick = () => {
-      if (confirm(`Delete section "${sec}"?`)) {
-        // remove section
-        sections.splice(index, 1);
-        // update items that used this section
-        items.forEach(item => {
-          if (item.section === sec) {
-            delete item.section;
-          }
-        });
-        saveToStorage();
-        renderSections();
-        renderItems();
-        // update editor UI
-        document.getElementById('editSectionBtn').click();
-      }
-    };
+      input.onchange = () => {
+        const oldName = sec; // Capture current section name for item update
+        const newName = input.value.trim().toLowerCase();
+        if (newName && newName !== oldName && !sections.includes(newName)) {
+          sections[index] = newName;
+          items.forEach(item => {
+            if (item.section === oldName) {
+              item.section = newName;
+            }
+          });
+          saveToStorage();
+          renderSections();
+          renderItems();
+          // Re-render the editor list (optional, as name change is reflected)
+          // document.getElementById('editSectionBtn').click(); // Could cause flicker, test if needed
+        } else if (newName !== oldName) { // Name is invalid or duplicate
+          alert(`Section name "${newName}" is invalid or already exists.`);
+          input.value = oldName; // Revert
+        }
+      };
 
-    input.onchange = () => {
-      const newName = input.value.trim().toLowerCase();
-      if (newName && !sections.includes(newName)) {
-        // rename in sections[]
-        sections[index] = newName;
-        // rename in items
-        items.forEach(item => {
-          if (item.section === sec) item.section = newName;
-        });
-        saveToStorage();
-        renderSections();
-        renderItems();
-        document.getElementById('editSectionBtn').click();
-      } else {
-        input.value = sec; // revert if invalid
-      }
-    };
+      li.appendChild(input);
+      li.appendChild(deleteBtn);
+      list.appendChild(li);
+    });
 
-    li.appendChild(input);
-    li.appendChild(deleteBtn);
-    list.appendChild(li);
-  });
+    editor.classList.remove('hidden');
+  };
 
-  editor.classList.remove('hidden');
-};
-
-function closeSectionEditor() {
-  document.getElementById('sectionEditor').classList.add('hidden');
-}
-
+  function closeSectionEditor() {
+    document.getElementById('sectionEditor').classList.add('hidden');
+  }
 
   function addSection() {
-    const name = document.getElementById('newSectionName').value.trim().toLowerCase();
+    const nameInput = document.getElementById('newSectionName');
+    const name = nameInput.value.trim().toLowerCase();
     if (name && !sections.includes(name)) {
       sections.push(name);
-      document.getElementById('newSectionName').value = '';
+      nameInput.value = '';
+      saveToStorage(); // Save after adding section
       renderSections();
-      renderItems();
+      renderItems(); // renderItems will call saveToStorage again, but that's okay
+    } else if (sections.includes(name)) {
+      alert(`Section "${name}" already exists.`);
+    } else if (!name) {
+      alert("Section name cannot be empty.");
     }
   }
 
-function openPopup(item) {
-  currentItem = item;
-  document.getElementById('popupOverlay').style.display = 'flex';
-  document.getElementById('inputSite').value = item.site || '';
-  document.getElementById('inputURL').value = item.url || '';
-  document.getElementById('inputCount').value = item.count || '';
-  document.getElementById('inputStatus').value = item.status || '';
-  document.getElementById('inputMemo').value = item.memo || '';
-  document.getElementById('inputTags').value = item.tags ? item.tags.join(', ') : '';
-  document.getElementById('inputLoadout').checked = item.loadout || false;
+  function openPopup(item) {
+    currentItem = item;
+    document.getElementById('popupOverlay').style.display = 'flex';
+    document.getElementById('inputSite').value = item.site || '';
+    document.getElementById('inputURL').value = item.url || '';
+    document.getElementById('inputCount').value = item.count || '';
+    document.getElementById('inputStatus').value = item.status || '';
+    document.getElementById('inputMemo').value = item.memo || '';
+    document.getElementById('inputTags').value = item.tags ? item.tags.join(', ') : '';
+    document.getElementById('inputLoadout').checked = item.loadout || false;
 
-  // ✅ location表示（複数対応）
-  document.querySelectorAll('.locCheck').forEach(cb => {
-    cb.checked = item.location?.includes(cb.value);
-  });
-}
-
-                                                   
-
-function savePopup() {
-  if (currentItem) {
-    currentItem.site = document.getElementById('inputSite').value;
-    currentItem.url = document.getElementById('inputURL').value;
-    currentItem.count = document.getElementById('inputCount').value;
-    currentItem.status = document.getElementById('inputStatus').value;
-    currentItem.memo = document.getElementById('inputMemo').value;
-    currentItem.tags = document.getElementById('inputTags').value
-      .split(',').map(t => t.trim()).filter(t => t);
-    currentItem.loadout = document.getElementById('inputLoadout').checked;
-
-    // ✅ location保存（複数対応）
-    currentItem.location = [...document.querySelectorAll('.locCheck')]
-      .filter(cb => cb.checked)
-      .map(cb => cb.value);
-
-    renderItems();
-    closePopup();
+    document.querySelectorAll('.locCheck').forEach(cb => {
+      cb.checked = Array.isArray(item.location) && item.location.includes(cb.value);
+    });
   }
-}
+                                                   
+  function savePopup() {
+    if (currentItem) {
+      currentItem.site = document.getElementById('inputSite').value;
+      currentItem.url = document.getElementById('inputURL').value;
+      currentItem.count = document.getElementById('inputCount').value;
+      currentItem.status = document.getElementById('inputStatus').value;
+      currentItem.memo = document.getElementById('inputMemo').value;
+      currentItem.tags = document.getElementById('inputTags').value
+        .split(',').map(t => t.trim()).filter(t => t);
+      currentItem.loadout = document.getElementById('inputLoadout').checked;
+
+      currentItem.location = [...document.querySelectorAll('.locCheck')]
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+      renderItems(); // This will call saveToStorage
+      closePopup();
+    }
+  }
 
   function closePopup() {
     document.getElementById('popupOverlay').style.display = 'none';
   }
-
-
-
   
-  // 初期処理
+  // Initial setup
   loadFromStorage();
   renderSections();
   renderItems();
@@ -444,6 +518,5 @@ function savePopup() {
   document.querySelectorAll('input[name="type"], #toggleLoadout')
     .forEach(el => el.addEventListener('change', renderItems));
 </script>
-      
-    </body>
-    </html>
+</body>
+</html>
