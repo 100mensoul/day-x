@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SUPER HUB</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #00ffff;
+      text-align: center;
+    }
+    p.subtitle {
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+
+    .filters, .add-item-form, .add-section-form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .item-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .item {
+      background-color: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .item.loadout {
+      border-color: #00ffff;
+      background-color: #113;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+      color: #eee;
+    }
+
+    .popup input, .popup select, .popup textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 6px;
+      background: #111;
+      border: 1px solid #444;
+      color: #fff;
+    }
+
+    .popup button {
+      background: #00cccc;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      color: #000;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .popup-header {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+
+    .tags {
+      font-size: 0.85rem;
+      color: #ccc;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>SUPER HUB</h1>
+  <p class="subtitle">
+    This is the terminal board console for managing all parts — from enduring equipment to expendable inventory — across all sections.
+  </p>
+
+  <section class="filters">
+    <label><input type="checkbox" id="toggleLoadout" /> Show Loadout Only</label>
+    <label><input type="radio" name="type" value="all" checked /> All</label>
+    <label><input type="radio" name="type" value="equipment" /> Equipment</label>
+    <label><input type="radio" name="type" value="inventory" /> Inventory</label>
+  </section>
+
+  <section class="filters" id="sectionFilters"></section>
+
+  <section class="add-section-form">
+    <input type="text" id="newSectionName" placeholder="New Section (e.g., tools)">
+    <button onclick="addSection()">Add Section</button>
+  </section>
+
+  <section class="add-item-form">
+    <input type="text" id="itemName" placeholder="Item name">
+    <select id="itemType">
+      <option value="equipment">Equipment</option>
+      <option value="inventory">Inventory</option>
+    </select>
+    <select id="itemSection"></select>
+    <button onclick="addItem()">Add Item</button>
+  </section>
+
+  <section class="item-list" id="itemList"></section>
+
+  <!-- Popup -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <div class="popup-header">Item Details</div>
+      <input id="inputSite" placeholder="Purchase Site Name">
+      <input id="inputURL" placeholder="URL">
+      <input id="inputCount" placeholder="Quantity">
+      <select id="inputLocation">
+        <option value="tokyo">Tokyo</option>
+        <option value="himeji">Himeji</option>
+        <option value="baggage">Baggage</option>
+        <option value="car">Car</option>
+      </select>
+      <input id="inputStatus" placeholder="Condition">
+      <textarea id="inputMemo" rows="2" placeholder="Memo..."></textarea>
+      <input id="inputTags" placeholder="Tags (comma separated)">
+      <label><input type="checkbox" id="inputLoadout"> Include in Loadout</label><br><br>
+      <button onclick="savePopup()">Save</button>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+<script>
+  // Part 2（後半JS）は次に送ります…
+  let items = [];
+  let sections = ['wear', 'ec'];
+  let currentItem = null;
+
+  function saveToStorage() {
+    localStorage.setItem('superhub_items', JSON.stringify(items));
+    localStorage.setItem('superhub_sections', JSON.stringify(sections));
+  }
+
+  function loadFromStorage() {
+    const savedItems = localStorage.getItem('superhub_items');
+    const savedSections = localStorage.getItem('superhub_sections');
+    if (savedItems) items = JSON.parse(savedItems);
+    if (savedSections) sections = JSON.parse(savedSections);
+  }
+
+  function renderSections() {
+    const sectionFilters = document.getElementById('sectionFilters');
+    const sectionSelect = document.getElementById('itemSection');
+    sectionFilters.innerHTML = '';
+    sectionSelect.innerHTML = '';
+
+    sections.forEach(sec => {
+      const checkbox = document.createElement('label');
+      checkbox.innerHTML = `<input type="checkbox" class="sectionFilter" value="${sec}" checked> ${sec}`;
+      sectionFilters.appendChild(checkbox);
+
+      const option = document.createElement('option');
+      option.value = sec;
+      option.textContent = sec;
+      sectionSelect.appendChild(option);
+    });
+
+    document.querySelectorAll('.sectionFilter').forEach(cb =>
+      cb.addEventListener('change', renderItems)
+    );
+  }
+
+  function renderItems() {
+    const itemList = document.getElementById('itemList');
+    const showLoadoutOnly = document.getElementById('toggleLoadout').checked;
+    const selectedType = [...document.querySelectorAll('input[name="type"]')].find(r => r.checked).value;
+    const selectedSections = [...document.querySelectorAll('.sectionFilter')].filter(cb => cb.checked).map(cb => cb.value);
+
+    const filtered = items.filter(item => {
+      if (showLoadoutOnly && !item.loadout) return false;
+      if (selectedType !== "all" && item.type !== selectedType) return false;
+      if (!selectedSections.includes(item.section)) return false;
+      return true;
+    });
+
+    itemList.innerHTML = '';
+    filtered.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = 'item' + (item.loadout ? ' loadout' : '');
+      div.innerHTML = `
+        <div>
+          <div><strong>${item.name}</strong> (${item.type})</div>
+          <div class="tags">${item.tags ? item.tags.join(', ') : ''}</div>
+        </div>
+        <div>▶</div>
+      `;
+      div.onclick = () => openPopup(item);
+      itemList.appendChild(div);
+    });
+
+    saveToStorage();
+  }
+
+  function addItem() {
+    const name = document.getElementById('itemName').value;
+    const type = document.getElementById('itemType').value;
+    const section = document.getElementById('itemSection').value;
+    if (name.trim()) {
+      items.push({ name, type, section, loadout: false });
+      document.getElementById('itemName').value = '';
+      renderItems();
+    }
+  }
+
+  function addSection() {
+    const name = document.getElementById('newSectionName').value.trim().toLowerCase();
+    if (name && !sections.includes(name)) {
+      sections.push(name);
+      document.getElementById('newSectionName').value = '';
+      renderSections();
+      renderItems();
+    }
+  }
+
+  function openPopup(item) {
+    currentItem = item;
+    document.getElementById('popupOverlay').style.display = 'flex';
+    document.getElementById('inputSite').value = item.site || '';
+    document.getElementById('inputURL').value = item.url || '';
+    document.getElementById('inputCount').value = item.count || '';
+    document.getElementById('inputLocation').value = item.location || 'tokyo';
+    document.getElementById('inputStatus').value = item.status || '';
+    document.getElementById('inputMemo').value = item.memo || '';
+    document.getElementById('inputTags').value = item.tags ? item.tags.join(', ') : '';
+    document.getElementById('inputLoadout').checked = item.loadout || false;
+  }
+
+  function savePopup() {
+    if (currentItem) {
+      currentItem.site = document.getElementById('inputSite').value;
+      currentItem.url = document.getElementById('inputURL').value;
+      currentItem.count = document.getElementById('inputCount').value;
+      currentItem.location = document.getElementById('inputLocation').value;
+      currentItem.status = document.getElementById('inputStatus').value;
+      currentItem.memo = document.getElementById('inputMemo').value;
+      currentItem.tags = document.getElementById('inputTags').value
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+      currentItem.loadout = document.getElementById('inputLoadout').checked;
+      renderItems();
+      closePopup();
+    }
+  }
+
+  function closePopup() {
+    document.getElementById('popupOverlay').style.display = 'none';
+  }
+
+  // 初期処理
+  loadFromStorage();
+  renderSections();
+  renderItems();
+
+  document.querySelectorAll('input[name="type"], #toggleLoadout')
+    .forEach(el => el.addEventListener('change', renderItems));
+</script>
