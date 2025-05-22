@@ -5,7 +5,6 @@
   <title>SUPER HUB</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* CSSは前回のものから変更なし */
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
@@ -91,22 +90,30 @@
         font-weight: bold;
     }
 
-
-    #editSectionBtn {
-      background: #00cccc;
-      color: #000;
-      border: none;
+    /* Unified button style for SECTION EDIT, Add Section */
+    #editSectionBtn, 
+    .add-section-form-inline button,
+    .add-item-form button { /* Also include Add Item button for consistency */
+      background-color: #007777;
+      color: #eee;
+      border: 1px solid #333; /* Unified border */
       padding: 7px 14px;
       font-weight: bold;
       border-radius: 4px;
       cursor: pointer;
-      transition: background 0.2s ease;
+      transition: background-color 0.2s ease, color 0.2s ease;
       font-size: 0.85rem;
-      height: 34px;
+      height: 34px; /* Consistent height */
       box-sizing: border-box;
     }
-    #editSectionBtn:hover {
-      background: #00eeee;
+    #editSectionBtn:hover,
+    .add-section-form-inline button:hover,
+    .add-item-form button:hover {
+      background-color: #009999;
+    }
+    /* Remove specific background/color from #editSectionBtn if any were missed by above */
+    #editSectionBtn { 
+        /* background, color, border are now handled by the common rule above */
     }
     
     .add-section-form-inline {
@@ -115,7 +122,7 @@
         align-items: center;
     }
     .add-section-form-inline input[type="text"],
-    .add-section-form-inline button {
+    .add-item-form input, .add-item-form select { /* Include Add Item inputs/selects here for consistency */
         padding: 7px 9px;
         border: 1px solid #333;
         border-radius: 4px;
@@ -128,14 +135,7 @@
     .add-section-form-inline input[type="text"] {
         min-width: 130px;
     }
-    .add-section-form-inline button {
-        cursor: pointer;
-        background-color: #007777;
-    }
-    .add-section-form-inline button:hover {
-        background-color: #009999;
-    }
-
+    
     .add-item-form {
       display: flex;
       flex-wrap: wrap;
@@ -143,220 +143,153 @@
       gap: 0.75rem;
       margin-bottom: 1rem;
     }
-    .add-item-form input, .add-item-form select, .add-item-form button {
-        padding: 7px 9px;
-        border: 1px solid #333;
-        border-radius: 4px;
-        background-color: #282828;
-        color: #eee;
-        font-size: 0.9rem;
-        height: 36px;
-        box-sizing: border-box;
-    }
-    .add-item-form button {
-        cursor: pointer;
-        background-color: #007777;
-    }
-    .add-item-form button:hover {
-        background-color: #009999;
-    }
-    .add-item-form input, .add-item-form select {
+    /* .add-item-form input, .add-item-form select are now styled above */
+    /* .add-item-form button is now styled above */
+    .add-item-form input, .add-item-form select { /* Specific for Add Item form if needed */
         min-width: 140px;
+        font-size: 0.9rem; /* Slightly larger font for main item name */
+        height: 36px; /* Slightly taller for main add item, if preferred, or unify to 34px */
+    }
+     #editSectionBtn, .add-section-form-inline button {
+        height: 34px; /* Ensure these are consistent */
+        font-size: 0.85rem;
+    }
+     .add-item-form button { /* If Add Item button needs slightly different props */
+        height: 36px;
+        font-size: 0.85rem; /* Or 0.9rem to match its inputs */
     }
 
 
-    .item-list {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .item {
-      background-color: #222;
-      border: 1px solid #444;
-      border-radius: 8px;
-      padding: 0.8rem 1rem;
-      margin-bottom: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .item-details-clickable {
-        flex-grow: 1;
-        cursor: pointer;
-        padding-right: 1rem;
-    }
-    .item.loadout {
-      border-color: #00ffff;
-      background-color: #113;
-    }
-
-    .popup-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0,0,0,0.7);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 15px;
-    }
-    .popup {
-      background-color: #222;
-      padding: 20px;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 400px;
-      color: #eee;
-      box-sizing: border-box;
-    }
-    .popup input, .popup select, .popup textarea {
-      width: 100%;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-      padding: 8px;
-      background: #111;
-      border: 1px solid #444;
-      color: #fff;
-      border-radius: 4px;
-    }
-    .popup input[type="checkbox"] {
-        width: auto;
-        margin-right: 5px;
-    }
-    .popup button {
-      background: #00cccc;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      color: #000;
-      font-weight: bold;
-      margin-right: 10px;
-      border-radius: 4px;
-      margin-top: 5px;
-    }
-    .popup button.delete-item-btn {
-        background-color: #cc0000;
-        color: #fff;
-    }
-    .popup button.delete-item-btn:hover {
-        background-color: #aa0000;
-    }
-    .popup-header {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
-    .tags {
-      font-size: 0.85rem;
-      color: #ccc;
-      margin-top: 5px;
-    }
-    .locations-container {
-        display: flex;
-        gap: 5px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-    }
-    .location-badge {
-      color: #000;
-      background-color: #00aaaa;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      white-space: nowrap;
-      display: inline-block;
-      transition: transform 0.1s ease;
-    }
-    .location-badge.active-filter-highlight {
-        outline: 2px solid #00ffff;
-        box-shadow: 0 0 5px #00ffff;
-    }
-    .location-badge.tokyo { background-color: #00ccff; }
-    .location-badge.himeji { background-color: #ffcc00; }
-    .location-badge.baggage { background-color: #ff8888; }
-    .location-badge.car { background-color: #aaffaa; }
-
+    .item-list { max-width: 800px; margin: 0 auto; }
+    .item { background-color: #222; border: 1px solid #444; border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
+    .item-details-clickable { flex-grow: 1; cursor: pointer; padding-right: 1rem; }
+    .item.loadout { border-color: #00ffff; background-color: #113; }
+    .popup-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+    .popup { background-color: #222; padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; color: #eee; box-sizing: border-box; }
+    .popup input, .popup select, .popup textarea { width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 8px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; }
+    .popup input[type="checkbox"] { width: auto; margin-right: 5px; }
+    .popup button { background: #00cccc; border: none; padding: 10px 15px; cursor: pointer; color: #000; font-weight: bold; margin-right: 10px; border-radius: 4px; margin-top: 5px; }
+    .popup button.delete-item-btn { background-color: #cc0000; color: #fff; }
+    .popup button.delete-item-btn:hover { background-color: #aa0000; }
+    .popup-header { font-size: 1.2rem; margin-bottom: 10px; }
+    .tags { font-size: 0.85rem; color: #ccc; margin-top: 5px; }
+    .locations-container { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+    .location-badge { color: #000; background-color: #00aaaa; padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; white-space: nowrap; display: inline-block; transition: transform 0.1s ease; }
+    .location-badge.active-filter-highlight { outline: 2px solid #00ffff; box-shadow: 0 0 5px #00ffff; }
+    .location-badge.tokyo { background-color: #00ccff; } .location-badge.himeji { background-color: #ffcc00; } .location-badge.baggage { background-color: #ff8888; } .location-badge.car { background-color: #aaffaa; }
     .hidden { display: none !important; }
-    .section-editor {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: #2a2a2a;
-      padding: 20px; border-radius: 10px;
-      width: 90%; max-width: 450px;
-      color: #eee; z-index: 1001;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      border: 1px solid #555; box-sizing: border-box;
-    }
-    .section-editor h2 {
-      text-align: center; color: #00ffff;
-      margin-top: 0; margin-bottom: 1.5rem;
-    }
-    #sectionEditList {
-      list-style-type: none; padding: 0;
-      max-height: 300px; overflow-y: auto;
-    }
-    #sectionEditList li {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 0; border-bottom: 1px solid #444;
-    }
+    .section-editor { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #2a2a2a; padding: 20px; border-radius: 10px; width: 90%; max-width: 450px; color: #eee; z-index: 1001; box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 1px solid #555; box-sizing: border-box; }
+    .section-editor h2 { text-align: center; color: #00ffff; margin-top: 0; margin-bottom: 1.5rem; }
+    #sectionEditList { list-style-type: none; padding: 0; max-height: 300px; overflow-y: auto; }
+    #sectionEditList li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #444; }
     #sectionEditList li:last-child { border-bottom: none; }
-    #sectionEditList input.rename-input {
-      flex-grow: 1; margin-right: 10px; padding: 8px;
-      background: #111; border: 1px solid #444;
-      color: #fff; border-radius: 4px;
-    }
-    #sectionEditList button.delete-btn {
-      background: #ff4444; color: #fff; border: none;
-      padding: 6px 10px; border-radius: 4px;
-      cursor: pointer; font-weight: bold;
-    }
+    #sectionEditList input.rename-input { flex-grow: 1; margin-right: 10px; padding: 8px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; }
+    #sectionEditList button.delete-btn { background: #ff4444; color: #fff; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     #sectionEditList button.delete-btn:hover { background: #dd2222; }
-    .section-editor button {
-      background: #00cccc; border: none;
-      padding: 10px 15px; cursor: pointer;
-      color: #000; font-weight: bold;
-      border-radius: 4px; transition: background 0.2s ease;
-      margin-top: 10px;
-    }
+    .section-editor button { background: #00cccc; border: none; padding: 10px 15px; cursor: pointer; color: #000; font-weight: bold; border-radius: 4px; transition: background 0.2s ease; margin-top: 10px; }
     .section-editor button:hover { background: #00eeee; }
 
-    @media (max-width: 768px) {
+    @media (max-width: 768px) { /* Tablet and smaller */
         body { padding: 10px 10px; }
         h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
         p.subtitle { font-size: 0.8rem; margin-bottom: 1rem; }
         #topButtonFilters .filter-btn { padding: 7px 9px; font-size: 0.75rem; }
         .controls-row { gap: 0.5rem; justify-content: space-around; }
         .section-filter-btn { padding: 7px 9px; font-size: 0.75rem; }
-        #editSectionBtn { padding: 7px 10px; font-size: 0.75rem; height: 32px; }
-        .add-section-form-inline input[type="text"],
-        .add-section-form-inline button { padding: 7px 8px; font-size: 0.75rem; height: 32px; }
-        .add-section-form-inline input[type="text"] { min-width: 100px; flex-grow: 1; }
+        
+        #editSectionBtn, .add-section-form-inline button { /* Sizing for these buttons on tablet */
+             padding: 7px 10px; font-size: 0.75rem; height: 32px;
+        }
+        .add-section-form-inline input[type="text"] { /* Sizing for input on tablet */
+             padding: 7px 8px; font-size: 0.75rem; height: 32px;
+             min-width: 100px; flex-grow: 1;
+        }
+
         .add-item-form { flex-direction: column; align-items: stretch; gap: 0.5rem; margin-bottom: 0.8rem; }
         .add-item-form input, .add-item-form select, .add-item-form button { width: 100%; margin-bottom: 0.3rem; padding: 9px 10px; font-size: 0.85rem; }
-        .add-item-form input, .add-item-form select { min-width: 0; }
+        .add-item-form input, .add-item-form select { min-width: 0; height: 36px; } /* Ensure consistent height here too */
+        .add-item-form button { height: 36px; }
+
+
         .item { flex-direction: column; align-items: flex-start; padding: 0.7rem; }
         .item-details-clickable { margin-bottom: 0.6rem; padding-right: 0; width: 100%; }
         .locations-container { justify-content: flex-start; width: 100%; }
         .location-badge { font-size: 0.7rem; padding: 2px 6px; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 480px) { /* Smartphone */
         body { padding: 8px 5px; }
         h1 { font-size: 1.6rem; }
         p.subtitle { font-size: 0.75rem; margin-bottom: 0.75rem; }
-        #topButtonFilters .filter-btn { font-size: 0.7rem; padding: 6px 7px; min-width: 55px; }
-        .controls-row { flex-direction: column; align-items: stretch; }
-        #sectionFilters { justify-content: stretch; }
-        .section-filter-btn, #editSectionBtn,
-        .add-section-form-inline input[type="text"],
-        .add-section-form-inline button { width: 100%; margin-bottom: 0.3rem; box-sizing: border-box; }
-        .add-section-form-inline { flex-direction: column; width: 100%; }
+        
+        #topButtonFilters .filter-btn { /* Region buttons style */
+            font-size: 0.7rem; 
+            padding: 5px 8px; /* Adjusted padding */
+            min-width: auto; /* Let content define width more naturally */
+            height: 30px;
+        }
+        
+        .controls-row {
+             flex-direction: row; /* Keep as row to allow wrapping */
+             flex-wrap: wrap;    /* Ensure wrapping */
+             justify-content: center; /* Center items in the row */
+             align-items: center;
+             gap: 0.4rem; /* Slightly reduced gap */
+        }
+        #sectionFilters { 
+            justify-content: center; /* Center section buttons if they wrap */
+            width: 100%; /* Allow section filter group to take full width and wrap internally */
+            margin-bottom: 0.4rem; /* Space if SECTION EDIT wraps below */
+        }
+        .section-filter-btn, #editSectionBtn {
+            width: auto; /* Let content + padding define width */
+            padding: 5px 10px; /* Consistent padding with topButtonFilters */
+            font-size: 0.75rem; /* Slightly larger than region for readability */
+            min-width: auto;
+            margin-bottom: 0; /* Remove bottom margin, rely on gap */
+            height: 30px; /* Consistent height */
+            flex-grow: 0; /* Don't grow to fill space unless desired */
+            flex-shrink: 0;
+        }
+        #editSectionBtn {
+            /* flex-grow: 1; /* Option: make it take more space if few section buttons */
+        }
+        
+        .add-section-form-inline {
+            display: flex; /* Ensure it's flex */
+            flex-direction: row; /* Keep input and button in a row */
+            width: auto; /* Let its content define width or set a max-width */
+            flex-grow: 1; /* Allow this group to take available space in the .controls-row */
+            min-width: 200px; /* Prevent it from becoming too small */
+        }
+        .add-section-form-inline input[type="text"] {
+            width: auto;
+            flex-grow: 1; /* Input takes available space within its form */
+            min-width: 100px; /* Minimum width for the input field */
+            padding: 5px 8px;
+            font-size: 0.75rem;
+            height: 30px;
+        }
+        .add-section-form-inline button {
+            width: auto; /* Button width based on content */
+            flex-shrink: 0; /* Prevent button from shrinking */
+            padding: 5px 10px;
+            font-size: 0.75rem;
+            height: 30px;
+        }
+
+        /* Add Item form remains stacked on smallest screens for usability */
+        .add-item-form input, .add-item-form select, .add-item-form button {
+            font-size: 0.8rem; /* Slightly smaller for very small screens */
+        }
+
+
         .popup button { width: calc(50% - 5px); margin-right: 5px; font-size: 0.85rem; padding: 8px 10px; }
         .popup button:nth-child(2n) { margin-right: 0; }
     }
   </style>
 </head>
 <body>
+  <!-- HTML structure remains the same as your last provided version -->
   <h1>SUPER HUB</h1>
   <p class="subtitle">
     This is the terminal board console for managing all parts across all sections.
@@ -422,8 +355,9 @@
   </div>
 
 <script>
+  // JavaScript remains the same as your last provided version
   let items = [];
-  let sections = ['wear', 'ec'];
+  let sections = ['wear', 'ec']; // Default/example sections
   let currentItem = null;
 
   const LOCATION_DETAILS = {
@@ -433,10 +367,9 @@
     'car': { label: '車', class: 'car' }
   };
 
-  // Filter states
   let activeLocationFilter = null;
   let showLoadoutFilterActive = false;
-  let isAllModeActive = true; // Initialize with ALL mode active
+  let isAllModeActive = true; 
 
   function saveToStorage() {
     localStorage.setItem('superhub_items', JSON.stringify(items));
@@ -447,8 +380,9 @@
     const savedItems = localStorage.getItem('superhub_items');
     const savedSections = localStorage.getItem('superhub_sections');
     if (savedItems) items = JSON.parse(savedItems);
-    if (savedSections) sections = JSON.parse(savedSections);
-    if (sections.length === 0 && items.some(item => item.section)) {
+    if (savedSections && JSON.parse(savedSections).length > 0) { // Ensure savedSections is not an empty array string
+        sections = JSON.parse(savedSections);
+    } else if (sections.length === 0 && items.some(item => item.section)) { // Fallback if sections is empty but items have sections
         const uniqueSectionsFromItems = [...new Set(items.map(item => item.section).filter(Boolean))];
         if (uniqueSectionsFromItems.length > 0) sections = uniqueSectionsFromItems;
     }
@@ -461,17 +395,13 @@
 
   function updateTopFilterButtonsUI() {
     document.querySelectorAll('#topButtonFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
-    
     const allBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="all"]');
     if (isAllModeActive) {
         if (allBtn) allBtn.classList.add('active');
     } else {
-        if (allBtn) allBtn.classList.remove('active'); // Explicitly remove if not in ALL mode
-
+        if (allBtn) allBtn.classList.remove('active');
         const loadlistBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="loadlist"]');
-        if (showLoadoutFilterActive) {
-            if(loadlistBtn) loadlistBtn.classList.add('active');
-        }
+        if (showLoadoutFilterActive && loadlistBtn) loadlistBtn.classList.add('active');
         if (activeLocationFilter) {
             const locBtn = document.querySelector(`#topButtonFilters .filter-btn[data-location="${activeLocationFilter}"]`);
             if (locBtn) locBtn.classList.add('active');
@@ -479,17 +409,14 @@
     }
   }
 
-
   function renderSections() {
     const sectionFiltersContainer = document.getElementById('sectionFilters');
     const sectionSelectDropdown = document.getElementById('itemSection');
     sectionFiltersContainer.innerHTML = '';
     sectionSelectDropdown.innerHTML = '';
 
-    // Retrieve current active sections before re-rendering, if any.
-    // This is to preserve selection state unless ALL is clicked.
-    const previouslyActiveSections = [...document.querySelectorAll('#sectionFilters .section-filter-btn.active')].map(btn => btn.dataset.section);
-
+    const activeSectionButtonsBeforeRender = isAllModeActive ? sections : 
+        [...document.querySelectorAll('#sectionFilters .section-filter-btn.active')].map(btn => btn.dataset.section);
 
     sections.forEach(sec => {
       const button = document.createElement('button');
@@ -497,16 +424,13 @@
       button.textContent = sec;
       button.dataset.section = sec;
 
-      // Set initial active state for section buttons
-      // If isAllModeActive is true, all sections are conceptually "active" for display, but filter is bypassed.
-      // If not in ALL mode, restore previous selection or default to active.
-      if (isAllModeActive || (previouslyActiveSections.length === 0 && sections.length > 0) || previouslyActiveSections.includes(sec)) {
-          button.classList.add('active');
+      if (isAllModeActive || activeSectionButtonsBeforeRender.includes(sec) || (activeSectionButtonsBeforeRender.length === 0 && sections.length > 0 && !isAllModeActive) ) {
+           button.classList.add('active');
       }
 
 
       button.onclick = () => {
-        isAllModeActive = false; // Any section interaction deactivates ALL mode
+        isAllModeActive = false; 
         button.classList.toggle('active');
         renderItems();
       };
@@ -529,32 +453,21 @@
 
   function renderItems() {
     const itemList = document.getElementById('itemList');
-    
     let itemsToDisplay = items;
 
-    if (!isAllModeActive) { // Only apply filters if not in ALL mode
+    if (!isAllModeActive) {
         itemsToDisplay = items.filter(item => {
             if (showLoadoutFilterActive && !item.loadout) return false;
-
-            if (activeLocationFilter) {
-                if (!item.location || !Array.isArray(item.location) || !item.location.includes(activeLocationFilter)) {
-                return false;
-                }
-            }
-
-            // Section filter logic (only if not in ALL mode)
+            if (activeLocationFilter && (!item.location || !item.location.includes(activeLocationFilter))) return false;
+            
             const selectedSectionButtons = [...document.querySelectorAll('#sectionFilters .section-filter-btn.active')];
             const selectedSections = selectedSectionButtons.map(btn => btn.dataset.section);
             const sectionButtonsExist = document.querySelectorAll('#sectionFilters .section-filter-btn').length > 0;
 
             if (sectionButtonsExist) {
                 if (selectedSections.length > 0) {
-                    if (!item.section || !selectedSections.includes(item.section)) {
-                        return false;
-                    }
-                } else {
-                    return false; 
-                }
+                    if (!item.section || !selectedSections.includes(item.section)) return false;
+                } else { return false; }
             }
             return true;
         });
@@ -566,7 +479,6 @@
         const locDetail = LOCATION_DETAILS[locKey];
         if (!locDetail) return `<span class="location-badge">${locKey}</span>`;
         let badgeClass = `location-badge ${locDetail.class}`;
-        // Highlight badge if it matches the active top filter (even in ALL mode, for visual consistency if a location was last active)
         if (locKey === activeLocationFilter && !isAllModeActive) { 
             badgeClass += ' active-filter-highlight';
         }
@@ -575,25 +487,20 @@
     }
 
     itemList.innerHTML = '';
-    itemsToDisplay.forEach(item => { // Iterate over potentially filtered list
+    itemsToDisplay.forEach(item => {
       const div = document.createElement('div');
       div.className = 'item' + (item.loadout ? ' loadout' : '');
       div.dataset.itemId = item.id;
       const detailsDiv = document.createElement('div');
       detailsDiv.className = 'item-details-clickable';
-      detailsDiv.innerHTML = `
-        <div><strong>${item.name}</strong></div>
-        <div class="tags">${item.tags && item.tags.length > 0 ? item.tags.join(', ') : ''}</div>
-      `;
+      detailsDiv.innerHTML = `<div><strong>${item.name}</strong></div><div class="tags">${item.tags && item.tags.length > 0 ? item.tags.join(', ') : ''}</div>`;
       detailsDiv.onclick = () => openPopup(item);
       const locationsDiv = document.createElement('div');
       locationsDiv.className = 'locations-container';
       locationsDiv.innerHTML = renderLocationsHTML(item.location);
-      div.appendChild(detailsDiv);
-      div.appendChild(locationsDiv);
+      div.appendChild(detailsDiv); div.appendChild(locationsDiv);
       itemList.appendChild(div);
     });
-
     updateTopFilterButtonsUI();
     saveToStorage();
   }
@@ -603,23 +510,15 @@
     const section = document.getElementById('itemSection').value;
     const name = nameInput.value.trim();
     if (name) {
-      const newItem = { 
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
-        name, section: section || undefined,
-        loadout: false, location: [], tags: [] 
-      };
+      const newItem = { id: Date.now().toString(36) + Math.random().toString(36).substr(2), name, section: section || undefined, loadout: false, location: [], tags: [] };
       items.push(newItem);
       nameInput.value = '';
-      // Adding an item should not change the ALL mode status unless explicitly desired
-      // isAllModeActive = false; // Uncomment if adding an item should exit ALL mode
       renderItems();
-    } else {
-        alert("Item name cannot be empty.");
-    }
+    } else { alert("Item name cannot be empty."); }
   }
 
   document.getElementById('editSectionBtn').onclick = function () {
-    isAllModeActive = false; // Editing sections implies specific focus, exit ALL mode
+    isAllModeActive = false; 
     const editor = document.getElementById('sectionEditor');
     const list = document.getElementById('sectionEditList');
     list.innerHTML = '';
@@ -628,92 +527,93 @@
       const input = document.createElement('input');
       input.type = 'text'; input.value = sec; input.className = 'rename-input';
       input.onchange = () => {
-        const oldName = sections[index];
-        const newName = input.value.trim().toLowerCase();
+        const oldName = sections[index]; const newName = input.value.trim().toLowerCase();
         if (newName && newName !== oldName && !sections.includes(newName)) {
-          sections[index] = newName;
-          items.forEach(item => { if (item.section === oldName) item.section = newName; });
+          sections[index] = newName; items.forEach(item => { if (item.section === oldName) item.section = newName; });
           saveToStorage(); renderSections(); renderItems();
-        } else if (newName !== oldName) {
-          alert(`Section name "${newName}" is invalid or already exists.`); input.value = oldName;
-        } else if (!newName) {
-            alert("Section name cannot be empty."); input.value = oldName;
-        }
+        } else if (newName !== oldName) { alert(`Section name "${newName}" is invalid or already exists.`); input.value = oldName;
+        } else if (!newName) { alert("Section name cannot be empty."); input.value = oldName; }
       };
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'delete-btn'; deleteBtn.textContent = '✕';
       deleteBtn.onclick = () => {
         const sectionToDelete = sections[index];
         if (confirm(`Delete section "${sectionToDelete}"? This will remove the section from all associated items.`)) {
-          sections.splice(index, 1);
-          items.forEach(item => { if (item.section === sectionToDelete) delete item.section; });
-          saveToStorage(); renderSections(); renderItems();
-          document.getElementById('editSectionBtn').click(); 
+          sections.splice(index, 1); items.forEach(item => { if (item.section === sectionToDelete) delete item.section; });
+          saveToStorage(); renderSections(); renderItems(); document.getElementById('editSectionBtn').click(); 
         }
       };
-      li.appendChild(input); li.appendChild(deleteBtn);
-      list.appendChild(li);
+      li.appendChild(input); li.appendChild(deleteBtn); list.appendChild(li);
     });
     editor.classList.remove('hidden');
   };
 
-  function closeSectionEditor() {
-    document.getElementById('sectionEditor').classList.add('hidden');
-    // isAllModeActive might have been set to false, UI will update on next renderItems if needed
-  }
+  function closeSectionEditor() { document.getElementById('sectionEditor').classList.add('hidden'); }
 
   function addSection() {
     const nameInput = document.getElementById('newSectionName');
     const name = nameInput.value.trim().toLowerCase();
     if (name && !sections.includes(name)) {
-      sections.push(name);
-      nameInput.value = '';
-      saveToStorage();
-      isAllModeActive = false; // Adding a section usually means focusing, exit ALL mode
-      renderSections(); 
-      renderItems(); 
-    } else if (sections.includes(name)) {
-      alert(`Section "${name}" already exists.`);
-    } else if (!name) {
-      alert("Section name cannot be empty.");
+      sections.push(name); nameInput.value = ''; saveToStorage();
+      isAllModeActive = false; renderSections(); renderItems(); 
+    } else if (sections.includes(name)) { alert(`Section "${name}" already exists.`);
+    } else if (!name) { alert("Section name cannot be empty."); }
+  }
+
+  function openPopup(item) {
+    currentItem = items.find(i => i.id === item.id); if (!currentItem) return;
+    document.getElementById('popupOverlay').style.display = 'flex';
+    document.getElementById('inputSite').value = currentItem.site || '';
+    document.getElementById('inputURL').value = currentItem.url || '';
+    document.getElementById('inputCount').value = currentItem.count || '';
+    document.getElementById('inputStatus').value = currentItem.status || '';
+    document.getElementById('inputMemo').value = currentItem.memo || '';
+    document.getElementById('inputTags').value = currentItem.tags && Array.isArray(currentItem.tags) ? currentItem.tags.join(', ') : '';
+    document.getElementById('inputLoadout').checked = currentItem.loadout || false;
+    document.querySelectorAll('.locCheck').forEach(cb => { cb.checked = Array.isArray(currentItem.location) && currentItem.location.includes(cb.value); });
+  }
+                                                   
+  function savePopup() {
+    if (currentItem) {
+      currentItem.site = document.getElementById('inputSite').value;
+      currentItem.url = document.getElementById('inputURL').value;
+      currentItem.count = document.getElementById('inputCount').value;
+      currentItem.status = document.getElementById('inputStatus').value;
+      currentItem.memo = document.getElementById('inputMemo').value;
+      currentItem.tags = document.getElementById('inputTags').value.split(',').map(t => t.trim()).filter(t => t);
+      currentItem.loadout = document.getElementById('inputLoadout').checked;
+      currentItem.location = [...document.querySelectorAll('.locCheck:checked')].map(cb => cb.value);
+      renderItems(); closePopup();
     }
   }
 
-  function openPopup(item) { /* ... (no changes) ... */ }
-  function savePopup() { /* ... (no changes other than renderItems call might be affected by isAllModeActive) ... */ }
-  function closePopup() { /* ... (no changes) ... */ }
-  function deleteCurrentItem() { /* ... (no changes other than renderItems call) ... */ }
+  function closePopup() { document.getElementById('popupOverlay').style.display = 'none'; currentItem = null; }
+
+  function deleteCurrentItem() {
+    if (currentItem && confirm(`Are you sure you want to delete item "${currentItem.name}"?`)) {
+      items = items.filter(item => item.id !== currentItem.id);
+      renderItems(); closePopup();
+    }
+  }
   
-  // Event listeners for top filter buttons
   document.querySelectorAll('#topButtonFilters .filter-btn').forEach(button => {
     button.addEventListener('click', () => {
-        const filterType = button.dataset.filterType;
-        const location = button.dataset.location;
-
+        const filterType = button.dataset.filterType; const location = button.dataset.location;
         if (filterType === 'all') {
-            isAllModeActive = true;
-            activeLocationFilter = null;
-            showLoadoutFilterActive = false;
-            // When ALL is clicked, make all section buttons visually active for clarity,
-            // though the filter itself is bypassed by isAllModeActive.
+            isAllModeActive = true; activeLocationFilter = null; showLoadoutFilterActive = false;
             document.querySelectorAll('#sectionFilters .section-filter-btn').forEach(sfBtn => sfBtn.classList.add('active'));
         } else {
-            isAllModeActive = false; // Any other top filter deactivates ALL mode
-            if (filterType === 'loadlist') {
-                showLoadoutFilterActive = !showLoadoutFilterActive;
-            } else if (filterType === 'location') {
-                activeLocationFilter = (activeLocationFilter === location) ? null : location;
-            }
+            isAllModeActive = false; 
+            if (filterType === 'loadlist') { showLoadoutFilterActive = !showLoadoutFilterActive;
+            } else if (filterType === 'location') { activeLocationFilter = (activeLocationFilter === location) ? null : location; }
         }
         renderItems();
     });
   });
 
-  // Initial Load
   loadFromStorage();
   renderSections(); 
   renderItems();
-
 </script>
 </body>
 </html>
