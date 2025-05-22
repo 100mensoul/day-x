@@ -13,25 +13,46 @@
     #topButtonFilters .filter-btn { padding: 6px 12px; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: background-color 0.2s, color 0.2s; background-color: #282828; color: #eee; font-size: 0.85rem; }
     #topButtonFilters .filter-btn:hover { background-color: #383838; }
     #topButtonFilters .filter-btn.active { background-color: #00aaaa; color: #000; font-weight: bold; }
+    
+    /* ▼▼▼ SEARCH BOX STYLES - ADD THIS SECTION ▼▼▼ */
+    .search-container {
+      text-align: center;
+      margin-bottom: 1rem;
+      margin-top: 0.5rem;
+    }
+    #searchInput { /* Changed from .search-container input[type="text"] to direct ID for specificity */
+      padding: 8px 10px;
+      width: 60%;
+      max-width: 400px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background-color: #282828;
+      color: #eee;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    #searchInput::placeholder {
+      color: #888;
+    }
+    /* ▲▲▲ END OF SEARCH BOX STYLES ▲▲▲ */
+
     .controls-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 1rem; padding: 0.5rem 0; }
     #sectionFilters { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
     .section-filter-btn { padding: 6px 12px; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: background-color 0.2s, color 0.2s; background-color: #282828; color: #eee; font-size: 0.85rem; }
     .section-filter-btn:hover { background-color: #383838; }
     .section-filter-btn.active { background-color: #009999; color: #fff; font-weight: bold; }
     #editSectionBtn, 
-    .add-item-form button, /* This is the "Add New Item" button */
+    .add-item-form button,
     .add-section-form-popup button { background-color: #007777; color: #eee; border: 1px solid #333; padding: 7px 14px; border-radius: 4px; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; font-size: 0.85rem; height: 34px; box-sizing: border-box; font-weight: normal; }
     #editSectionBtn:hover, .add-item-form button:hover, .add-section-form-popup button:hover { background-color: #009999; }
     
-    .add-section-form-popup input[type="text"], /* For new section name in popup */
-    .popup input#popupItemName, /* Item name in main item popup */
-    .popup select#popupItemSection /* Section select in main item popup */
+    .add-section-form-popup input[type="text"],
+    .popup input#popupItemName, 
+    .popup select#popupItemSection
      { padding: 7px 9px; border: 1px solid #333; border-radius: 4px; background-color: #282828; color: #eee; font-size: 0.85rem; height: 34px; box-sizing: border-box; }
     
     .add-item-form { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-    /* itemSection select is hidden in main form, only used for default section logic */
-    /* .add-item-form select#itemSection { min-width: 100px; } */
-
+    .add-item-form input[type="text"], .add-item-form select { min-width: 140px; }
 
     .item-list { max-width: 800px; margin: 0 auto; }
     .item { background-color: #222; border: 1px solid #444; border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
@@ -40,7 +61,7 @@
     .item-no { font-size: 0.8em; color: #88dddd; margin-right: 0.5em; font-family: monospace;}
     .item.loadout { border-color: #00ffff; background-color: #113; }
     .popup-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-    .popup { background-color: #222; padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; color: #eee; box-sizing: border-box; overflow-y: auto; max-height: 90vh;} /* Added overflow and max-height for long popups */
+    .popup { background-color: #222; padding: 20px; border-radius: 10px; width: 100%; max-width: 400px; color: #eee; box-sizing: border-box; overflow-y: auto; max-height: 90vh;}
     .popup input, .popup select, .popup textarea { width: 100%; box-sizing: border-box; margin-bottom: 10px; padding: 8px; background: #111; border: 1px solid #444; color: #fff; border-radius: 4px; }
     .popup input[type="checkbox"] { width: auto; margin-right: 5px; }
     .popup > button { background: #00cccc; border: none; padding: 10px 15px; cursor: pointer; color: #000; font-weight: bold; margin-right: 10px; border-radius: 4px; margin-top: 5px; }
@@ -91,6 +112,18 @@
         h1 { font-size: 1.6rem; }
         p.subtitle { font-size: 0.75rem; margin-bottom: 0.75rem; }
         #topButtonFilters .filter-btn { font-size: 0.7rem; padding: 5px 8px; min-width: auto; height: 30px; }
+        
+        /* ▼▼▼ SEARCH BOX STYLES FOR SMARTPHONE - ADD THIS ▼▼▼ */
+        .search-container {
+            margin-top: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+        #searchInput { /* Target by ID for specificity */
+            width: 90% !important; /* Use !important if inline styles are hard to override */
+            font-size: 0.85rem !important;
+        }
+        /* ▲▲▲ END OF SEARCH BOX STYLES FOR SMARTPHONE ▲▲▲ */
+
         .controls-row { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.2rem 0; margin-bottom: 0.6rem; }
         #editSectionBtn { width: auto; padding: 6px 12px; font-size: 0.75rem; height: 30px; flex-shrink: 0; }
         #sectionFilters { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; flex-grow: 1; }
@@ -117,12 +150,11 @@
       <button data-filter-type="location" data-location="car" class="filter-btn">車</button>
     </section>
 
-      <!-- ▼▼▼ ここに新しいセクションとして検索ボックスを追加 ▼▼▼ -->
-    <section class="search-container" style="text-align: center; margin-bottom: 1rem; margin-top: 0.5rem;"> {/* margin-topを追加して少し間隔を空ける */}
-      <input type="text" id="searchInput" placeholder="Search items by name or tag..." style="padding: 8px 10px; width: 60%; max-width: 400px; border: 1px solid #333; border-radius: 4px; background-color: #282828; color: #eee;">
+    <!-- ▼▼▼ KEYWORD SEARCH BOX - HTML (インラインスタイルは削除) ▼▼▼ -->
+    <section class="search-container">
+      <input type="text" id="searchInput" placeholder="Search items by name or tag...">
     </section>
-    <!-- ▲▲▲ 検索ボックスの追加はここまで ▲▲▲ -->
-    
+    <!-- ▲▲▲ END OF KEYWORD SEARCH BOX ▲▲▲ -->
   </div>
   
   <div class="controls-row">
@@ -174,8 +206,15 @@
   </div>
 
 <script>
+  // --- JavaScript from the previous full correct version ---
+  // (Including all functions: items, sections, currentItem, isNewItemInPopup, nextItemNo,
+  //  LOCATION_DETAILS, activeLocationFilter, showLoadoutFilterActive, isAllModeActive,
+  //  formatItemNo, saveToStorage, loadFromStorage, updateTopFilterButtonsUI, renderSections,
+  //  renderItems, prepareNewItemPopup, openPopup, savePopup, closePopup, deleteCurrentItem,
+  //  editSectionBtn onclick, addSection, topButtonFilters event listeners, and initial load calls)
+
   let items = [];
-  let sections = ['wear', 'ec']; // Default initial sections
+  let sections = ['wear', 'ec']; 
   let currentItem = null;
   let isNewItemInPopup = false;
   let nextItemNo = 1;
@@ -216,8 +255,8 @@
 
     if (savedNextItemNo) {
         nextItemNo = parseInt(savedNextItemNo, 10);
-        if (isNaN(nextItemNo) || nextItemNo < 1) nextItemNo = 1; // Basic validation
-    } else { // Calculate from existing items if not saved
+        if (isNaN(nextItemNo) || nextItemNo < 1) nextItemNo = 1;
+    } else {
         if (items.length > 0) {
             nextItemNo = Math.max(0, ...items.map(item => item.itemNo || 0)) + 1;
         } else {
@@ -225,21 +264,19 @@
         }
     }
     
-    // Ensure all items have necessary properties
     items.forEach((item, index) => {
-        if (item.itemNo === undefined || item.itemNo === null || isNaN(item.itemNo)) { // Assign/fix itemNo
+        if (item.itemNo === undefined || item.itemNo === null || isNaN(item.itemNo)) {
             item.itemNo = nextItemNo++; 
         }
         if (!item.id) item.id = Date.now().toString(36) + Math.random().toString(36).substr(2) + index;
         if (!Array.isArray(item.location)) item.location = [];
         if (!Array.isArray(item.tags)) item.tags = [];
     });
-    // Recalculate nextItemNo to be definitely higher than any existing itemNo
     if (items.length > 0) {
         const maxExistingNo = Math.max(0, ...items.map(item => item.itemNo || 0));
         nextItemNo = Math.max(nextItemNo, maxExistingNo + 1);
     } else {
-        nextItemNo = 1; // Reset if no items
+        nextItemNo = 1;
     }
   }
   
@@ -261,8 +298,8 @@
   
   function renderSections() {
     const sectionFiltersContainer = document.getElementById('sectionFilters');
-    const itemSectionDropdown = document.getElementById('itemSection'); // For pre-selection logic
-    const popupSectionDropdown = document.getElementById('popupItemSection'); // For popup editing
+    const itemSectionDropdown = document.getElementById('itemSection');
+    const popupSectionDropdown = document.getElementById('popupItemSection');
     
     sectionFiltersContainer.innerHTML = '';
     itemSectionDropdown.innerHTML = '';
@@ -305,6 +342,9 @@
   function renderItems() {
     const itemList = document.getElementById('itemList');
     let itemsToDisplay = items;
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : "";
+
     if (!isAllModeActive) { 
         itemsToDisplay = items.filter(item => {
             if (showLoadoutFilterActive && !item.loadout) return false;
@@ -317,8 +357,21 @@
                     if (!item.section || !selectedSections.includes(item.section)) return false;
                 } else { return false; }
             }
+            if (searchTerm) {
+                const itemNameMatches = item.name.toLowerCase().includes(searchTerm);
+                const itemTagsMatch = Array.isArray(item.tags) && item.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                if (!itemNameMatches && !itemTagsMatch) return false;
+            }
             return true;
         });
+    } else {
+        if (searchTerm) {
+            itemsToDisplay = items.filter(item => {
+                const itemNameMatches = item.name.toLowerCase().includes(searchTerm);
+                const itemTagsMatch = Array.isArray(item.tags) && item.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                return itemNameMatches || itemTagsMatch;
+            });
+        }
     }
     const displayedItemsSorted = itemsToDisplay.slice().reverse();
 
@@ -370,7 +423,7 @@
   function prepareNewItemPopup() {
     const defaultSection = document.getElementById('itemSection').value || (sections.length > 0 ? sections[0] : "");
     const newItem = { 
-      id: Date.now().toString(36) + Math.random().toString(36).substr(2) + "N", // Add N for new to ensure unique ID
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2) + "N",
       itemNo: nextItemNo, 
       name: "", 
       section: defaultSection, 
@@ -441,14 +494,13 @@
 
     if (isNewItemInPopup) {
         const existingItemIndex = items.findIndex(i => i.id === currentItem.id);
-        if (existingItemIndex === -1) { items.push(currentItem); } // Add if truly new
-        else { items[existingItemIndex] = currentItem; } // Should not happen if ID is unique for new
+        if (existingItemIndex === -1) { items.push(currentItem); } 
+        else { items[existingItemIndex] = currentItem; } 
 
-        if (currentItem.itemNo >= nextItemNo) { // Ensure nextItemNo is always ahead
+        if (currentItem.itemNo >= nextItemNo) { 
             nextItemNo = currentItem.itemNo + 1;
         }
     }
-    // For existing items, currentItem is already a reference in the 'items' array, so updates are direct.
     
     isNewItemInPopup = false;
     renderItems(); 
@@ -525,6 +577,14 @@
         renderItems();
     });
   });
+
+  // Event listener for search input
+  const searchInputElement = document.getElementById('searchInput');
+  if (searchInputElement) {
+      searchInputElement.addEventListener('input', () => {
+          renderItems();
+      });
+  }
 
   // Initial Load
   loadFromStorage();
