@@ -29,6 +29,24 @@
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
+    .filters label, .filters button { /* Combined for consistency */
+        padding: 5px 8px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        background-color: #282828; /* Default background for buttons */
+        color: #eee; /* Default text color for buttons */
+    }
+    .filters label:hover, .filters button:hover {
+        background-color: #353535;
+    }
+    .filters button.active-filter { /* For All Locations button */
+        background-color: #00aaaa;
+        color: #000;
+        font-weight: bold;
+    }
+
 
     .item-list {
       max-width: 800px;
@@ -44,8 +62,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      cursor: pointer;
+      /* cursor: pointer; Will be applied to a specific part if needed */
     }
+    .item-details-clickable { /* New class for the part that opens popup */
+        flex-grow: 1;
+        cursor: pointer;
+        padding-right: 1rem; /* Space before location badges */
+    }
+
 
     .item.loadout {
       border-color: #00ffff;
@@ -72,13 +96,19 @@
 
     .popup input, .popup select, .popup textarea {
       width: 100%;
-      box-sizing: border-box; /* Added for consistent sizing */
+      box-sizing: border-box;
       margin-bottom: 10px;
       padding: 6px;
       background: #111;
       border: 1px solid #444;
       color: #fff;
+      border-radius: 4px;
     }
+    .popup input[type="checkbox"] {
+        width: auto;
+        margin-right: 5px;
+    }
+
 
     .popup button {
       background: #00cccc;
@@ -88,7 +118,16 @@
       color: #000;
       font-weight: bold;
       margin-right: 10px;
+      border-radius: 4px;
     }
+    .popup button.delete-item-btn { /* Style for delete button in popup */
+        background-color: #cc0000;
+        color: #fff;
+    }
+    .popup button.delete-item-btn:hover {
+        background-color: #aa0000;
+    }
+
 
     .popup-header {
       font-size: 1.2rem;
@@ -101,10 +140,11 @@
       margin-top: 5px;
     }
 
-    .locations { /* Added to align location badges */
+    .locations-container { /* Container for location badges on the item */
         display: flex;
         gap: 5px;
         flex-wrap: wrap;
+        justify-content: flex-end;
     }
 
     .location-badge {
@@ -113,11 +153,20 @@
       padding: 3px 8px;
       border-radius: 12px;
       font-size: 0.75rem;
-      margin-left: 6px;
       font-weight: 500;
       white-space: nowrap;
       display: inline-block;
+      cursor: pointer; /* Make badges clickable for filtering */
+      transition: transform 0.1s ease;
     }
+    .location-badge:hover {
+        transform: scale(1.1);
+    }
+    .location-badge.active-filter-highlight { /* Highlight if this location is the active filter */
+        outline: 2px solid #00ffff;
+        box-shadow: 0 0 5px #00ffff;
+    }
+
 
     .location-badge.tokyo { background-color: #00ccff; }
     .location-badge.himeji { background-color: #ffcc00; }
@@ -138,7 +187,6 @@
       background: #00eeee;
     }
 
-    /* Styles for Section Editor */
     .hidden {
       display: none !important;
     }
@@ -148,12 +196,12 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: #2a2a2a; /* Slightly different from popup for distinction */
+      background-color: #2a2a2a;
       padding: 20px;
       border-radius: 10px;
       width: 450px;
       color: #eee;
-      z-index: 1001; /* Ensure it's above popup if they can overlap */
+      z-index: 1001;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
       border: 1px solid #555;
     }
@@ -168,8 +216,8 @@
     #sectionEditList {
       list-style-type: none;
       padding: 0;
-      max-height: 300px; /* Added for scrollability if many sections */
-      overflow-y: auto; /* Added for scrollability */
+      max-height: 300px;
+      overflow-y: auto;
     }
 
     #sectionEditList li {
@@ -206,7 +254,7 @@
       background: #dd2222;
     }
 
-    .section-editor button { /* General button styling within section editor, e.g., Close button */
+    .section-editor button {
       background: #00cccc;
       border: none;
       padding: 8px 12px;
@@ -219,6 +267,7 @@
     .section-editor button:hover {
       background: #00eeee;
     }
+
   </style>
 </head>
 <body>
@@ -232,6 +281,7 @@
     <label><input type="radio" name="type" value="all" checked /> All</label>
     <label><input type="radio" name="type" value="equipment" /> Equipment</label>
     <label><input type="radio" name="type" value="inventory" /> Inventory</label>
+    <button id="showAllLocationsBtn">All Locations</button> <!-- Button to show all locations -->
   </section>
 
   <section class="filters" id="sectionFilters"></section>
@@ -277,11 +327,11 @@
       <label><input type="checkbox" id="inputLoadout"> Include in Loadout</label><br><br>
       <button onclick="savePopup()">Save</button>
       <button onclick="closePopup()">Close</button>
+      <button onclick="deleteCurrentItem()" class="delete-item-btn">Delete Item</button> <!-- Delete button -->
     </div>
   </div>
 
-  <!-- SECTION EDIT PANEL -->
-  <div id="sectionEditor" class="section-editor hidden"> <!-- MOVED HERE and added class -->
+  <div id="sectionEditor" class="section-editor hidden">
     <h2>Edit Sections</h2>
     <ul id="sectionEditList"></ul>
     <div style="text-align:center; margin-top: 1rem;">
@@ -294,6 +344,16 @@
   let sections = ['wear', 'ec'];
   let currentItem = null;
 
+  // Mappable locations for display and consistency
+  const LOCATION_DETAILS = {
+    'tokyo': { label: '東京', class: 'tokyo' },
+    'himeji': { label: '姫路', class: 'himeji' },
+    'baggage': { label: '手荷物', class: 'baggage' },
+    'car': { label: '車', class: 'car' }
+  };
+
+  let activeLocationFilter = null; // null or 'all' means no specific location filter
+
   function saveToStorage() {
     localStorage.setItem('superhub_items', JSON.stringify(items));
     localStorage.setItem('superhub_sections', JSON.stringify(sections));
@@ -304,24 +364,60 @@
     const savedSections = localStorage.getItem('superhub_sections');
     if (savedItems) items = JSON.parse(savedItems);
     if (savedSections) sections = JSON.parse(savedSections);
+    items.forEach(item => {
+        if (!item.location) item.location = [];
+        if (!item.tags) item.tags = [];
+        // Ensure item has a unique ID if it doesn't already
+        if (!item.id) item.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
+    });
   }
 
+  // Function to handle location filter activation
+  function setLocationFilter(locationId, event) {
+    if (event) event.stopPropagation(); // Prevent popup from opening when clicking badge
+
+    if (activeLocationFilter === locationId) { // If clicking the same active filter, deactivate it
+        activeLocationFilter = null;
+    } else {
+        activeLocationFilter = locationId;
+    }
+    updateShowAllLocationsButtonState();
+    renderItems();
+  }
+
+  function updateShowAllLocationsButtonState() {
+    const btn = document.getElementById('showAllLocationsBtn');
+    if (activeLocationFilter === null) {
+        btn.classList.add('active-filter');
+    } else {
+        btn.classList.remove('active-filter');
+    }
+  }
+
+
   function renderSections() {
-    const sectionFilters = document.getElementById('sectionFilters');
-    const sectionSelect = document.getElementById('itemSection');
-    sectionFilters.innerHTML = '';
-    sectionSelect.innerHTML = '';
+    const sectionFiltersContainer = document.getElementById('sectionFilters');
+    const sectionSelectDropdown = document.getElementById('itemSection');
+    sectionFiltersContainer.innerHTML = '';
+    sectionSelectDropdown.innerHTML = '';
 
     sections.forEach(sec => {
-      const checkbox = document.createElement('label');
-      checkbox.innerHTML = `<input type="checkbox" class="sectionFilter" value="${sec}" checked> ${sec}`;
-      sectionFilters.appendChild(checkbox);
+      const label = document.createElement('label');
+      label.innerHTML = `<input type="checkbox" class="sectionFilter" value="${sec}" checked> ${sec}`;
+      sectionFiltersContainer.appendChild(label);
 
       const option = document.createElement('option');
       option.value = sec;
       option.textContent = sec;
-      sectionSelect.appendChild(option);
+      sectionSelectDropdown.appendChild(option);
     });
+    if (sections.length === 0 && sectionSelectDropdown.options.length === 0) {
+        const noSectionOption = document.createElement('option');
+        noSectionOption.value = "";
+        noSectionOption.textContent = "No sections defined";
+        noSectionOption.disabled = true;
+        sectionSelectDropdown.appendChild(noSectionOption);
+    }
 
     document.querySelectorAll('.sectionFilter').forEach(cb =>
       cb.addEventListener('change', renderItems)
@@ -331,57 +427,98 @@
   function renderItems() {
     const itemList = document.getElementById('itemList');
     const showLoadoutOnly = document.getElementById('toggleLoadout').checked;
-    const selectedType = [...document.querySelectorAll('input[name="type"]')].find(r => r.checked).value;
-    const selectedSections = [...document.querySelectorAll('.sectionFilter')].filter(cb => cb.checked).map(cb => cb.value);
-
+    const selectedType = document.querySelector('input[name="type"]:checked').value;
+    const selectedSectionCheckboxes = [...document.querySelectorAll('.sectionFilter:checked')];
+    const selectedSections = selectedSectionCheckboxes.map(cb => cb.value);
+    
     const filtered = items.filter(item => {
       if (showLoadoutOnly && !item.loadout) return false;
       if (selectedType !== "all" && item.type !== selectedType) return false;
-      if (!selectedSections.includes(item.section)) return false;
+      
+      if (selectedSections.length > 0) {
+          if (!item.section || !selectedSections.includes(item.section)) {
+              return false;
+          }
+      }
+
+      if (activeLocationFilter && activeLocationFilter !== 'all') { // 'all' is now handled by null
+        if (!item.location || !Array.isArray(item.location) || !item.location.includes(activeLocationFilter)) {
+          return false;
+        }
+      }
       return true;
     });
 
-    // Corrected renderLocations function
-    function renderLocations(locArray) {
-      if (!Array.isArray(locArray) || locArray.length === 0) return '';
-      const labelMap = {
-        tokyo: '東京',
-        himeji: '姫路',
-        baggage: '手荷物',
-        car: '車'
-      };
-      return locArray.map(loc => {
-        return `<span class="location-badge ${loc}">${labelMap[loc] || loc}</span>`;
+    function renderLocationsHTML(itemLocations) {
+      if (!Array.isArray(itemLocations) || itemLocations.length === 0) return '';
+      return itemLocations.map(locKey => {
+        const locDetail = LOCATION_DETAILS[locKey];
+        if (!locDetail) return `<span class="location-badge">${locKey}</span>`; // Fallback for unknown location
+        
+        let badgeClass = `location-badge ${locDetail.class}`;
+        if (locKey === activeLocationFilter) {
+            badgeClass += ' active-filter-highlight'; // Highlight if this location is the current filter
+        }
+        // The data-location attribute will be used to identify which location was clicked
+        return `<span class="${badgeClass}" data-location="${locKey}">${locDetail.label}</span>`;
       }).join('');
     }
 
     itemList.innerHTML = '';
-    filtered.forEach((item) => { // Removed index as it's not used here
+    filtered.forEach(item => {
       const div = document.createElement('div');
       div.className = 'item' + (item.loadout ? ' loadout' : '');
-      div.innerHTML = `
-        <div>
-          <div><strong>${item.name}</strong></div>
-          <div class="tags">${item.tags ? item.tags.join(', ') : ''}</div>
-        </div>
-        <div class="locations">${renderLocations(item.location)}</div>
-      `;
+      div.dataset.itemId = item.id; // For easier reference, e.g., for deletion
 
-      div.onclick = () => openPopup(item);
+      // Div for item name and tags, which is clickable for popup
+      const detailsDiv = document.createElement('div');
+      detailsDiv.className = 'item-details-clickable';
+      detailsDiv.innerHTML = `
+        <div><strong>${item.name}</strong></div>
+        <div class="tags">${item.tags && item.tags.length > 0 ? item.tags.join(', ') : ''}</div>
+      `;
+      detailsDiv.onclick = () => openPopup(item);
+
+      // Container for location badges
+      const locationsDiv = document.createElement('div');
+      locationsDiv.className = 'locations-container';
+      locationsDiv.innerHTML = renderLocationsHTML(item.location);
+      
+      // Add click listeners to individual location badges within this item
+      locationsDiv.querySelectorAll('.location-badge').forEach(badge => {
+        badge.onclick = (event) => setLocationFilter(badge.dataset.location, event);
+      });
+
+      div.appendChild(detailsDiv);
+      div.appendChild(locationsDiv);
       itemList.appendChild(div);
     });
 
+    updateShowAllLocationsButtonState(); // Ensure "All Locations" button state is correct
     saveToStorage();
   }
 
   function addItem() {
-    const name = document.getElementById('itemName').value;
+    const nameInput = document.getElementById('itemName');
     const type = document.getElementById('itemType').value;
     const section = document.getElementById('itemSection').value;
-    if (name.trim()) {
-      items.push({ name, type, section, loadout: false, location: [] }); // Added empty location array
-      document.getElementById('itemName').value = '';
+    const name = nameInput.value.trim();
+
+    if (name) {
+      const newItem = { 
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2), // Unique ID
+        name, 
+        type, 
+        section: section || undefined,
+        loadout: false, 
+        location: [], 
+        tags: [] 
+      };
+      items.push(newItem);
+      nameInput.value = '';
       renderItems();
+    } else {
+        alert("Item name cannot be empty.");
     }
   }
 
@@ -392,7 +529,6 @@
 
     sections.forEach((sec, index) => {
       const li = document.createElement('li');
-
       const input = document.createElement('input');
       input.type = 'text';
       input.value = sec;
@@ -403,50 +539,38 @@
       deleteBtn.textContent = '✕';
       deleteBtn.onclick = () => {
         if (confirm(`Delete section "${sec}"? This will remove the section from all associated items.`)) {
-          const sectionToDelete = sections[index]; // Store before splice
+          const sectionToDelete = sections[index];
           sections.splice(index, 1);
-          
           items.forEach(item => {
-            if (item.section === sectionToDelete) {
-              // Optionally, assign to a default section or mark as 'unsectioned'
-              // For now, just removing it. Consider user experience here.
-              delete item.section; 
-            }
+            if (item.section === sectionToDelete) delete item.section;
           });
           saveToStorage();
           renderSections();
           renderItems();
-          // Re-render the editor list
-          document.getElementById('editSectionBtn').click(); 
+          document.getElementById('editSectionBtn').click();
         }
       };
 
       input.onchange = () => {
-        const oldName = sec; // Capture current section name for item update
+        const oldName = sec;
         const newName = input.value.trim().toLowerCase();
         if (newName && newName !== oldName && !sections.includes(newName)) {
           sections[index] = newName;
           items.forEach(item => {
-            if (item.section === oldName) {
-              item.section = newName;
-            }
+            if (item.section === oldName) item.section = newName;
           });
           saveToStorage();
           renderSections();
           renderItems();
-          // Re-render the editor list (optional, as name change is reflected)
-          // document.getElementById('editSectionBtn').click(); // Could cause flicker, test if needed
-        } else if (newName !== oldName) { // Name is invalid or duplicate
+        } else if (newName !== oldName) {
           alert(`Section name "${newName}" is invalid or already exists.`);
-          input.value = oldName; // Revert
+          input.value = oldName;
         }
       };
-
       li.appendChild(input);
       li.appendChild(deleteBtn);
       list.appendChild(li);
     });
-
     editor.classList.remove('hidden');
   };
 
@@ -460,9 +584,9 @@
     if (name && !sections.includes(name)) {
       sections.push(name);
       nameInput.value = '';
-      saveToStorage(); // Save after adding section
+      saveToStorage();
       renderSections();
-      renderItems(); // renderItems will call saveToStorage again, but that's okay
+      renderItems(); 
     } else if (sections.includes(name)) {
       alert(`Section "${name}" already exists.`);
     } else if (!name) {
@@ -471,18 +595,22 @@
   }
 
   function openPopup(item) {
-    currentItem = item;
+    currentItem = items.find(i => i.id === item.id); // Ensure currentItem is the one from the main array
+    if (!currentItem) {
+        console.error("Item not found for popup:", item);
+        return;
+    }
     document.getElementById('popupOverlay').style.display = 'flex';
-    document.getElementById('inputSite').value = item.site || '';
-    document.getElementById('inputURL').value = item.url || '';
-    document.getElementById('inputCount').value = item.count || '';
-    document.getElementById('inputStatus').value = item.status || '';
-    document.getElementById('inputMemo').value = item.memo || '';
-    document.getElementById('inputTags').value = item.tags ? item.tags.join(', ') : '';
-    document.getElementById('inputLoadout').checked = item.loadout || false;
+    document.getElementById('inputSite').value = currentItem.site || '';
+    document.getElementById('inputURL').value = currentItem.url || '';
+    document.getElementById('inputCount').value = currentItem.count || '';
+    document.getElementById('inputStatus').value = currentItem.status || '';
+    document.getElementById('inputMemo').value = currentItem.memo || '';
+    document.getElementById('inputTags').value = currentItem.tags && Array.isArray(currentItem.tags) ? currentItem.tags.join(', ') : '';
+    document.getElementById('inputLoadout').checked = currentItem.loadout || false;
 
     document.querySelectorAll('.locCheck').forEach(cb => {
-      cb.checked = Array.isArray(item.location) && item.location.includes(cb.value);
+      cb.checked = Array.isArray(currentItem.location) && currentItem.location.includes(cb.value);
     });
   }
                                                    
@@ -496,27 +624,47 @@
       currentItem.tags = document.getElementById('inputTags').value
         .split(',').map(t => t.trim()).filter(t => t);
       currentItem.loadout = document.getElementById('inputLoadout').checked;
-
-      currentItem.location = [...document.querySelectorAll('.locCheck')]
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-
-      renderItems(); // This will call saveToStorage
+      currentItem.location = [...document.querySelectorAll('.locCheck:checked')].map(cb => cb.value);
+      
+      // Update the item in the main items array (currentItem is already a reference)
+      renderItems();
       closePopup();
     }
   }
 
   function closePopup() {
     document.getElementById('popupOverlay').style.display = 'none';
+    currentItem = null; // Clear current item
+  }
+
+  function deleteCurrentItem() {
+    if (currentItem && confirm(`Are you sure you want to delete item "${currentItem.name}"?`)) {
+      items = items.filter(item => item.id !== currentItem.id);
+      renderItems(); // This will also call saveToStorage()
+      closePopup();
+    }
   }
   
   // Initial setup
   loadFromStorage();
   renderSections();
-  renderItems();
+  renderItems(); // Initial render
+  updateShowAllLocationsButtonState(); // Set initial state for "All Locations" button
+
+  // Event listener for "All Locations" button
+  document.getElementById('showAllLocationsBtn').addEventListener('click', () => {
+    activeLocationFilter = null; // Set to null to show all
+    updateShowAllLocationsButtonState();
+    renderItems();
+  });
+
 
   document.querySelectorAll('input[name="type"], #toggleLoadout')
-    .forEach(el => el.addEventListener('change', renderItems));
+    .forEach(el => el.addEventListener('change', () => {
+        // No need to directly call updateShowAllLocationsButtonState here unless these filters affect it
+        renderItems();
+    }));
+
 </script>
 </body>
 </html>
