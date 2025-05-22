@@ -10,44 +10,41 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: #111;
       color: #eee;
-      padding: 15px; /* Reduced body padding */
+      padding: 15px;
     }
     h1 {
-      font-size: 2.2rem; /* Slightly reduced */
+      font-size: 2.2rem;
       color: #00ffff;
       text-align: center;
       margin-top: 0;
-      margin-bottom: 0.5rem; /* Reduced */
+      margin-bottom: 0.5rem;
     }
     p.subtitle {
       text-align: center;
       color: #aaa;
-      margin-bottom: 1.2rem; /* Reduced */
-      font-size: 0.9rem; /* Slightly reduced */
+      margin-bottom: 1.2rem;
+      font-size: 0.9rem;
     }
 
-    .filters-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem; /* Reduced gap between filter groups */
-      margin-bottom: 1rem; /* Reduced */
+    .filters-container { /* Only for topButtonFilters now */
+      margin-bottom: 1rem;
     }
 
     #topButtonFilters {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.5rem; /* Reduced gap between buttons */
+      gap: 0.5rem;
     }
     #topButtonFilters .filter-btn {
-        padding: 6px 12px; /* Reduced padding */
+        padding: 6px 12px;
         border: 1px solid #333;
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.2s, color 0.2s;
         background-color: #282828;
         color: #eee;
-        font-size: 0.85rem; /* Slightly reduced */
+        font-size: 0.85rem;
     }
     #topButtonFilters .filter-btn:hover {
         background-color: #383838;
@@ -58,60 +55,116 @@
         font-weight: bold;
     }
 
-    #sectionFilters {
+    /* New styling for the combined control row */
+    .controls-row {
+        display: flex;
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        padding: 0.5rem 0; /* Add some vertical padding to the row */
+        /* border-top: 1px solid #333;
+        border-bottom: 1px solid #333; */
+    }
+
+    #sectionFilters { /* Container for section filter buttons */
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.75rem; /* Reduced */
+      gap: 0.5rem; /* Gap between section filter buttons */
     }
-    #sectionFilters label {
-        padding: 4px 7px; /* Reduced */
+    .section-filter-btn { /* Style for individual section filter buttons */
+        padding: 6px 12px;
         border: 1px solid #333;
         border-radius: 4px;
         cursor: pointer;
-        transition: background-color 0.2s;
-        background-color: #282828;
+        transition: background-color 0.2s, color 0.2s;
+        background-color: #282828; /* Default state */
         color: #eee;
-        font-size: 0.85rem; /* Slightly reduced */
+        font-size: 0.85rem;
     }
-    #sectionFilters label:hover {
-        background-color: #353535;
+    .section-filter-btn:hover {
+        background-color: #383838;
     }
-    #sectionFilters input[type="checkbox"] {
-        margin-right: 4px; /* Slightly reduced */
-    }
-
-    .section-edit-button-container { /* Class for SECTION EDIT button container */
-        text-align: center;
-        margin-bottom: 1rem; /* Reduced */
+    .section-filter-btn.active { /* Active state for section filter buttons */
+        background-color: #009999; /* Different active color from top filters */
+        color: #fff;
+        font-weight: bold;
     }
 
-    .add-item-form, .add-section-form {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.75rem; /* Reduced */
-      margin-bottom: 1rem; /* Reduced */
+
+    #editSectionBtn { /* SECTION EDIT button specific styling */
+      background: #00cccc;
+      color: #000;
+      border: none;
+      padding: 7px 14px; /* Adjusted to align height with other inputs/buttons */
+      font-weight: bold;
+      border-radius: 4px; /* Consistent radius */
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-size: 0.85rem;
+      height: 34px; /* Explicit height to match inputs */
+      box-sizing: border-box;
     }
-    .add-item-form input, .add-item-form select, .add-item-form button,
-    .add-section-form input, .add-section-form button {
-        padding: 7px 9px; /* Slightly reduced */
+    #editSectionBtn:hover {
+      background: #00eeee;
+    }
+    
+    .add-section-form-inline { /* Wrapper for inline add section form */
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    .add-section-form-inline input[type="text"],
+    .add-section-form-inline button {
+        padding: 7px 9px;
         border: 1px solid #333;
         border-radius: 4px;
         background-color: #282828;
         color: #eee;
-        font-size: 0.9rem; /* Consistent font size for form elements */
+        font-size: 0.85rem; /* Consistent font size */
+        height: 34px; /* Explicit height */
+        box-sizing: border-box;
     }
-    .add-item-form button, .add-section-form button {
+    .add-section-form-inline input[type="text"] {
+        min-width: 130px;
+    }
+    .add-section-form-inline button {
         cursor: pointer;
         background-color: #007777;
     }
-    .add-item-form button:hover, .add-section-form button:hover {
+    .add-section-form-inline button:hover {
         background-color: #009999;
     }
-    .add-item-form input, .add-item-form select,
-    .add-section-form input {
-        min-width: 140px; /* Slightly reduced base width */
+
+    /* Add Item form styling (remains separate for now) */
+    .add-item-form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .add-item-form input, .add-item-form select, .add-item-form button {
+        padding: 7px 9px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        background-color: #282828;
+        color: #eee;
+        font-size: 0.9rem;
+        height: 36px; /* Slightly taller for main add item */
+        box-sizing: border-box;
+    }
+    .add-item-form button {
+        cursor: pointer;
+        background-color: #007777;
+    }
+    .add-item-form button:hover {
+        background-color: #009999;
+    }
+    .add-item-form input, .add-item-form select {
+        min-width: 140px;
     }
 
 
@@ -124,8 +177,8 @@
       background-color: #222;
       border: 1px solid #444;
       border-radius: 8px;
-      padding: 0.8rem 1rem; /* Adjusted padding */
-      margin-bottom: 0.8rem; /* Reduced */
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.8rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -135,8 +188,6 @@
         cursor: pointer;
         padding-right: 1rem;
     }
-
-
     .item.loadout {
       border-color: #00ffff;
       background-color: #113;
@@ -152,7 +203,6 @@
       z-index: 1000;
       padding: 15px;
     }
-
     .popup {
       background-color: #222;
       padding: 20px;
@@ -162,7 +212,6 @@
       color: #eee;
       box-sizing: border-box;
     }
-
     .popup input, .popup select, .popup textarea {
       width: 100%;
       box-sizing: border-box;
@@ -177,8 +226,6 @@
         width: auto;
         margin-right: 5px;
     }
-
-
     .popup button {
       background: #00cccc;
       border: none;
@@ -197,26 +244,21 @@
     .popup button.delete-item-btn:hover {
         background-color: #aa0000;
     }
-
-
     .popup-header {
       font-size: 1.2rem;
       margin-bottom: 10px;
     }
-
     .tags {
       font-size: 0.85rem;
       color: #ccc;
       margin-top: 5px;
     }
-
     .locations-container {
         display: flex;
         gap: 5px;
         flex-wrap: wrap;
         justify-content: flex-end;
     }
-
     .location-badge {
       color: #000;
       background-color: #00aaaa;
@@ -232,211 +274,131 @@
         outline: 2px solid #00ffff;
         box-shadow: 0 0 5px #00ffff;
     }
-
-
     .location-badge.tokyo { background-color: #00ccff; }
     .location-badge.himeji { background-color: #ffcc00; }
     .location-badge.baggage { background-color: #ff8888; }
     .location-badge.car { background-color: #aaffaa; }
 
-    #editSectionBtn {
-      background: #00cccc;
-      color: #000;
-      border: none;
-      padding: 8px 14px; /* Slightly reduced padding for compactness */
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-      font-size: 0.9rem; /* Consistent with other form buttons */
-    }
-    #editSectionBtn:hover {
-      background: #00eeee;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
+    .hidden { display: none !important; }
     .section-editor {
       position: fixed;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       background-color: #2a2a2a;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 450px;
-      color: #eee;
-      z-index: 1001;
+      padding: 20px; border-radius: 10px;
+      width: 90%; max-width: 450px;
+      color: #eee; z-index: 1001;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      border: 1px solid #555;
-      box-sizing: border-box;
+      border: 1px solid #555; box-sizing: border-box;
     }
-
     .section-editor h2 {
-      text-align: center;
-      color: #00ffff;
-      margin-top: 0;
-      margin-bottom: 1.5rem;
+      text-align: center; color: #00ffff;
+      margin-top: 0; margin-bottom: 1.5rem;
     }
-
     #sectionEditList {
-      list-style-type: none;
-      padding: 0;
-      max-height: 300px;
-      overflow-y: auto;
+      list-style-type: none; padding: 0;
+      max-height: 300px; overflow-y: auto;
     }
-
     #sectionEditList li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid #444;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 1px solid #444;
     }
-    #sectionEditList li:last-child {
-      border-bottom: none;
-    }
-
+    #sectionEditList li:last-child { border-bottom: none; }
     #sectionEditList input.rename-input {
-      flex-grow: 1;
-      margin-right: 10px;
-      padding: 8px;
-      background: #111;
-      border: 1px solid #444;
-      color: #fff;
-      border-radius: 4px;
+      flex-grow: 1; margin-right: 10px; padding: 8px;
+      background: #111; border: 1px solid #444;
+      color: #fff; border-radius: 4px;
     }
-
     #sectionEditList button.delete-btn {
-      background: #ff4444;
-      color: #fff;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
+      background: #ff4444; color: #fff; border: none;
+      padding: 6px 10px; border-radius: 4px;
+      cursor: pointer; font-weight: bold;
     }
-    #sectionEditList button.delete-btn:hover {
-      background: #dd2222;
-    }
-
+    #sectionEditList button.delete-btn:hover { background: #dd2222; }
     .section-editor button {
-      background: #00cccc;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      color: #000;
-      font-weight: bold;
-      border-radius: 4px;
-      transition: background 0.2s ease;
+      background: #00cccc; border: none;
+      padding: 10px 15px; cursor: pointer;
+      color: #000; font-weight: bold;
+      border-radius: 4px; transition: background 0.2s ease;
       margin-top: 10px;
     }
-    .section-editor button:hover {
-      background: #00eeee;
-    }
+    .section-editor button:hover { background: #00eeee; }
 
     /* --- Smartphone Adjustments --- */
     @media (max-width: 768px) {
-        body {
-            padding: 10px 10px; /* Top/bottom padding reduced */
-        }
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.3rem;
-        }
-        p.subtitle {
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-        }
-        .filters-container {
-            gap: 0.8rem;
-            margin-bottom: 0.8rem;
-        }
+        body { padding: 10px 10px; }
+        h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+        p.subtitle { font-size: 0.8rem; margin-bottom: 1rem; }
+        
         #topButtonFilters .filter-btn {
-            padding: 7px 9px; /* Adjusted padding for better tap targets but less vertical space */
-            font-size: 0.75rem; /* Reduced font size */
-        }
-        #sectionFilters label {
-            padding: 5px 6px;
-            font-size: 0.75rem; /* Reduced font size */
-        }
-        .section-edit-button-container {
-             margin-bottom: 0.8rem;
+            padding: 7px 9px; font-size: 0.75rem;
         }
 
-        .add-item-form, .add-section-form {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0.5rem; /* Reduced gap for column layout */
-            margin-bottom: 0.8rem;
+        .controls-row { /* Adjustments for the combined row on smaller screens */
+            gap: 0.5rem; /* Reduce gap further */
+            justify-content: space-around; /* Better distribution if wrapped */
         }
-        .add-item-form input, .add-item-form select, .add-item-form button,
-        .add-section-form input, .add-section-form button {
-            width: 100%;
-            margin-bottom: 0.3rem; /* Reduced margin between stacked elements */
-            box-sizing: border-box;
-            padding: 9px 10px; /* Maintain decent tap height */
-            font-size: 0.85rem;
+        .section-filter-btn {
+            padding: 7px 9px; font-size: 0.75rem;
         }
-        .add-item-form input, .add-item-form select {
-            min-width: 0;
+        #editSectionBtn {
+            padding: 7px 10px; font-size: 0.75rem; height: 32px;
+        }
+        .add-section-form-inline input[type="text"],
+        .add-section-form-inline button {
+             padding: 7px 8px; font-size: 0.75rem; height: 32px;
+        }
+        .add-section-form-inline input[type="text"] {
+            min-width: 100px; /* Further reduce min-width if needed */
+            flex-grow: 1; /* Allow input to take available space */
         }
 
-        .item {
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 0.7rem;
+
+        .add-item-form { /* Main add item form stacking */
+            flex-direction: column; align-items: stretch;
+            gap: 0.5rem; margin-bottom: 0.8rem;
         }
-        .item-details-clickable {
-            margin-bottom: 0.6rem;
-            padding-right: 0;
-            width: 100%;
+        .add-item-form input, .add-item-form select, .add-item-form button {
+            width: 100%; margin-bottom: 0.3rem;
+            padding: 9px 10px; font-size: 0.85rem;
         }
-        .locations-container {
-            justify-content: flex-start;
-            width: 100%;
-        }
-        .location-badge {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-        }
+        .add-item-form input, .add-item-form select { min-width: 0; }
+
+        .item { flex-direction: column; align-items: flex-start; padding: 0.7rem; }
+        .item-details-clickable { margin-bottom: 0.6rem; padding-right: 0; width: 100%; }
+        .locations-container { justify-content: flex-start; width: 100%; }
+        .location-badge { font-size: 0.7rem; padding: 2px 6px; }
     }
 
     @media (max-width: 480px) {
-        body {
-            padding: 8px 5px; /* Further reduce padding */
+        body { padding: 8px 5px; }
+        h1 { font-size: 1.6rem; }
+        p.subtitle { font-size: 0.75rem; margin-bottom: 0.75rem; }
+        
+        #topButtonFilters .filter-btn { font-size: 0.7rem; padding: 6px 7px; min-width: 55px; }
+        
+        .controls-row {
+             flex-direction: column; /* Stack controls vertically on very small screens */
+             align-items: stretch; /* Make them full width when stacked */
         }
-        h1 {
-            font-size: 1.6rem;
+        #sectionFilters { justify-content: stretch; } /* Stretch buttons in column */
+        .section-filter-btn, #editSectionBtn,
+        .add-section-form-inline input[type="text"],
+        .add-section-form-inline button {
+            width: 100%; /* Full width when stacked */
+            margin-bottom: 0.3rem;
+            box-sizing: border-box;
         }
-        p.subtitle {
-            font-size: 0.75rem;
-            margin-bottom: 0.75rem;
-        }
-        #topButtonFilters .filter-btn {
-            font-size: 0.7rem;
-            padding: 6px 7px;
-            min-width: 55px; /* Ensure buttons don't get too squished */
-        }
-        #sectionFilters label {
-            font-size: 0.7rem;
+        .add-section-form-inline {
+            flex-direction: column; /* Stack input and button within its form */
+            width: 100%;
         }
 
         .popup button {
-             width: calc(50% - 5px);
-             margin-right: 5px;
-             font-size: 0.85rem;
-             padding: 8px 10px;
+             width: calc(50% - 5px); margin-right: 5px;
+             font-size: 0.85rem; padding: 8px 10px;
         }
-        .popup button:nth-child(2n) { /* Second button in a row */
-            margin-right: 0;
-        }
-        .popup button.delete-item-btn { /* Ensure delete button can be full width if needed or specific styling */
-            /* width: 100%; margin-top: 8px; margin-right:0; */
-        }
+        .popup button:nth-child(2n) { margin-right: 0; }
     }
 
   </style>
@@ -447,7 +409,7 @@
     This is the terminal board console for managing all parts across all sections.
   </p>
 
-  <div class="filters-container">
+  <div class="filters-container"> <!-- Renamed or could be removed if only topButtonFilters exist here -->
     <section id="topButtonFilters">
       <button data-filter-type="all" class="filter-btn active">ALL</button>
       <button data-filter-type="loadlist" class="filter-btn">LOADLIST</button>
@@ -456,20 +418,21 @@
       <button data-filter-type="location" data-location="baggage" class="filter-btn">手荷物</button>
       <button data-filter-type="location" data-location="car" class="filter-btn">車</button>
     </section>
-
-    <section id="sectionFilters"></section>
   </div>
   
-  <!-- Changed: Added class and removed inline style -->
-  <section class="section-edit-button-container">
+  <!-- New combined controls row -->
+  <div class="controls-row">
+    <div id="sectionFilters">
+      <!-- Section filter buttons will be rendered here by JS -->
+    </div>
     <button id="editSectionBtn">SECTION EDIT</button>
-  </section>
+    <div class="add-section-form-inline"> <!-- Changed from section to div for inline form -->
+      <input type="text" id="newSectionName" placeholder="New Section"> <!-- e.g. removed for space -->
+      <button onclick="addSection()">Add Section</button>
+    </div>
+  </div>
 
-  <section class="add-section-form">
-    <input type="text" id="newSectionName" placeholder="New Section (e.g., tools)">
-    <button onclick="addSection()">Add Section</button>
-  </section>
-
+  <!-- Add Item form (remains separate) -->
   <section class="add-item-form">
     <input type="text" id="itemName" placeholder="Item name">
     <select id="itemSection"></select>
@@ -524,6 +487,7 @@
 
   let activeLocationFilter = null;
   let showLoadoutFilterActive = false;
+  // let activeSections = []; // Not strictly needed if we read from button classes
 
   function saveToStorage() {
     localStorage.setItem('superhub_items', JSON.stringify(items));
@@ -535,6 +499,10 @@
     const savedSections = localStorage.getItem('superhub_sections');
     if (savedItems) items = JSON.parse(savedItems);
     if (savedSections) sections = JSON.parse(savedSections);
+    if (sections.length === 0 && items.some(item => item.section)) { // Basic migration for older data if sections array is empty
+        const uniqueSectionsFromItems = [...new Set(items.map(item => item.section).filter(Boolean))];
+        if (uniqueSectionsFromItems.length > 0) sections = uniqueSectionsFromItems;
+    }
     items.forEach(item => {
         if (!item.location) item.location = [];
         if (!item.tags) item.tags = [];
@@ -544,18 +512,14 @@
 
   function updateTopFilterButtonsUI() {
     document.querySelectorAll('#topButtonFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
-
     const loadlistBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="loadlist"]');
     if (showLoadoutFilterActive) {
         if(loadlistBtn) loadlistBtn.classList.add('active');
     }
-
     if (activeLocationFilter) {
         const locBtn = document.querySelector(`#topButtonFilters .filter-btn[data-location="${activeLocationFilter}"]`);
         if (locBtn) locBtn.classList.add('active');
     }
-    
-    // "ALL" button logic: active if no other specific filter (location or loadout) is active.
     const allBtn = document.querySelector('#topButtonFilters .filter-btn[data-filter-type="all"]');
     if (!activeLocationFilter && !showLoadoutFilterActive) {
         if (allBtn) allBtn.classList.add('active');
@@ -567,51 +531,72 @@
 
   function renderSections() {
     const sectionFiltersContainer = document.getElementById('sectionFilters');
-    const sectionSelectDropdown = document.getElementById('itemSection');
+    const sectionSelectDropdown = document.getElementById('itemSection'); // For add item form
     sectionFiltersContainer.innerHTML = '';
     sectionSelectDropdown.innerHTML = '';
 
     sections.forEach(sec => {
-      const label = document.createElement('label');
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.className = 'sectionFilter';
-      checkbox.value = sec;
-      checkbox.checked = true;
-      checkbox.addEventListener('change', renderItems);
-      label.appendChild(checkbox);
-      label.appendChild(document.createTextNode(` ${sec}`));
-      sectionFiltersContainer.appendChild(label);
+      // Create filter button
+      const button = document.createElement('button');
+      button.className = 'section-filter-btn active'; // Default to active
+      button.textContent = sec;
+      button.dataset.section = sec;
+      button.onclick = () => {
+        button.classList.toggle('active');
+        renderItems();
+      };
+      sectionFiltersContainer.appendChild(button);
 
+      // Populate dropdown for adding items
       const option = document.createElement('option');
       option.value = sec;
       option.textContent = sec;
       sectionSelectDropdown.appendChild(option);
     });
-    if (sections.length === 0 && sectionSelectDropdown.options.length === 0) {
-        const noSectionOption = document.createElement('option');
-        noSectionOption.value = "";
-        noSectionOption.textContent = "No sections defined";
-        noSectionOption.disabled = true;
-        sectionSelectDropdown.appendChild(noSectionOption);
+
+    if (sections.length === 0) {
+        if (sectionSelectDropdown.options.length === 0) { // Check if already populated
+            const noSectionOption = document.createElement('option');
+            noSectionOption.value = "";
+            noSectionOption.textContent = "No sections defined";
+            noSectionOption.disabled = true;
+            sectionSelectDropdown.appendChild(noSectionOption);
+        }
+         // Optionally add a message to sectionFiltersContainer if no sections
+        if(sectionFiltersContainer.children.length === 0) {
+            // sectionFiltersContainer.textContent = "No sections available.";
+        }
     }
   }
 
   function renderItems() {
     const itemList = document.getElementById('itemList');
-    const selectedSectionCheckboxes = [...document.querySelectorAll('.sectionFilter:checked')];
-    const selectedSections = selectedSectionCheckboxes.map(cb => cb.value);
+    // Get selected sections from active buttons
+    const selectedSectionButtons = [...document.querySelectorAll('#sectionFilters .section-filter-btn.active')];
+    const selectedSections = selectedSectionButtons.map(btn => btn.dataset.section);
     
     const filtered = items.filter(item => {
       if (showLoadoutFilterActive && !item.loadout) return false;
       
-      if (selectedSections.length > 0 && sections.length > 0) {
-          if (!item.section || !selectedSections.includes(item.section)) {
-              return false;
+      // Section filter:
+      // If there are section filters defined (i.e. buttons exist)
+      // AND some sections are selected (i.e. active buttons exist)
+      // THEN item must be in one of the selected sections.
+      // If no sections are selected (all buttons inactive), then no items with sections match.
+      // If item has no section, it passes this filter UNLESS specific sections are selected.
+      const sectionButtonsExist = document.querySelectorAll('#sectionFilters .section-filter-btn').length > 0;
+
+      if (sectionButtonsExist) { // Only apply section filtering if section buttons are present
+          if (selectedSections.length > 0) { // If some sections ARE selected
+              if (!item.section || !selectedSections.includes(item.section)) {
+                  return false;
+              }
+          } else { // If section buttons exist, but NONE are selected (all inactive)
+              return false; // Show no items because the user deselected all sections
           }
-      } else if (sections.length > 0 && selectedSections.length === 0) {
-          return false;
       }
+      // If no section buttons exist at all (e.g., no sections defined), items are not filtered by section.
+
 
       if (activeLocationFilter) {
         if (!item.location || !Array.isArray(item.location) || !item.location.includes(activeLocationFilter)) {
@@ -626,7 +611,6 @@
       return itemLocations.map(locKey => {
         const locDetail = LOCATION_DETAILS[locKey];
         if (!locDetail) return `<span class="location-badge">${locKey}</span>`;
-        
         let badgeClass = `location-badge ${locDetail.class}`;
         if (locKey === activeLocationFilter) {
             badgeClass += ' active-filter-highlight';
@@ -640,7 +624,6 @@
       const div = document.createElement('div');
       div.className = 'item' + (item.loadout ? ' loadout' : '');
       div.dataset.itemId = item.id;
-
       const detailsDiv = document.createElement('div');
       detailsDiv.className = 'item-details-clickable';
       detailsDiv.innerHTML = `
@@ -648,11 +631,9 @@
         <div class="tags">${item.tags && item.tags.length > 0 ? item.tags.join(', ') : ''}</div>
       `;
       detailsDiv.onclick = () => openPopup(item);
-
       const locationsDiv = document.createElement('div');
       locationsDiv.className = 'locations-container';
       locationsDiv.innerHTML = renderLocationsHTML(item.location);
-      
       div.appendChild(detailsDiv);
       div.appendChild(locationsDiv);
       itemList.appendChild(div);
@@ -666,15 +647,12 @@
     const nameInput = document.getElementById('itemName');
     const section = document.getElementById('itemSection').value;
     const name = nameInput.value.trim();
-
     if (name) {
       const newItem = { 
         id: Date.now().toString(36) + Math.random().toString(36).substr(2),
         name, 
         section: section || undefined,
-        loadout: false, 
-        location: [], 
-        tags: [] 
+        loadout: false, location: [], tags: [] 
       };
       items.push(newItem);
       nameInput.value = '';
@@ -688,52 +666,38 @@
     const editor = document.getElementById('sectionEditor');
     const list = document.getElementById('sectionEditList');
     list.innerHTML = '';
-
     sections.forEach((sec, index) => {
       const li = document.createElement('li');
       const input = document.createElement('input');
-      input.type = 'text';
-      input.value = sec;
-      input.className = 'rename-input';
+      input.type = 'text'; input.value = sec; input.className = 'rename-input';
       input.onchange = () => {
-        const oldName = sections[index];
+        const oldName = sections[index]; // Critical to get from array at current index
         const newName = input.value.trim().toLowerCase();
         if (newName && newName !== oldName && !sections.includes(newName)) {
           sections[index] = newName;
-          items.forEach(item => {
-            if (item.section === oldName) item.section = newName;
-          });
+          items.forEach(item => { if (item.section === oldName) item.section = newName; });
           saveToStorage();
-          renderSections();
-          renderItems();
+          renderSections(); renderItems(); // Update UI
+          // No need to re-click editor, changes applied.
         } else if (newName !== oldName) {
-          alert(`Section name "${newName}" is invalid or already exists.`);
-          input.value = oldName;
+          alert(`Section name "${newName}" is invalid or already exists.`); input.value = oldName;
         } else if (!newName) {
-            alert("Section name cannot be empty.");
-            input.value = oldName;
+            alert("Section name cannot be empty."); input.value = oldName;
         }
       };
-
       const deleteBtn = document.createElement('button');
-      deleteBtn.className = 'delete-btn';
-      deleteBtn.textContent = '✕';
+      deleteBtn.className = 'delete-btn'; deleteBtn.textContent = '✕';
       deleteBtn.onclick = () => {
-        const sectionToDelete = sections[index];
+        const sectionToDelete = sections[index]; // Critical to get from array
         if (confirm(`Delete section "${sectionToDelete}"? This will remove the section from all associated items.`)) {
           sections.splice(index, 1);
-          items.forEach(item => {
-            if (item.section === sectionToDelete) delete item.section;
-          });
+          items.forEach(item => { if (item.section === sectionToDelete) delete item.section; });
           saveToStorage();
-          renderSections();
-          renderItems();
-          document.getElementById('editSectionBtn').click(); 
+          renderSections(); renderItems(); // Update UI
+          document.getElementById('editSectionBtn').click(); // Reopen/refresh editor
         }
       };
-      
-      li.appendChild(input);
-      li.appendChild(deleteBtn);
+      li.appendChild(input); li.appendChild(deleteBtn);
       list.appendChild(li);
     });
     editor.classList.remove('hidden');
@@ -741,6 +705,8 @@
 
   function closeSectionEditor() {
     document.getElementById('sectionEditor').classList.add('hidden');
+    // Potentially re-render sections if changes in editor might not have triggered it
+    // renderSections(); renderItems(); // Usually handled by onchange/delete in editor
   }
 
   function addSection() {
@@ -750,7 +716,7 @@
       sections.push(name);
       nameInput.value = '';
       saveToStorage();
-      renderSections();
+      renderSections(); // Re-render section filter buttons
       renderItems(); 
     } else if (sections.includes(name)) {
       alert(`Section "${name}" already exists.`);
@@ -770,7 +736,6 @@
     document.getElementById('inputMemo').value = currentItem.memo || '';
     document.getElementById('inputTags').value = currentItem.tags && Array.isArray(currentItem.tags) ? currentItem.tags.join(', ') : '';
     document.getElementById('inputLoadout').checked = currentItem.loadout || false;
-
     document.querySelectorAll('.locCheck').forEach(cb => {
       cb.checked = Array.isArray(currentItem.location) && currentItem.location.includes(cb.value);
     });
@@ -787,9 +752,7 @@
         .split(',').map(t => t.trim()).filter(t => t);
       currentItem.loadout = document.getElementById('inputLoadout').checked;
       currentItem.location = [...document.querySelectorAll('.locCheck:checked')].map(cb => cb.value);
-      
-      renderItems();
-      closePopup();
+      renderItems(); closePopup();
     }
   }
 
@@ -801,8 +764,7 @@
   function deleteCurrentItem() {
     if (currentItem && confirm(`Are you sure you want to delete item "${currentItem.name}"?`)) {
       items = items.filter(item => item.id !== currentItem.id);
-      renderItems();
-      closePopup();
+      renderItems(); closePopup();
     }
   }
   
@@ -810,26 +772,21 @@
     button.addEventListener('click', () => {
         const filterType = button.dataset.filterType;
         const location = button.dataset.location;
-
         if (filterType === 'all') {
             activeLocationFilter = null;
             showLoadoutFilterActive = false;
         } else if (filterType === 'loadlist') {
             showLoadoutFilterActive = !showLoadoutFilterActive;
         } else if (filterType === 'location') {
-            if (activeLocationFilter === location) {
-                activeLocationFilter = null;
-            } else {
-                activeLocationFilter = location;
-            }
+            activeLocationFilter = (activeLocationFilter === location) ? null : location;
         }
         renderItems();
     });
   });
 
   loadFromStorage();
-  renderSections();
-  renderItems();
+  renderSections(); // This now renders buttons and populates dropdown
+  renderItems();    // Initial item render based on default active sections
 
 </script>
 </body>
