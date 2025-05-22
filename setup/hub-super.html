@@ -209,6 +209,20 @@
       return true;
     });
 
+    function renderLocations(locArray) {
+      if (!Array.isArray(locArray)) return '';
+      return locArray.map(loc => {
+        const labelMap = {
+          tokyo: '東京',
+          himeji: '姫路',
+          baggage: '手荷物',
+          car: '車'
+        };
+      return `<span style="background:#00aaaa;color:#000;padding:2px 6px;border-radius:6px;font-size:0.8rem;margin-left:4px;">${labelMap[loc] || loc}</span>`;
+      }).join('');
+    }
+
+
     itemList.innerHTML = '';
     filtered.forEach((item, index) => {
       const div = document.createElement('div');
@@ -221,11 +235,6 @@
         <div class="locations">${renderLocations(item.location)}</div>
       `;
 
-
-
-
-
-      
       div.onclick = () => openPopup(item);
       itemList.appendChild(div);
     });
