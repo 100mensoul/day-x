@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>DAYX｜持ち物リスト</title>
+  <link rel="stylesheet" href="list.css">
+</head>
+<body>
+  <header>
+    <h1>持ち物リスト</h1>
+    <nav>
+      <button data-filter="ALL">ALL</button>
+      <button data-filter="WEAR">WEAR</button>
+      <button data-filter="EC">EC</button>
+      <button data-filter="DOCS">DOCS</button>
+    </nav>
+  </header>
+
+  <main>
+    <form id="itemForm">
+      <input type="text" id="itemInput" placeholder="持ち物を入力" required>
+      <select id="categorySelect">
+        <option value="WEAR">WEAR</option>
+        <option value="EC">EC</option>
+        <option value="DOCS">DOCS</option>
+      </select>
+      <button type="submit">追加</button>
+    </form>
+
+    <ul id="itemList"></ul>
+  </main>
+
+  <script src="list.js"></script>
+</body>
+</html>
