@@ -60,7 +60,7 @@
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        gap: 0.75rem;
+        gap: 0.75rem; /* Default gap for PC */
         margin-bottom: 1rem;
         padding: 0.5rem 0;
     }
@@ -69,7 +69,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.5rem; /* Gap between section filter buttons */
     }
     .section-filter-btn {
         padding: 6px 12px;
@@ -90,7 +90,6 @@
         font-weight: bold;
     }
 
-    /* Unified button style for SECTION EDIT, Add Item, Add Section (in popup) */
     #editSectionBtn, 
     .add-item-form button,
     .add-section-form-popup button {
@@ -104,7 +103,7 @@
       font-size: 0.85rem;
       height: 34px;
       box-sizing: border-box;
-      font-weight: normal; /* Explicitly set for consistency, or bold if preferred */
+      font-weight: normal; 
     }
     #editSectionBtn:hover,
     .add-item-form button:hover,
@@ -127,15 +126,24 @@
     
     .add-item-form {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: wrap; /* Allow wrapping for multiple rows */
       justify-content: center;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.75rem; /* Default gap for PC */
       margin-bottom: 1rem;
     }
-    .add-item-form input[type="text"], .add-item-form select {
-        min-width: 140px;
+    .add-item-form input[type="text"]#itemName { /* Specific styling for itemName input if needed */
+        min-width: 140px; /* PC min-width */
+        /* flex-grow: 2; /* Example: allow it to take more space */
     }
+     .add-item-form select#itemSection {
+        min-width: 100px; /* PC min-width */
+        /* flex-grow: 1; */
+    }
+    .add-item-form button#addItemBtn {
+        /* flex-grow: 0; */ /* Don't grow by default */
+    }
+
 
     .item-list { max-width: 800px; margin: 0 auto; }
     .item { background-color: #222; border: 1px solid #444; border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
@@ -178,12 +186,15 @@
         .controls-row { gap: 0.5rem; }
         .section-filter-btn { padding: 7px 9px; font-size: 0.75rem; }
         #editSectionBtn { padding: 7px 10px; font-size: 0.75rem; height: 32px; }
+        
+        /* Tablet: Add Item form might still stack */
         .add-item-form { flex-direction: column; align-items: stretch; gap: 0.5rem; margin-bottom: 0.8rem; }
         .add-item-form input[type="text"], .add-item-form select, .add-item-form button {
             width: 100%; margin-bottom: 0.3rem; padding: 9px 10px; font-size: 0.85rem;
         }
         .add-item-form input[type="text"], .add-item-form select { min-width: 0; height: 34px; }
         .add-item-form button { height: 34px; }
+
         .item { flex-direction: column; align-items: flex-start; padding: 0.7rem; }
         .item-details-clickable { margin-bottom: 0.6rem; padding-right: 0; width: 100%; }
         .locations-container { justify-content: flex-start; width: 100%; }
@@ -199,39 +210,57 @@
             font-size: 0.7rem; padding: 5px 8px; min-width: auto; height: 30px;
         }
         
-        .controls-row { /* Smartphone: This row handles SECTION EDIT and sectionFilters */
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center items horizontally */
-            gap: 0.6rem; /* Gap between SECTION EDIT and sectionFilters group */
+        .controls-row { /* Smartphone: SECTION EDIT and sectionFilters row */
+            display: flex; /* Keep as flex for horizontal alignment */
+            flex-direction: row; /* Explicitly row */
+            flex-wrap: wrap; /* Allow wrapping if space is tight */
+            align-items: center; 
+            justify-content: center;
+            gap: 0.5rem; /* Gap between SECTION EDIT and #sectionFilters, and within #sectionFilters */
             padding: 0.2rem 0; margin-bottom: 0.6rem;
         }
         #editSectionBtn { /* Smartphone: SECTION EDIT button */
-            order: -1; /* Place it before #sectionFilters in the flex flow */
+            /* order: -1; /* Not needed if it's the first child in HTML for this row */
             width: auto; 
             padding: 6px 12px; font-size: 0.75rem; height: 30px;
-            margin-bottom: 0.2rem; /* Small space if #sectionFilters is present */
+            flex-shrink: 0; /* Prevent shrinking */
         }
-        #sectionFilters { /* sectionFilters container itself */
-            width: 100%; /* Take full width to allow internal centering of buttons */
-            justify-content: center; /* Center the filter buttons */
-            gap: 0.4rem; /* Gap between filter buttons */
+        #sectionFilters { /* sectionFilters container */
+            display: flex; /* Already flex, ensure it for this context */
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4rem; /* Gap between actual filter buttons */
+            flex-grow: 1; /* Allow it to take remaining space if editSectionBtn is small */
         }
         .section-filter-btn { /* 'wear', 'ec' buttons */
             width: auto; padding: 5px 10px; font-size: 0.75rem; height: 30px;
+            flex-shrink: 0;
         }
         
         .add-item-form { /* Smartphone: Add Item form styling */
-            display: flex; flex-wrap: wrap; justify-content: center;
-            align-items: center; gap: 0.5rem; margin-bottom: 1rem;
+            display: flex; 
+            flex-wrap: wrap; /* Allow wrapping into multiple lines */
+            justify-content: center;
+            align-items: center; 
+            gap: 0.5rem; 
+            margin-bottom: 1rem;
         }
-        .add-item-form input[type="text"], .add-item-form select {
-            flex-grow: 1; min-width: 100px; 
-            width: auto; height: 32px; font-size: 0.8rem; padding: 5px 8px;
-            margin-bottom: 0; 
+        .add-item-form input[type="text"]#itemName { /* Item Name input */
+            width: 100%; /* Takes full width on its own line */
+            flex-basis: 100%; /* Ensure it takes full width before wrapping others */
+            margin-bottom: 0.5rem; /* Space before the next row of controls */
+            height: 32px; font-size: 0.8rem; padding: 5px 8px;
         }
-        .add-item-form button#addItemBtn { /* Smartphone: Add Item button */
-            width: auto; padding: 5px 12px; font-size: 0.75rem; height: 32px;
-            flex-shrink: 0; margin-bottom: 0; 
+        .add-item-form select#itemSection { /* Section dropdown */
+            flex-grow: 1; /* Grow to fill space alongside Add Item button */
+            min-width: 100px; 
+            width: auto; 
+            height: 32px; font-size: 0.8rem; padding: 5px 8px;
+        }
+        .add-item-form button#addItemBtn { /* Add Item button */
+            width: auto; 
+            padding: 5px 12px; font-size: 0.75rem; height: 32px;
+            flex-shrink: 0; 
         }
 
         .popup button { width: calc(50% - 5px); margin-right: 5px; font-size: 0.85rem; padding: 8px 10px; }
@@ -257,7 +286,7 @@
   </div>
   
   <div class="controls-row">
-    <!-- SECTION EDIT button is now a flex item within controls-row -->
+    <!-- SECTION EDIT button first for mobile layout, CSS will handle its specific sizing -->
     <button id="editSectionBtn">SECTION EDIT</button>
     <div id="sectionFilters">
       <!-- Section filter buttons will be rendered here by JS -->
@@ -265,7 +294,9 @@
   </div>
 
   <section class="add-item-form">
+    <!-- Item name input will be on its own line on mobile due to flex-basis: 100% -->
     <input type="text" id="itemName" placeholder="Item name">
+    <!-- Section select and Add Item button will be on the next line, side-by-side on mobile -->
     <select id="itemSection"></select>
     <button id="addItemBtn" onclick="addItem()">Add Item</button>
   </section>
@@ -311,6 +342,7 @@
   </div>
 
 <script>
+  // JavaScript remains the same as the previous version.
   let items = [];
   let sections = ['wear', 'ec'];
   let currentItem = null;
@@ -476,10 +508,7 @@
   function closeSectionEditor() { document.getElementById('sectionEditor').classList.add('hidden'); }
 
   function addSection(isFromPopup = false) {
-    if (!isFromPopup) { // This function is now only intended to be called from the popup
-        console.warn("addSection called incorrectly. It should only be called from the Section Edit popup.");
-        return;
-    }
+    if (!isFromPopup) { console.warn("addSection called incorrectly."); return; }
     const nameInput = document.getElementById('newSectionNamePopup');
     if (!nameInput) { console.error("Popup's new section name input not found!"); return; }
     const name = nameInput.value.trim().toLowerCase();
