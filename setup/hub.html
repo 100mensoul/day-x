@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SUPER HUB</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+      color: #00ffff;
+    }
+    p.subtitle {
+      font-size: 1.1rem;
+      color: #aaa;
+      margin-top: 0.5rem;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .filters label {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.95rem;
+    }
+    .item-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .item {
+      background-color: #222;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .item.loadout {
+      border-color: #00ffff;
+      background-color: #113;
+    }
+    .item span {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SUPER HUB</h1>
+    <p class="subtitle">
+      This is the terminal board console for managing all parts — from enduring equipment to expendable inventory — across all sections.
+    </p>
+  </header>
+
+  <section class="filters">
+    <label><input type="checkbox" id="toggleLoadout" /> Show Loadout Only</label>
+    <label><input type="radio" name="type" value="all" checked /> All</label>
+    <label><input type="radio" name="type" value="equipment" /> Equipment</label>
+    <label><input type="radio" name="type" value="inventory" /> Inventory</label>
+    <label><input type="checkbox" class="sectionFilter" value="wear" checked /> Wear</label>
+    <label><input type="checkbox" class="sectionFilter" value="ec" checked /> EC</label>
+  </section>
+
+  <section class="item-list" id="itemList">
+    <!-- アイテムがJSで挿入される -->
+  </section>
+
+  <script>
+    const items = [
+      { name: "Solar Charger", type: "equipment", section: "ec", loadout: true },
+      { name: "Toothpaste", type: "inventory", section: "wear", loadout: false },
+      { name: "Battery Pack", type: "equipment", section: "wear", loadout: true },
+      { name: "Green Tea", type: "inventory", section: "ec", loadout: false }
+    ];
+
+    const itemList = document.getElementById('itemList');
+    const toggleLoadout = document.getElementById('toggleLoadout');
+    const typeRadios = document.querySelectorAll('input[name="type"]');
+    const sectionFilters = document.querySelectorAll('.sectionFilter');
+
+    function renderItems() {
+      const showLoadoutOnly = toggleLoadout.checked;
+      const selectedType = [...typeRadios].find(r => r.checked).value;
+      const selectedSections = [...sectionFilters].filter(cb => cb.checked).map(cb => cb.value);
+
+      const filtered = items.filter(item => {
+        if (showLoadoutOnly && !item.loadout) return false;
+        if (selectedType !== "all" && item.type !== selectedType) return false;
+        if (!selectedSections.includes(item.section)) return false;
+        return true;
+      });
+
+      itemList.innerHTML = '';
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item' + (item.loadout ? ' loadout' : '');
+        div.innerHTML = `<span>${item.name}</span><span>${item.type}</span>`;
+        itemList.appendChild(div);
+      });
+    }
+
+    toggleLoadout.addEventListener('change', renderItems);
+    typeRadios.forEach(r => r.addEventListener('change', renderItems));
+    sectionFilters.forEach(cb => cb.addEventListener('change', renderItems));
+
+    renderItems();
+  </script>
+</body>
+</html>
