@@ -140,12 +140,13 @@
       <input id="inputSite" placeholder="Purchase Site Name">
       <input id="inputURL" placeholder="URL">
       <input id="inputCount" placeholder="Quantity">
-      <select id="inputLocation">
-        <option value="tokyo">Tokyo</option>
-        <option value="himeji">Himeji</option>
-        <option value="baggage">Baggage</option>
-        <option value="car">Car</option>
-      </select>
+      <div>Location:</div>
+        <div id="locationCheckboxes">
+          <label><input type="checkbox" class="locCheck" value="tokyo"> Tokyo</label>
+          <label><input type="checkbox" class="locCheck" value="himeji"> Himeji</label>
+          <label><input type="checkbox" class="locCheck" value="baggage"> Baggage</label>
+          <label><input type="checkbox" class="locCheck" value="car"> Car</label>
+      </div>
       <input id="inputStatus" placeholder="Condition">
       <textarea id="inputMemo" rows="2" placeholder="Memo..."></textarea>
       <input id="inputTags" placeholder="Tags (comma separated)">
