@@ -101,15 +101,32 @@
     }
 
     .location-badge {
-      background-color: #00aaaa;
       color: #000;
+      background-color: #00aaaa; /* デフォルト色（使うか任意） */
       padding: 3px 8px;
       border-radius: 12px;
       font-size: 0.75rem;
       margin-left: 6px;
       font-weight: 500;
       white-space: nowrap;
+      display: inline-block;
     }
+
+    /* ロケーションごとの色分け */
+    .location-badge.tokyo {
+      background-color: #00ccff; /* シアン系 */
+    }
+    .location-badge.himeji {
+      background-color: #ffcc00; /* イエロー系 */
+    }
+    .location-badge.baggage {
+      background-color: #ff8888; /* ピンク系 */
+    }
+    .location-badge.car {
+      background-color: #aaffaa; /* グリーン系 */
+    }
+
+
 
     #editSectionBtn {
       background: #00cccc;
@@ -124,7 +141,6 @@
     #editSectionBtn:hover {
       background: #00eeee;
     }
-
 
   </style>
 </head>
@@ -249,9 +265,11 @@
           baggage: '手荷物',
           car: '車'
         };
-      return `<span class="location-badge">${labelMap[loc] || loc}</span>`;
+      return locArray.map(loc => {
+      return `<span class="location-badge ${loc}">${labelMap[loc] || loc}</span>`;
       }).join('');
     }
+
 
 
     itemList.innerHTML = '';
