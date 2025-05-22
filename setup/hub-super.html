@@ -202,7 +202,17 @@
       <button onclick="closePopup()">Close</button>
     </div>
   </div>
+  
+ <!-- SECTION EDIT PANEL -->
+      <div id="sectionEditor" class="section-editor hidden"> <!-- MOVED HERE and added class -->
+        <h2>Edit Sections</h2>
+        <ul id="sectionEditList"></ul>
+        <div style="text-align:center; margin-top: 1rem;">
+          <button onclick="closeSectionEditor()">Close</button>
+        </div>
+      </div>
 
+  
 <script>
   // Part 2（後半JS）は次に送ります…
   let items = [];
@@ -434,14 +444,6 @@ function savePopup() {
   document.querySelectorAll('input[name="type"], #toggleLoadout')
     .forEach(el => el.addEventListener('change', renderItems));
 </script>
-
-     <!-- SECTION EDIT PANEL -->
-    <div id="sectionEditor" class="section-editor hidden">
-      <h2>Edit Sections</h2>
-      <ul id="sectionEditList"></ul>
-      <div style="text-align:center; margin-top: 1rem;">
-        <button onclick="closeSectionEditor()">Close</button>
-      </div>
-    </div>
+      
     </body>
     </html>
