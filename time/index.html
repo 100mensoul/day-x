@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIME プロトタイプ Ver.0.1</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* 縦に長くなる可能性があるのでflex-start */
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px; /* 少し広めに */
+            width: 100%;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            margin-bottom: 18px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+        }
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group textarea {
+            width: calc(100% - 20px); /* paddingを考慮 */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box; /* これ重要 */
+        }
+        .input-group textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+        .timer-display {
+            font-size: 3.5em; /* 少し大きめに */
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1abc9c; /* テーマカラーっぽく */
+            padding: 15px 0;
+            background-color: #e8f8f5;
+            border-radius: 8px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 25px;
+            display: flex; /* ボタンを横並びに */
+            justify-content: center;
+            gap: 10px; /* ボタン間のスペース */
+        }
+        .controls button {
+            padding: 12px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        #startButton { background-color: #2ecc71; color: white; }
+        #startButton:hover { background-color: #27ae60; }
+        #lapButton { background-color: #3498db; color: white; }
+        #lapButton:hover { background-color: #2980b9; }
+        #stopButton { background-color: #e74c3c; color: white; }
+        #stopButton:hover { background-color: #c0392b; }
+        #resetButton { background-color: #95a5a6; color: white; }
+        #resetButton:hover { background-color: #7f8c8d; }
+        button:disabled {
+            background-color: #bdc3c7 !important;
+            cursor: not-allowed;
+        }
+
+        .laps-section h3, .total-summary h3 {
+            margin-top: 25px;
+            margin-bottom: 12px;
+            color: #34495e;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 8px;
+        }
+        .lap-item {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column; /* メモを下に配置 */
+            gap: 8px;
+        }
+        .lap-item-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95em;
+        }
+        .lap-item .lap-number { font-weight: bold; color: #555; }
+        .lap-item .lap-time { font-weight: bold; color: #16a085; }
+        .lap-item .lap-total-time { font-size: 0.85em; color: #777; }
+        .lap-item .lap-memo input {
+            width: calc(100% - 16px); /* paddingを考慮 */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .total-summary p {
+            font-size: 1.05em;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        #totalTime, #timeDifference {
+            font-weight: bold;
+        }
+        #timeDifference.positive { color: #c0392b; /* 赤系 */ }
+        #timeDifference.negative { color: #27ae60; /* 緑系 */ }
+        #timeDifference.neutral { color: #333; }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>⏱️ TIME トラッカー (プロトタイプ)</h2>
+
+        <div class="task-section">
+            <div class="input-group">
+                <label for="taskTitle">タスク名:</label>
+                <input type="text" id="taskTitle" placeholder="例: 新機能のプロトタイプ開発">
+            </div>
+            <div class="input-group">
+                <label for="targetMinutes">目標時間 (分):</label>
+                <input type="number" id="targetMinutes" placeholder="例: 60 (オプション)">
+            </div>
+        </div>
+
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+
+        <div class="controls">
+            <button id="startButton">START</button>
+            <button id="lapButton" disabled>LAP</button>
+            <button id="stopButton" disabled>STOP</button>
+            <button id="resetButton">RESET</button>
+        </div>
+
+        <div class="laps-section">
+            <h3>ラップタイム</h3>
+            <div id="lapTimesList">
+                <!-- ラップタイムはここに動的に追加されます -->
+            </div>
+        </div>
+
+        <div class="total-summary">
+            <h3>タスクサマリー</h3>
+            <p>合計時間: <span id="totalTime">--:--:--</span></p>
+            <p>目標とのズレ: <span id="timeDifference" class="neutral">--</span></p>
+            <div class="input-group">
+                <label for="overallMemo">タスク全体のメモ:</label>
+                <textarea id="overallMemo" placeholder="タスク全体の振り返りや気づきを記録"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.getElementById('startButton');
+            const lapButton = document.getElementById('lapButton');
+            const stopButton = document.getElementById('stopButton');
+            const resetButton = document.getElementById('resetButton');
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            const lapTimesList = document.getElementById('lapTimesList');
+            const taskTitleInput = document.getElementById('taskTitle');
+            const targetMinutesInput = document.getElementById('targetMinutes');
+            const totalTimeDisplay = document.getElementById('totalTime');
+            const timeDifferenceDisplay = document.getElementById('timeDifference');
+            const overallMemoTextarea = document.getElementById('overallMemo');
+
+            let timerInterval = null;
+            let startTimeMs = 0;      // 計測開始時のタイムスタンプ (PAUSE/RESUME時に更新)
+            let elapsedTimeMs = 0;    // PAUSEするまでの累積経過時間 (ミリ秒)
+            let lapNumber = 1;
+            let isRunning = false;
+            let laps = []; // { lap: number, lapDurationMs: number, totalTimeAtLapMs: number, memo: string }
+
+            function formatTime(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+
+            function getCurrentElapsedTimeMs() {
+                if (!isRunning) return elapsedTimeMs;
+                return elapsedTimeMs + (Date.now() - startTimeMs);
+            }
+
+            function updateTimerDisplay() {
+                timerDisplay.textContent = formatTime(getCurrentElapsedTimeMs());
+            }
+
+            startButton.addEventListener('click', () => {
+                if (isRunning) { // PAUSE
+                    clearInterval(timerInterval);
+                    elapsedTimeMs += Date.now() - startTimeMs; // PAUSE時点までの経過時間を累積
+                    isRunning = false;
+                    startButton.textContent = 'RESUME';
+                    lapButton.disabled = true;
+                } else { // START or RESUME
+                    startTimeMs = Date.now(); // 現在時刻を記録
+                    timerInterval = setInterval(updateTimerDisplay, 100); // 100ms毎に表示更新
+                    isRunning = true;
+                    startButton.textContent = 'PAUSE';
+                    lapButton.disabled = false;
+                    stopButton.disabled = false;
+                    resetButton.disabled = true; // 実行中はリセット不可
+                }
+            });
+
+            lapButton.addEventListener('click', () => {
+                if (!isRunning) return;
+
+                const currentTotalTimeMs = getCurrentElapsedTimeMs();
+                const previousLapsTotalTimeMs = laps.reduce((sum, lap) => sum + lap.lapDurationMs, 0);
+                const thisLapDurationMs = currentTotalTimeMs - previousLapsTotalTimeMs;
+
+                const lapData = {
+                    lap: lapNumber++,
+                    lapDurationMs: thisLapDurationMs,
+                    totalTimeAtLapMs: currentTotalTimeMs,
+                    memo: '' // 初期メモは空
+                };
+                laps.push(lapData);
+                renderLaps();
+            });
+
+            stopButton.addEventListener('click', () => {
+                if (!isRunning && elapsedTimeMs === 0) return; // 計測前は無効
+
+                clearInterval(timerInterval);
+                if (isRunning) { // 実行中の場合は最後の経過時間を加算
+                    elapsedTimeMs += Date.now() - startTimeMs;
+                }
+                isRunning = false;
+
+                updateTimerDisplay(); // 最終時間を表示
+
+                startButton.textContent = 'START';
+                startButton.disabled = true; // 停止後はリセットを促す
+                lapButton.disabled = true;
+                stopButton.disabled = true;
+                resetButton.disabled = false;
+
+                totalTimeDisplay.textContent = formatTime(elapsedTimeMs);
+
+                const targetMinutes = parseInt(targetMinutesInput.value, 10);
+                if (!isNaN(targetMinutes) && targetMinutes > 0) {
+                    const targetMs = targetMinutes * 60 * 1000;
+                    const differenceMs = elapsedTimeMs - targetMs;
+                    const sign = differenceMs >= 0 ? '+' : '-';
+                    timeDifferenceDisplay.textContent = `${sign}${formatTime(Math.abs(differenceMs))}`;
+                    if (differenceMs > 0) {
+                        timeDifferenceDisplay.className = 'positive';
+                    } else if (differenceMs < 0) {
+                        timeDifferenceDisplay.className = 'negative';
+                    } else {
+                        timeDifferenceDisplay.className = 'neutral';
+                    }
+                } else {
+                    timeDifferenceDisplay.textContent = '--';
+                    timeDifferenceDisplay.className = 'neutral';
+                }
+                // ログ出力 (デバッグ用)
+                console.log("Task Title:", taskTitleInput.value);
+                console.log("Target Minutes:", targetMinutesInput.value);
+                console.log("Total Time (ms):", elapsedTimeMs, "Formatted:", formatTime(elapsedTimeMs));
+                console.log("Laps:", laps.map(l => ({ ...l, memo: document.getElementById(`lapMemo-${l.lap}`)?.value || '' })));
+                console.log("Overall Memo:", overallMemoTextarea.value);
+            });
+
+            resetButton.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                startTimeMs = 0;
+                elapsedTimeMs = 0;
+                lapNumber = 1;
+                isRunning = false;
+                laps = [];
+
+                timerDisplay.textContent = '00:00:00';
+                startButton.textContent = 'START';
+                startButton.disabled = false;
+                lapButton.disabled = true;
+                stopButton.disabled = true;
+                resetButton.disabled = false; // リセット後はリセットボタンも有効で良いか、設計次第。一旦有効。
+
+                lapTimesList.innerHTML = '';
+                taskTitleInput.value = '';
+                targetMinutesInput.value = '';
+                totalTimeDisplay.textContent = '--:--:--';
+                timeDifferenceDisplay.textContent = '--';
+                timeDifferenceDisplay.className = 'neutral';
+                overallMemoTextarea.value = '';
+            });
+
+            function renderLaps() {
+                lapTimesList.innerHTML = ''; // 一旦クリア
+                laps.forEach(lapData => {
+                    const lapItem = document.createElement('div');
+                    lapItem.classList.add('lap-item');
+
+                    const infoDiv = document.createElement('div');
+                    infoDiv.classList.add('lap-item-info');
+                    infoDiv.innerHTML = `
+                        <span class="lap-number">Lap ${lapData.lap}:</span>
+                        <span class="lap-time">${formatTime(lapData.lapDurationMs)}</span>
+                        <span class="lap-total-time">(Total: ${formatTime(lapData.totalTimeAtLapMs)})</span>
+                    `;
+
+                    const memoDiv = document.createElement('div');
+                    memoDiv.classList.add('lap-memo');
+                    const memoInput = document.createElement('input');
+                    memoInput.type = 'text';
+                    memoInput.id = `lapMemo-${lapData.lap}`;
+                    memoInput.placeholder = `Lap ${lapData.lap} のメモ`;
+                    memoInput.value = lapData.memo; // 再描画時にもメモを保持
+                    memoInput.addEventListener('change', (e) => {
+                        lapData.memo = e.target.value; // 配列内のデータを直接更新
+                    });
+                    memoDiv.appendChild(memoInput);
+
+                    lapItem.appendChild(infoDiv);
+                    lapItem.appendChild(memoDiv);
+                    lapTimesList.appendChild(lapItem);
+                });
+            }
+
+            // 初期状態設定
+            resetButton.click(); // ページロード時にリセット状態から開始
+            startButton.disabled = false; // STARTは最初から押せるように
+            resetButton.disabled = true; // 最初はリセット不要
+
+        });
+    </script>
+</body>
+</html>
